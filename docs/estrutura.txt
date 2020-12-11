@@ -57,5 +57,5 @@ noticias: {
 
 
 [Extras]
-stars como no git
+stars como no github
 fazer logging de todos os pedidos feitos e construir estatísticas (rotas mais utilizadas,...)

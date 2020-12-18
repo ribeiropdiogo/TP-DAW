@@ -4,6 +4,8 @@ const path = require('path')
 const logger = require('morgan')
 
 const indexRouter = require('./routes/index')
+const usersRouter = require('./routes/utilizadores')
+const postsRouter = require('./routes/posts')
 
 var app = express()
 
@@ -16,6 +18,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
 
+app.use('/posts', postsRouter)
+app.use('/utilizadores', usersRouter)
 app.use('/', indexRouter)
 
 // catch 404 and forward to error handler

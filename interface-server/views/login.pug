@@ -1,41 +1,62 @@
 extends layout
 
 block head
-  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
-  link(rel='stylesheet', href='https://www.w3schools.com/w3css/4/w3.css')
-  link(rel='stylesheet', href='/stylesheets/login.css')
+    title Login
+    link(rel='stylesheet', href='/stylesheets/main.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/color.css')
+    link(rel='stylesheet', href='/stylesheets/responsive.css')
+    link(rel='icon', href='/img/favicon.png', type='image/png' sizes='16x16') 
+    script(src='/javascript/main.min.js')
+    script(src='/javascript/script.js')
 
 block body
-  .lg-container
-    form(action='/login.js')
-      .lg-row
-        h1(style='text-align: center')= title
-        h2(style='text-align: center') Iniciar sessão com uma Rede Social ou Manualmente
-        .lg-vl
-          span.lg-vl-innertext ou
-
-        .lg-col
-          a.lg-fb.lg-btn(href='#')
-            i.fa.fa-facebook.fa-fw
-            | Iniciar sessão com Facebook
-          a.lg-twitter.lg-btn(href='#')
-            i.fa.fa-twitter.fa-fw
-            | Iniciar sessão com Twitter
-          a.lg-google.lg-btn(href='#')
-            i.fa.fa-google.fa-fw
-            | Iniciar sessão com Google+
-
-        .lg-col
-          .lg-hide-med-lrg
-            p Ou iniciar sessão manualmente:
-
-          input(type='text', name='username', placeholder='Nome de utilizador', required)
-          input(type='password', name='password', placeholder='Palavra-passe', required)
-          input(type='submit', value='Iniciar Sessão')
-
-  .lg-bottom-container
-    .lg-row
-      .lg-col
-        a.lg-btn(href='#', style='color: white') Criar conta
-      .lg-col
-        a.lg-btn(href='#', style='color: white') Não sabes a tua palavra-passe?
+    .theme-layout
+        .container-fluid.pdng0
+            .row.merged
+                .col-lg-6.col-md-6.col-sm-6.col-xs-12
+                    .land-featurearea
+                        .land-meta
+                            h2 RepositóriDOIS
+                .col-lg-6.col-md-6.col-sm-6.col-xs-12
+                    .login-reg-bg
+                        .log-reg-area.sign
+                            h2.log-title Login
+                            form(action='/login.js')
+                                .form-group
+                                    input(type='text', id='username', name='username', required)
+                                    label(class='control-label', for='username') Username
+                                    i.mtrl-select
+                                .form-group
+                                    input(type='password', id='password', name='password', required)
+                                    label(class='control-label', for='password') Password
+                                    i.mtrl-select
+                                a(href='', title='', class='forgot-pwd') Esqueceu a password?
+                                .submit-btns
+                                    button(class='mtr-btn signin', type='button', style="margin-right: 5px")
+                                        span Login
+                                    button(class='mtr-btn signup', type='button')
+                                        span Registar
+                        .log-reg-area.reg
+                            h2.log-title Register
+                            form(action='/login.js')
+                                .form-group
+                                    input(type='text', id='name', name='name', required)
+                                    label(class='control-label', for='name') Primeiro e Último Nome
+                                    i.mtrl-select
+                                .form-group
+                                    input(type='text', id='username', name='username', required)
+                                    label(class='control-label', for='username') Username
+                                    i.mtrl-select
+                                .form-group
+                                    input(type='password', id='password', name='password', required)
+                                    label(class='control-label', for='password') Password
+                                    i.mtrl-select
+                                .form-group
+                                    input(type='email', id='email', name='email', required)
+                                    label(class='control-label', for='email') Email
+                                    i.mtrl-select
+                                a(href='', title='', class='already-have') Já tem conta?
+                                .submit-btns
+                                    button(class='mtr-btn signup', type='button')
+                                        span Registar

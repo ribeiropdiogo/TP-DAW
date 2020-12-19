@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express')
+const router = express.Router()
 
 /* ############################# */
 /* Interface -> Comunicação com a API / Render dos templates
@@ -18,7 +18,7 @@ router.get('/feed', function(req, res, next) {
 
 router.get('/login', function(req, res, next) {
     //res.render('index', { title: 'Express' });
-    res.render('index')
+    res.render('login', { title: 'Login' })
 });
 
 router.get('/logout', function(req, res, next) {
@@ -41,4 +41,4 @@ router.post('/registo', function(req, res, next) {
     res.render('registo')
 });
 
-module.exports = router;
+module.exports = router

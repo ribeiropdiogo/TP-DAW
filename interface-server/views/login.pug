@@ -1,0 +1,62 @@
+extends layout
+
+block head
+    title Login
+    link(rel='stylesheet', href='/stylesheets/main.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/color.css')
+    link(rel='stylesheet', href='/stylesheets/responsive.css')
+    link(rel='icon', href='/img/favicon.png', type='image/png' sizes='16x16') 
+    script(src='/javascript/main.min.js')
+    script(src='/javascript/script.js')
+
+block body
+    .theme-layout
+        .container-fluid.pdng0
+            .row.merged
+                .col-lg-6.col-md-6.col-sm-6.col-xs-12
+                    .land-featurearea
+                        .land-meta
+                            h2 RepositóriDOIS
+                .col-lg-6.col-md-6.col-sm-6.col-xs-12
+                    .login-reg-bg
+                        .log-reg-area.sign
+                            h2.log-title Login
+                            form(action='/login.js')
+                                .form-group
+                                    input(type='text', id='username', name='username', required)
+                                    label(class='control-label', for='username') Username
+                                    i.mtrl-select
+                                .form-group
+                                    input(type='password', id='password', name='password', required)
+                                    label(class='control-label', for='password') Password
+                                    i.mtrl-select
+                                a(href='', title='', class='forgot-pwd') Esqueceu a password?
+                                .submit-btns
+                                    button(class='mtr-btn signin', type='button', style="margin-right: 5px")
+                                        span Login
+                                    button(class='mtr-btn signup', type='button')
+                                        span Registar
+                        .log-reg-area.reg
+                            h2.log-title Register
+                            form(action='/login.js')
+                                .form-group
+                                    input(type='text', id='name', name='name', required)
+                                    label(class='control-label', for='name') Primeiro e Último Nome
+                                    i.mtrl-select
+                                .form-group
+                                    input(type='text', id='username', name='username', required)
+                                    label(class='control-label', for='username') Username
+                                    i.mtrl-select
+                                .form-group
+                                    input(type='password', id='password', name='password', required)
+                                    label(class='control-label', for='password') Password
+                                    i.mtrl-select
+                                .form-group
+                                    input(type='email', id='email', name='email', required)
+                                    label(class='control-label', for='email') Email
+                                    i.mtrl-select
+                                a(href='', title='', class='already-have') Já tem conta?
+                                .submit-btns
+                                    button(class='mtr-btn signup', type='button')
+                                        span Registar

@@ -1,88 +1,48 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express')
+const router = express.Router()
 
-var Post = require('../controllers/post')
+const Post = require('../controllers/post')
 
+// GET /posts
 router.get('/', function(req, res) {
-    res.jsonp("post works")
-    // Data Retrieve 
-    //promessa
-    /*
     Post.list()
-        .then(data => res.render('index', { list: data}))
-        .catch(err => res.render('error', {error: err}));
-    */
-    });
+        .then(data => res.status(200).jsonp(data))
+        .catch(error => res.status(500).jsonp(error))
+})
 
-
-// Get post details
+// GET /posts/:id
 router.get('/:id', function(req, res) {
-    Post.lookup(id)
-      .then(data => res.render('index',{post: data}))
-      .catch(err => res.render('error',{error: err}))
-});
+    Post.lookup(req.params.id)
+        .then(data => res.status(200).jsonp(data))
+        .catch(error => res.status(500).jsonp(error))
+})
 
-//Get Comentários de um post especifico
-router.get('/:id/comentarios', function(req, res) {
-    res.render(index);
-});
-
-
-//Add post  
+// POST /posts
 router.post('/', function(req, res) {
+    Post.insert(req.body)
+        .then(data => res.status(201).jsonp(data))
+        .catch(error => res.status(500).jsonp(error))
+})
 
-    var info = req.body
+// PUT /posts/:id
+router.put('/:id', function(req, res) {
+    Post.edit(req.params.id, req.body)
+        .then(data => res.status(200).jsonp(data))
+        .catch(error => res.status(500).jsonp(error))
+})
 
-    Post.insert(info)
-        .then(data => res.render('index',{post: data}))
-        .catch(err => res.render('error',{error: err}))
+// DELETE /posts/:id
+router.delete('/:id', function(req, res) {
+    Post.remove(req.params.id)
+        .then(data => res.status(200).jsonp(data))
+        .catch(error => res.status(500).jsonp(error))
+})
 
-});
+// Post Comentários
+// Fazer Igual para os Likes ?
+// POST /posts/comentarios/:id
+router.post('/comentarios/:id', function(req, res) {
+    // TODO
+})
 
-
-//Post Comentários
-//Fazer Igual para os Likes ? 
-router.post('/:id/comentarios', function(req, res) {
-    res.render(index);
-});
-
-
-//Get post Edit Form
-router.get('/edit/:id', function(req, res) {
-    var id = req.url.split("/")[2]
-
-    Post.lookup(id)
-      .then(data => res.render('edit',{post: data}))
-      .catch(err => res.render('error',{error: err}))
-  });
-
-
-//Update post
-
-router.put('/edit', function(req, res) {
-
-    var info = req.body
-    
-    Post.edit(info)
-      .then(data => res.render('post',{post: data}))
-      .catch(err => res.render('error',{error: err}))
-  });
-
-
-// Delete post
-router.get('/:id', function(req, res) {
-
-    var id = req.url.split("/")[2]
-
-    Post.remove(id)
-      .then(data => {
-          Post.list()
-          .then(data => res.render('index', { list: data}))
-          .catch(err => res.render('error', {error: err}));
-      })   
-      .catch(err => res.render('error', {error: err}))
-  });
-
-
-
-  module.exports = router;
+module.exports = router

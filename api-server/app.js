@@ -15,10 +15,8 @@ db.once('open', function() {
     console.log('Connected to MongoDB...')
 })
 
-const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/utilizador')
 const postsRouter = require('./routes/posts')
-
 
 var app = express()
 
@@ -29,7 +27,6 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use('/utilizadores', usersRouter)
 app.use('/posts', postsRouter)
-app.use('/', indexRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,5 +1,5 @@
 // User Model
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
 var userSchema = new mongoose.Schema({
     username: String,
@@ -11,7 +11,9 @@ var userSchema = new mongoose.Schema({
     instituicao: String,
     admin: Boolean,
     dataRegisto: Date,
-    ultimoAcesso: Date
+    ultimoAcesso: Date,
+    hashedPassword: String,
+    salt: String
 })
 
-module.exports = mongoose.model('utilizador',userSchema)
+module.exports = mongoose.model('utilizador', userSchema, 'utilizadores')

@@ -1,72 +1,73 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express')
+const router = express.Router()
+const crypto = require('../util/crypto')
 
-var Utilizador = require('../controllers/utilizador')
+const Utilizador = require('../controllers/utilizador')
 
+
+function filter(user) {
+    user.hashedPassword = undefined
+    user.salt = undefined
+    user.__v = undefined
+    return user
+}
+
+
+// GET /utilizadores
 router.get('/', function(req, res) {
-    res.jsonp("API User's good.")
-    // Data Retrieve 
-    //promessa
-    /*
     Utilizador.list()
-        .then(data => res.render('index', { list: data}))
-        .catch(err => res.render('error', {error: err}));*/
-  });
+        .then(data => res.status(200).jsonp(data))
+        .catch(error => res.status(500).jsonp(error))
+})
 
-
-// Get user
+// GET /utilizadores/:id
 router.get('/:id', function(req, res) {
-    res.jsonp("workz")
-    Utilizador.lookup(id)
-      .then(data => res.render('index',{utilizador: data}))
-      .catch(err => res.render('error',{error: err}))
-  });
+    Utilizador.lookup(req.params.id)
+        .then(data => res.status(200).jsonp(data))
+        .catch(error => res.status(500).jsonp(error))
+})
 
-
-//Add User  
+// POST /utilizadores
 router.post('/', function(req, res) {
-    var info = req.body
-    info.admin = false;
-    Utilizador.insert(info)
-        .then(data => res.jsonp(data))
-        .catch(err => res.jsonp(err))
-});
+    const user = req.body
 
+    user.admin = false
 
-//Get user Edit Form
-router.get('/edit/:id', function(req, res) {
-    var id = req.url.split("/")[2]
+    var hash = crypto.hasher(user.pass, crypto.generateSalt())
+    user.hashedPassword = hash.hashedPassword
+    user.salt = hash.salt
+    user.pass = undefined
 
-    Utilizador.lookup(id)
-      .then(data => res.render('edit',{utilizador: data}))
-      .catch(err => res.render('error',{error: err}))
-});
+    Utilizador.insert(user)
+        .then(data => res.status(201).jsonp(filter(data)))
+        .catch(error => res.status(500).jsonp(error))
+})
 
+// POST /utilizadores/login
+router.post('/login', function(req, res) {
+    Utilizador.credentials(req.body.username)
+        .then(data => {
+            if (crypto.compare(req.body.pass, data)) {
+                res.status(200).send()
+            } else {
+                res.status(401).send()
+            }
+        })
+        .catch(error => res.status(500).jsonp(error))
+})
 
-//Update user
+// PUT /utilizadores/:id
+router.put('/:id', function(req, res) {
+    Utilizador.edit(req.params.id, req.body)
+        .then(data => res.status(200).jsonp(filter(data)))
+        .catch(error => res.status(500).jsonp(error))
+})
 
-router.put('/edit', function(req, res) {
+// DELETE /utilizadores/:id
+router.delete('/:id', function(req, res) {
+    Utilizador.remove(req.params.id)
+        .then(data => res.status(200).jsonp(filter(data)))
+        .catch(error => res.status(500).jsonp(error))
+})
 
-    var info = req.body
-    
-    Utilizador.edit(info)
-      .then(data => res.render('utilizador',{utilizador: data}))
-      .catch(err => res.render('error',{error: err}))
-  });
-
-
-// Delete user
-router.get('/delete/:id', function(req, res) {
-
-    var id = req.url.split("/")[2]
-
-    Utilizador.remove(id)
-      .then(data => {
-          Utilizador.list()
-          .then(data => res.render('index', { list: data}))
-          .catch(err => res.render('error', {error: err}));
-      })   
-      .catch(err => res.render('error', {error: err}))
-  });
-
-module.exports = router;
+module.exports = router

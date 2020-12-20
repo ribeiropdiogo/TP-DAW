@@ -1,5 +1,5 @@
 // Resource Model
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
 var resourceSchema = new mongoose.Schema({
     tipo: String,
@@ -12,4 +12,4 @@ var resourceSchema = new mongoose.Schema({
     tags: [String]
 })
 
-module.exports = mongoose.model('recurso',resourceSchema)
+module.exports = mongoose.model('recurso', resourceSchema)

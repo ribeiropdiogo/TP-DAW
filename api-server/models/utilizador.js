@@ -9,7 +9,7 @@ var userSchema = new mongoose.Schema({
     curso: String,
     departamento: String,
     instituicao: String,
-    nivel_acesso: String,
+    admin: Boolean,
     dataRegisto: Date,
     ultimoAcesso: Date
 })

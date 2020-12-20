@@ -8,6 +8,7 @@ block head
     link(rel='stylesheet', href='/stylesheets/responsive.css')
     link(rel='icon', href='/img/favicon.png', type='image/png' sizes='16x16') 
     script(src='/javascript/main.min.js')
+    script(src='/javascript/custom.js')
     script(src='/javascript/script.js')
 
 block body
@@ -38,25 +39,37 @@ block body
                                     button(class='mtr-btn signup', type='button')
                                         span Registar
                         .log-reg-area.reg
-                            h2.log-title Register
+                            h2.log-title Registar
                             form(action='/login.js')
                                 .form-group
                                     input(type='text', id='name', name='name', required)
                                     label(class='control-label', for='name') Primeiro e Último Nome
                                     i.mtrl-select
                                 .form-group
-                                    input(type='text', id='username', name='username', required)
-                                    label(class='control-label', for='username') Username
-                                    i.mtrl-select
-                                .form-group
-                                    input(type='password', id='password', name='password', required)
-                                    label(class='control-label', for='password') Password
-                                    i.mtrl-select
-                                .form-group
                                     input(type='email', id='email', name='email', required)
                                     label(class='control-label', for='email') Email
                                     i.mtrl-select
+                                .form-group
+                                    input(type='password', id='rpassword', name='rpassword', required)
+                                    label(class='control-label', for='rpassword') Password
+                                    i.mtrl-select
+                                .form-radio(id='rad_filiacao')
+                                    .radio
+                                        label
+                                            input(type='radio', id='filiacao', name='filiacao', value='aluno', checked='checked')
+                                            i.check-box 
+                                            span Aluno
+                                    .radio
+                                        label
+                                            input(type='radio', id='filiacao', name='filiacao', value='docente')
+                                            i.check-box 
+                                            span Docente
+                                div(id='sec_filiacao')
+                                .form-group
+                                    input(type='text', id='instituicao', name='instituicao', required)
+                                    label(class='control-label', for='instituicao') Instituição
+                                    i.mtrl-select
                                 a(href='', title='', class='already-have') Já tem conta?
                                 .submit-btns
-                                    button(class='mtr-btn signup', type='button')
+                                    button(class='mtr-btn signup', type='button', onclick='register()')
                                         span Registar

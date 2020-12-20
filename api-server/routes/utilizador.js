@@ -25,13 +25,11 @@ router.get('/:id', function(req, res) {
 
 //Add User  
 router.post('/', function(req, res) {
-
     var info = req.body
-
+    info.admin = false;
     Utilizador.insert(info)
-        .then(data => res.render('index',{utilizador: data}))
-        .catch(err => res.render('error',{error: err}))
-
+        .then(data => res.jsonp(data))
+        .catch(err => res.jsonp(err))
 });
 
 
@@ -42,7 +40,7 @@ router.get('/edit/:id', function(req, res) {
     Utilizador.lookup(id)
       .then(data => res.render('edit',{utilizador: data}))
       .catch(err => res.render('error',{error: err}))
-  });
+});
 
 
 //Update user

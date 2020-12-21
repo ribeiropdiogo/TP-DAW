@@ -44,7 +44,12 @@ router.post('/', function(req, res) {
 
     Utilizador.insert(user)
         .then(data => res.status(201).jsonp(filter_send(data)))
-        .catch(error => res.status(500).jsonp(error))
+        .catch(error => {
+            if (error.name === 'MongoError' && error.code === 11000)
+                res.status(409).send(error)
+            else
+                res.status(500).jsonp(error)
+        })
 })
 
 

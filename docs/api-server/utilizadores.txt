@@ -40,7 +40,10 @@ response
         body = {_id, username, nome, email, filiacao, curso, departamento, instituicao,
                 admin, dataRegisto, ultimoAcesso}
     error
-        status_code = 500
+        username/email already exist
+            status_code = 409
+        other
+            status_code = 500
 
 
 -----------------------------------------------------------------------------------------
@@ -52,14 +55,14 @@ request
 
 response
     success
-        valid credentials
-            status_code = 200
-            body = {_id, username, nome, email, filiacao, curso, departamento,
-                    instituicao, admin, dataRegisto, ultimoAcesso}
+        status_code = 200
+        body = {_id, username, nome, email, filiacao, curso, departamento,
+                instituicao, admin, dataRegisto, ultimoAcesso}
+    error
         invalid credentials
             status_code = 401
-    error
-        status_code = 500
+        other
+            status_code = 500
 
 
 -----------------------------------------------------------------------------------------

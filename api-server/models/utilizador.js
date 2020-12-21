@@ -2,9 +2,9 @@
 const mongoose = require('mongoose')
 
 var userSchema = new mongoose.Schema({
-    username: String,
+    username: {type: String, index: {unique: true, dropDups: true}},
     nome: String,
-    email: String,
+    email: {type: String, index: {unique: true, dropDups: true}},
     filiacao: String,
     curso: String,
     departamento: String,

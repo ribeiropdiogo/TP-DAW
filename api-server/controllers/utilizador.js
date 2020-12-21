@@ -20,7 +20,7 @@ module.exports.lookup = function(id) {
 }
 
 
-// Returns a user login credentials
+// Returns a user with the login credentials
 module.exports.credentials = function(id) {
     return Utilizador.findOne({username: id}, {__v: 0}).exec()
 }

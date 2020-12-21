@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 
 const mongoDB = 'mongodb://127.0.0.1/RepositoriDOIS'
-mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
+mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true})
 
 const db = mongoose.connection
 db.on('error', function() {

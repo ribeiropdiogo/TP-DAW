@@ -1,0 +1,96 @@
+extends layout
+
+block head
+    title RepositóriDOIS
+    link(rel='stylesheet', href='/stylesheets/main.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/color.css')
+    link(rel='stylesheet', href='/stylesheets/responsive.css')
+    link(rel='icon', href='/img/favicon.png', type='image/png' sizes='16x16') 
+    script(src='/javascript/main.min.js')
+    script(src='/javascript/custom.js')
+    script(src='/javascript/script.js')
+
+block body
+    .theme-layout
+        .responsive-header
+            .mh-head.first.Sticky
+                span.mh-text
+                    h3 RepositóriDOIS
+            
+        .topbar.stick
+            .logo
+                h3(style='margin-top: 12px')
+                    a(href='/') RepositóriDOIS
+            .top-area
+                ul.main-menu
+        section
+            .gap.gray-bg
+                .container-fluid
+                    .row
+                        .col-lg-12
+                            div(class='row', id='page-contents')
+                                .col-lg-2
+                                    aside(class='sidebar static')
+                                        .widget
+                                            h2.widget-title Categorias
+                                            ul.naves
+                                                li
+                                                    a(href='/', title='') Categoria 1
+                                                li
+                                                    a(href='/', title='') Categoria 2
+                                                li
+                                                    a(href='/', title='') Categoria 3
+                                                li
+                                                    a(href='/', title='') Categoria 4
+                                .col-lg-6
+                                .col-lg-4
+                                    aside(class='sidebar static')
+                                        .widget
+                                            h4.widget-title Perfil
+                                            .your-page
+                                                .page-meta
+                                                    a(href='', title='', class='underline')= nome
+                                                    span
+                                                        i.ti-email
+                                                        a= email
+                                                    span
+                                                        i.ti-book
+                                                        a= instituicao
+    
+block footer
+    .container
+        .row
+            .col-lg-4.col-md-4
+                .widget
+                    .foot-logo
+                        .logo
+                            h5(style='margin-top: 12px')
+                                a(href='/') RepositóriDOIS
+                        p RepositóriDOIS @ DAW2020
+            .col-lg-2.col-md-4
+                .widget
+                    .widget-title
+                        h4 Categorias
+                    ul.list-style
+                        li
+                            a(href='', title='') Categoria1
+                        li
+                            a(href='', title='') Categoria2
+                        li
+                            a(href='', title='') Categoria3
+            .col-lg-2.col-md-4
+                .widget
+                    .widget-title
+                        h4 Cena Random  
+            .col-lg-4.col-md-4
+                .widget
+                    .widget-title
+                        h4 Desenvilvido por
+                    ul.list-style
+                        li
+                            a(href='', title='') Cândido
+                        li
+                            a(href='', title='') Diogo
+                        li
+                            a(href='', title='') Luís

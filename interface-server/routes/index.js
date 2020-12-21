@@ -8,7 +8,7 @@ const router = express.Router()
 /* GET home page. */
 router.get('/', function(req, res, next) {
     //Quando vai para a /, verfica auth, se isAuth: True vai para o feed, else redirect login
-    res.render('index', { title: 'Express' });
+    res.render('home', { title: 'RepositóriDOIS', nome: 'Gajo Fixe', email: 'gajo@fixe.com', instituicao: 'Universidade do Minho' });
 });
 
 //Obter Lista de Posts dos users que subscreve

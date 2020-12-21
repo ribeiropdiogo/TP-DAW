@@ -1,0 +1,92 @@
+-----------------------------------------------------------------------------------------
+GET /utilizadores -----------------------------------------------------------------------
+- Devolve todos os utilizadores
+
+response
+    success
+        status_code = 200
+        body = [{_id, username, nome, email, filiacao, curso, departamento, instituicao,
+                 admin, dataRegisto, ultimoAcesso}]
+    error
+        status_code = 500
+
+
+-----------------------------------------------------------------------------------------
+GET /utilizadores/:id -------------------------------------------------------------------
+- Devolve o utilizador com um dado username
+
+request
+    :id = username
+
+response
+    success
+        status_code = 200
+        body = {_id, username, nome, email, filiacao, curso, departamento, instituicao,
+                admin, dataRegisto, ultimoAcesso}
+    error
+        status_code = 500
+
+
+-----------------------------------------------------------------------------------------
+POST /utilizadores ----------------------------------------------------------------------
+- Regista um utilizador
+
+request
+    body = {username, nome, email, filiacao, curso, departamento, instituicao, pass}
+
+response
+    success
+        status_code = 201
+        body = {_id, username, nome, email, filiacao, curso, departamento, instituicao,
+                admin, dataRegisto, ultimoAcesso}
+    error
+        status_code = 500
+
+
+-----------------------------------------------------------------------------------------
+POST /utilizadores/login ----------------------------------------------------------------
+- Inicia sessão a um utilizador
+
+request
+    body = {username, pass}
+
+response
+    success
+        valid credentials
+            status_code = 200
+            body = {_id, username, nome, email, filiacao, curso, departamento,
+                    instituicao, admin, dataRegisto, ultimoAcesso}
+        invalid credentials
+            status_code = 401
+    error
+        status_code = 500
+
+
+-----------------------------------------------------------------------------------------
+PUT /utilizadores/:id -------------------------------------------------------------------
+- Atualiza a informação de um dado utilizador
+
+request
+    :id = username
+    body = novos valores
+
+response
+    success
+        status_code = 200
+        body = utilizador atualizado
+    error
+        status_code = 500
+
+
+-----------------------------------------------------------------------------------------
+DELETE /utilizadores/:id ----------------------------------------------------------------
+- Apaga um dado utilizador
+
+request
+    :id = username
+
+response
+    success
+        status_code = 200
+    error
+        status_code = 500

@@ -47,7 +47,7 @@ router.post('/', function(req, res) {
         .catch(error => {
             if (error.name === 'MongoError' && error.code === 11000)
                 res.status(409).send(error)
-            else
+            else 
                 res.status(500).jsonp(error)
         })
 })

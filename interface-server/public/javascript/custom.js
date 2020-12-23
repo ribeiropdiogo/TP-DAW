@@ -36,8 +36,8 @@ $(function() {
 
 function register(){
     var data = {};
-    data.name = $("input[name=name]").val();
-    data.password  = $("input[name=rpassword]").val();
+    data.nome = $("input[name=name]").val();
+    data.pass  = $("input[name=rpassword]").val();
     data.email  = $("input[name=email]").val();
     
     if($("input[name=curso]").val())
@@ -45,7 +45,7 @@ function register(){
     else if($("input[name=departamento]").val())
         data.filiacao = "docente"
 
-    data.username  = $("input[name=email]").val();
+    data.username  = $("input[name=rusername]").val();
     data.curso  = $("input[name=curso]").val();
     data.departamento  = $("input[name=departamento]").val();
     data.instituicao = $("input[name=instituicao]").val();
@@ -56,8 +56,10 @@ function register(){
 
     xhr.onreadystatechange = function() {
         if(xhr.readyState == 4 && xhr.status == 200) {
-            //alert(xhr.responseText);
+            alert("heyy")
             window.location.replace("/login");
+        } else if(xhr.status == 409){
+            alert("Username or Email already exist");
         }
     }
 

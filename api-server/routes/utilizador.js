@@ -42,6 +42,8 @@ router.post('/', function(req, res) {
     user.salt = hash.salt
     user.pass = undefined
 
+    console.log(JSON.stringify(user))
+
     Utilizador.insert(user)
         .then(data => res.status(201).jsonp(filter_send(data)))
         .catch(error => {
@@ -55,6 +57,9 @@ router.post('/', function(req, res) {
 
 // POST /utilizadores/login
 router.post('/login', function(req, res) {
+
+    //console.log(req.body.username)
+
     Utilizador.credentials(req.body.username)
         .then(data => {
             if (crypto.compare(req.body.pass, data))

@@ -34,6 +34,30 @@ $(function() {
   })
 
 
+
+  //On Click -> Login
+  function login(){
+    var data = {};
+
+    data.username  = $("input[name=username]").val();
+    data.pass = $("input[name=password]").val();
+
+    var json = JSON.stringify(data);
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState == 4 && xhr.status == 200) {
+            window.location.replace("/feed");
+
+        }
+    }
+
+    xhr.open("POST", '/utilizadores/login', true);
+    xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+    xhr.send(json);
+}
+
 function register(){
     var data = {};
     data.nome = $("input[name=name]").val();

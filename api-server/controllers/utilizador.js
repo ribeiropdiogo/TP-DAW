@@ -12,13 +12,20 @@ module.exports.list = function() {
 
 
 // Returns a user record
-module.exports.lookup = function(id) {
+/*module.exports.lookup = function(id) {
     return Utilizador.findOne(
         {username: id},
         {hashedPassword: 0, salt: 0, __v: 0}
     ).exec()
 }
+*/
 
+module.exports.lookup = function(id) {
+    return Utilizador.findById(
+        id,
+        {hashedPassword: 0, salt: 0, __v: 0}
+    ).exec()
+}
 
 // Returns a user with the login credentials
 module.exports.credentials = function(id) {

@@ -13,7 +13,6 @@ var departamento = $(`
     </div>
 `)
 
-
 $(document).ready(function(){
 
     $("#sec_filiacao").append(curso);
@@ -49,9 +48,12 @@ $(function() {
     xhr.onreadystatechange = function() {
         if(xhr.readyState == 4 && xhr.status == 200) {
             window.location.replace("/feed");
-
+        } else if(xhr.status == 401){
+            alert("Check if your credentials are correct!");
+        } else if(xhr.status == 500){
+            alert("The server exploded, please try again later...");
         }
-    }
+    } 
 
     xhr.open("POST", '/utilizadores/login', true);
     xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
@@ -80,7 +82,6 @@ function register(){
 
     xhr.onreadystatechange = function() {
         if(xhr.readyState == 4 && xhr.status == 200) {
-            alert("heyy")
             window.location.replace("/login");
         } else if(xhr.status == 409){
             alert("Username or Email already exist");

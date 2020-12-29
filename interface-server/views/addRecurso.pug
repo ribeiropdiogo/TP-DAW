@@ -33,20 +33,19 @@ block body
                     .row
                         .col-lg-12
                             div(class='row', id='page-contents')
-                                .col-lg-2
-                                    aside(class='sidebar static')
-                                        .widget
-                                            h2.widget-title Categorias
-                                            ul.naves
-                                                li
-                                                    a(href='/', title='') Categoria 1
-                                                li
-                                                    a(href='/', title='') Categoria 2
-                                                li
-                                                    a(href='/', title='') Categoria 3
-                                                li
-                                                    a(href='/', title='') Categoria 4
-                                .col-lg-6
+                                .col-lg-8
+                                    .central-meta
+                                        .editing-info
+                                            h5.f-title Adicionar Recurso
+                                            form
+                                                .form-group.half
+                                                    input(type="text", id="titulo", name="titulo", required)
+                                                    label(class='control-label', for="titulo") Título
+                                                    i.mtrl-select
+                                                .form-group.half
+                                                    input(type="text", id="tipo", name="tipo", required)
+                                                    label(class='control-label', for="tipo") Categoria
+                                                    i.mtrl-select
                                 .col-lg-4
                                     aside(class='sidebar static')
                                         .widget
@@ -68,6 +67,12 @@ block body
                                                     a(href='/recursos/novo', title='') Adicionar Recurso
                                                 li
                                                     a(href='/recursos?username='+username, title='') Meus Recursos
+                                    aside(class='sidebar static')
+                                        .widget
+                                            h4.widget-title Categorias
+                                            ul.naves
+                                                li
+                                                    a(href='/categoria/novo', title='') Criar Categoria
     
 block footer
     .container

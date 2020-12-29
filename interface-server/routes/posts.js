@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+
 //Detalhes de um Post
 router.get('/:id', function(req, res, next) {
     res.jsonp("Interface Posts work.")

@@ -8,7 +8,7 @@ block head
     link(rel='stylesheet', href='/stylesheets/responsive.css')
     link(rel='icon', href='/img/favicon.png', type='image/png' sizes='16x16') 
     script(src='/javascript/main.min.js')
-    script(src='/javascript/custom.js')
+    script(src='/javascript/crud.js')
     script(src='/javascript/script.js')
 
 block body
@@ -33,15 +33,20 @@ block body
                     .row
                         .col-lg-12
                             div(class='row', id='page-contents')
-                                .col-lg-2
-                                    aside(class='sidebar static')
-                                        .widget
-                                            h2.widget-title Tipos
-                                            ul.naves
-                                                each t in tipos
-                                                    li
-                                                        a(href='/tipos'+t._id, title='')= t._id
-                                .col-lg-6
+                                .col-lg-8
+                                    .central-meta
+                                        .editing-info
+                                            h5.f-title Adicionar Tipo
+                                            form
+                                                .form-group
+                                                    input(type="text", id="nome", name="nome", required)
+                                                    label(class='control-label', for="nome") Nome do Tipo
+                                                    i.mtrl-select
+                                                .submit-btns
+                                                    button.mtr-btn(type='button', id='adicionar', onclick='postTipo()', style='margin-right: 5px;')
+                                                        span Adicionar
+                                                    button.mtr-btn(type='button', onclick='history.back();')
+                                                        span Cancelar
                                 .col-lg-4
                                     aside(class='sidebar static')
                                         .widget
@@ -63,7 +68,14 @@ block body
                                                     a(href='/recursos/novo', title='') Adicionar Recurso
                                                 li
                                                     a(href='/recursos?username='+username, title='') Meus Recursos
+                                    aside(class='sidebar static')
+                                        .widget
+                                            h4.widget-title Tipos
+                                            ul.naves
+                                                li
+                                                    a(href='/tipo/novo', title='') Criar Tipo
     
+   
 block footer
     .container
         .row
@@ -80,11 +92,11 @@ block footer
                         h4 Tipos
                     ul.list-style
                         li
-                            a(href='/tipos/'+tipos[0]._id, title='')= tipos[0]._id
+                            a(href='', title='') Categoria1
                         li
-                            a(href='/tipos/'+tipos[1]._id, title='')= tipos[1]._id
+                            a(href='', title='') Categoria2
                         li
-                            a(href='/tipos/'+tipos[2]._id, title='')= tipos[2]._id
+                            a(href='', title='') Categoria3
             .col-lg-2.col-md-4
                 .widget
                     .widget-title

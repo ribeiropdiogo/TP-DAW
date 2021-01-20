@@ -1,4 +1,5 @@
 const express = require('express')
+var axios = require('axios');
 const router = express.Router()
 
 /* ############################# */
@@ -7,7 +8,9 @@ const router = express.Router()
 
 /* GET home page. */
 router.get('/', verificaAutenticacao, function(req, res, next) {
-    res.render('home', {title: 'RepositóriDOIS', nome: req.user.nome, username: req.user.username, instituicao: req.user.instituicao, email: req.user.email});
+    axios.get('http://localhost:7000/tipos/top/5')
+        .then(t => res.render('home', {title: 'RepositóriDOIS', nome: req.user.nome, username: req.user.username, instituicao: req.user.instituicao, email: req.user.email, tipos: t.data}))
+        .catch(e => res.render('error', {error: e}));
 });
 
 //Obter Lista de Posts dos users que subscreve

@@ -6,6 +6,15 @@ module.exports.list = function() {
     return Tipo.find().exec()
 }
 
+// Returns Type list top 7
+module.exports.listTop = function(top) {
+    return Tipo
+        .find()
+        .sort({'recursos': 1})
+        .limit(parseInt(top))
+        .exec()
+}
+
 // Returns a type record
 module.exports.lookup = function(id) {
     return Tipo.findOne({_id: id}).exec()

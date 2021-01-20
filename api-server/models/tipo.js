@@ -2,7 +2,8 @@
 const mongoose = require('mongoose')
 
 var typeSchema = new mongoose.Schema({
-    nome: String
+    _id: String,
+    recursos: Number
 })
 
 module.exports = mongoose.model('tipo', typeSchema)

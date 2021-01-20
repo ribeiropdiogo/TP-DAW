@@ -17,6 +17,7 @@ db.once('open', function() {
 
 const usersRouter = require('./routes/utilizador')
 const postsRouter = require('./routes/posts')
+const tiposRouter = require('./routes/tipo')
 
 var app = express()
 
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use('/utilizadores', usersRouter)
 app.use('/posts', postsRouter)
+app.use('/tipos', tiposRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

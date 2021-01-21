@@ -15,7 +15,9 @@ router.get('/', verificaAutenticacao, function(req, res, next) {
 
 //Obter Lista de Posts dos users que subscreve
 router.get('/feed', verificaAutenticacao, function(req, res, next) {
-    res.render('home', {title: 'RepositóriDOIS', nome: req.user.nome, username: req.user.username, instituicao: req.user.instituicao, email: req.user.email});
+    axios.get('http://localhost:7000/tipos/top/5')
+        .then(t => res.render('home', {title: 'RepositóriDOIS', nome: req.user.nome, username: req.user.username, instituicao: req.user.instituicao, email: req.user.email, tipos: t.data}))
+        .catch(e => res.render('error', {error: e}));
 });
 
 router.get('/login', function(req, res, next) {

@@ -30,7 +30,7 @@ passport.use( new LocalStrategy({
 
 // Indica-se ao passport como serializar o utilizador
 passport.serializeUser((user,done) => {
-    console.log('Serialização, id: ' + user._id)
+    //console.log('Serialização, id: ' + user._id)
     done(null, user._id)
   })
 
@@ -78,8 +78,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(function(req, res, next){
-    console.log('Signed Cookies: ', JSON.stringify(req.signedCookies))
-    console.log('Session: ', JSON.stringify(req.session))
+    //console.log('Signed Cookies: ', JSON.stringify(req.signedCookies))
+    //console.log('Session: ', JSON.stringify(req.session))
     next()
   })
 

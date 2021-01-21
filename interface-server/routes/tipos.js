@@ -17,7 +17,6 @@ router.post('/', function(req, res) {
       .catch(erro => {
           res.jsonp(erro)
       })
-  
 });
 
 function verificaAutenticacao(req, res, next){

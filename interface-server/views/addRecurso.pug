@@ -8,7 +8,7 @@ block head
     link(rel='stylesheet', href='/stylesheets/responsive.css')
     link(rel='icon', href='/img/favicon.png', type='image/png' sizes='16x16') 
     script(src='/javascript/main.min.js')
-    script(src='/javascript/custom.js')
+    script(src='/javascript/crud.js')
     script(src='/javascript/script.js')
 
 block body
@@ -43,9 +43,35 @@ block body
                                                     label(class='control-label', for="titulo") Título
                                                     i.mtrl-select
                                                 .form-group.half
-                                                    input(type="text", id="tipo", name="tipo", required)
-                                                    label(class='control-label', for="tipo") Categoria
+                                                    input(type="text", id="subtitulo", name="subtitulo")
+                                                    label(class='control-label', for="subtitulo") Subtítulo
                                                     i.mtrl-select
+                                                .form-group
+                                                    select(style="display: none;", id="tipo")
+                                                        option(value="Tipo", disabled) Tipo
+                                                        each tipo in tipos
+                                                            option(value=tipo._id)= tipo._id
+                                                .form-radio
+                                                    .radio
+                                                        label
+                                                            input(type="radio", id="visibilidade", name="visibilidade", value="Público" )
+                                                            i.check-box
+                                                            | Público
+                                                    .radio
+                                                        label
+                                                            input(type="radio", id="visibilidade", name="visibilidade", value="Privado", checked="checked" )
+                                                            i.check-box
+                                                            | Privado
+                                                .form-group
+                                                    input(type="text", id="tags", name="tags")
+                                                    label(class='control-label', for="tags") Tags (separadas por vírgulas)
+                                                    i.mtrl-select
+                                                input(type="hidden", id="username", name="username" value=username)
+                                                .submit-btns
+                                                    button.mtr-btn(type='button', id='adicionar', onclick='postRecurso()', style='margin-right: 5px;')
+                                                        span Adicionar
+                                                    button.mtr-btn(type='button', onclick='history.back();')
+                                                        span Cancelar
                                 .col-lg-4
                                     aside(class='sidebar static')
                                         .widget

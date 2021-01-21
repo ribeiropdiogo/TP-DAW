@@ -7,7 +7,7 @@ var resourceSchema = new mongoose.Schema({
     subtitulo: String,
     dataCriacao: Date,
     dataRegisto: Date,
-    visibilidade: Boolean,
+    visibilidade: String,
     autor: String,
     tags: [String]
 })

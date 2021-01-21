@@ -18,6 +18,7 @@ db.once('open', function() {
 const usersRouter = require('./routes/utilizador')
 const postsRouter = require('./routes/posts')
 const tiposRouter = require('./routes/tipo')
+const recursosRouter = require('./routes/recurso')
 
 var app = express()
 
@@ -27,6 +28,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 app.use('/utilizadores', usersRouter)
+app.use('/recursos', recursosRouter)
 app.use('/posts', postsRouter)
 app.use('/tipos', tiposRouter)
 

@@ -31,6 +31,5 @@ module.exports.edit = function(id, u) {
 module.exports.remove = function(id) {
     return Utilizador
         .deleteOne({username: id})
-        .select({hashedPassword: 0, salt: 0, __v: 0})
         .exec()
 }

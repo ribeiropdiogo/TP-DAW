@@ -28,44 +28,6 @@ response
 
 
 -----------------------------------------------------------------------------------------
-POST /utilizadores ----------------------------------------------------------------------
-- Regista um utilizador
-
-request
-    body = {username, nome, email, filiacao, curso, departamento, instituicao, pass}
-
-response
-    success
-        status_code = 201
-        body = {_id, username, nome, email, filiacao, curso, departamento, instituicao,
-                admin, dataRegisto, ultimoAcesso}
-    error
-        username/email already exist
-            status_code = 409
-        other
-            status_code = 500
-
-
------------------------------------------------------------------------------------------
-POST /utilizadores/login ----------------------------------------------------------------
-- Inicia sessão a um utilizador
-
-request
-    body = {username, pass}
-
-response
-    success
-        status_code = 200
-        body = {_id, username, nome, email, filiacao, curso, departamento,
-                instituicao, admin, dataRegisto, ultimoAcesso}
-    error
-        invalid credentials
-            status_code = 401
-        other
-            status_code = 500
-
-
------------------------------------------------------------------------------------------
 PUT /utilizadores/:id -------------------------------------------------------------------
 - Atualiza a informação de um dado utilizador
 
@@ -76,7 +38,8 @@ request
 response
     success
         status_code = 200
-        body = utilizador atualizado
+        body = {_id, username, nome, email, filiacao, curso, departamento, instituicao,
+                admin, dataRegisto, ultimoAcesso}
     error
         status_code = 500
 

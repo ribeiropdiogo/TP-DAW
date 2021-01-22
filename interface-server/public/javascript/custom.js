@@ -34,12 +34,12 @@ $(function() {
 
 
 
-  //On Click -> Login
-  function login(){
+//On Click -> Login
+function login(){
     var data = {};
 
     data.username  = $("input[name=username]").val();
-    data.pass = $("input[name=password]").val();
+    data.password = $("input[name=password]").val();
 
     var json = JSON.stringify(data);
 

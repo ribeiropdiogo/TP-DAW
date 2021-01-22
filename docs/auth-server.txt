@@ -14,10 +14,12 @@ response
                                 instituicao, admin, dataRegisto, ultimoAcesso}
                }
     error
-        username/email already exists
+        username or email already exists
             status_code = 409
+            body = { error: {...} }
         other
             status_code = 500
+            body = { error: {...} }
 
 
 -----------------------------------------------------------------------------------------
@@ -36,7 +38,9 @@ response
                                 instituicao, admin, dataRegisto, ultimoAcesso}
                }
     error
-        invalid credentials
+        invalid username or password
             status_code = 401
+            body = { error: "..." }
         other
             status_code = 500
+            body = { error: {...} }

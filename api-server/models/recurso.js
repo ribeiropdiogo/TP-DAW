@@ -8,6 +8,7 @@ var resourceSchema = new mongoose.Schema({
     dataCriacao: Date,
     dataRegisto: Date,
     visibilidade: String,
+    nome: String,
     autor: String,
     tags: [String]
 })

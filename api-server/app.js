@@ -16,10 +16,10 @@ db.once('open', function() {
     console.log('Connected to MongoDB...')
 })
 
-const usersRouter = require('./routes/utilizador')
+const usersRouter = require('./routes/utilizadores')
 const postsRouter = require('./routes/posts')
-const tiposRouter = require('./routes/tipo')
-const recursosRouter = require('./routes/recurso')
+const tiposRouter = require('./routes/tipos')
+const recursosRouter = require('./routes/recursos')
 
 var app = express()
 

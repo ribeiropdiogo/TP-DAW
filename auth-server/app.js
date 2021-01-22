@@ -24,7 +24,7 @@ const LocalStrategy = require('passport-local').Strategy
 const Utilizador = require('./controllers/utilizador')
 
 passport.use(new LocalStrategy(
-    {usernameField: 'username', passwordField: 'pass'},
+    {usernameField: 'username', passwordField: 'password'},
     (username, password, done) => {
         console.log('Verificar password...')
         Utilizador.lookupWithCredentials(username)
@@ -40,7 +40,7 @@ passport.use(new LocalStrategy(
 ))
 
 passport.serializeUser((ut, done) => {
-    console.log('Serielização, uname: ' + ut.username)
+    console.log('Serielização, username: ' + ut.username)
     done(null, ut.username)
 })
 

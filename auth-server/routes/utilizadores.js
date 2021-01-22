@@ -17,10 +17,10 @@ router.post('/', function(req, res) {
     user.ultimoAcesso = user.dataRegisto
 
     // hashing da palavra-passe
-    var hash = crypto.hasher(user.pass, crypto.generateSalt())
+    var hash = crypto.hasher(user.password, crypto.generateSalt())
     user.hashedPassword = hash.hashedPassword
     user.salt = hash.salt
-    user.pass = undefined
+    user.password = undefined
 
     Utilizador.insert(user)
         .then(dados => {
@@ -32,8 +32,11 @@ router.post('/', function(req, res) {
                     if (e) {
                         res.status(500).jsonp({error: 'Erro na geração do token: ' + e}) 
                     } else {
-                        dados.token = token
-                        res.status(201).jsonp(Utilizador.filter(dados))
+                        var res_obj = {
+                            token: token,
+                            utilizador: Utilizador.filter(dados)
+                        }
+                        res.status(201).jsonp(res_obj)
                     }
                 }
             )
@@ -58,8 +61,11 @@ router.post('/login', passport.authenticate('local'), function(req, res) {
             if (e) {
                 res.status(500).jsonp({error: 'Erro na geração do token: ' + e}) 
             } else {
-                req.user.token = token
-                res.status(200).jsonp(req.user)
+                var res_obj = {
+                    token: token,
+                    utilizador: req.user
+                }
+                res.status(200).jsonp(res_obj)
             }
         }
     )

@@ -1,0 +1,42 @@
+-----------------------------------------------------------------------------------------
+POST /utilizadores ----------------------------------------------------------------------
+- Regista um utilizador
+
+request
+    body = {username, nome, email, filiacao, curso, departamento, instituicao, password}
+
+response
+    success
+        status_code = 201
+        body = {
+                   token,
+                   utilizador: {_id, username, nome, email, filiacao, curso, departamento,
+                                instituicao, admin, dataRegisto, ultimoAcesso}
+               }
+    error
+        username/email already exists
+            status_code = 409
+        other
+            status_code = 500
+
+
+-----------------------------------------------------------------------------------------
+POST /utilizadores/login ----------------------------------------------------------------
+- Inicia sessão a um utilizador
+
+request
+    body = {username, password}
+
+response
+    success
+        status_code = 200
+        body = {
+                   token,
+                   utilizador: {_id, username, nome, email, filiacao, curso, departamento,
+                                instituicao, admin, dataRegisto, ultimoAcesso}
+               }
+    error
+        invalid credentials
+            status_code = 401
+        other
+            status_code = 500

@@ -14,8 +14,7 @@ var userSchema = new mongoose.Schema({
     dataRegisto: Date,
     ultimoAcesso: Date,
     hashedPassword: String,
-    salt: String,
-    token: String
+    salt: String
 })
 
 

@@ -8,8 +8,10 @@ block head
     link(rel='stylesheet', href='/stylesheets/responsive.css')
     link(rel='icon', href='/img/favicon.png', type='image/png' sizes='16x16') 
     script(src='/javascript/main.min.js')
-    script(src='/javascript/crud.js')
     script(src='/javascript/script.js')
+    script(src='/javascript/crud.js')
+    script(src='/javascript/jszip.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/sha256.js')
 
 block body
     .theme-layout
@@ -43,7 +45,7 @@ block body
                                                     label(class='control-label', for="titulo") Título
                                                     i.mtrl-select
                                                 .form-group.half
-                                                    input(type="text", id="subtitulo", name="subtitulo")
+                                                    input(type="text", id="subtitulo", name="subtitulo", required)
                                                     label(class='control-label', for="subtitulo") Subtítulo
                                                     i.mtrl-select
                                                 .form-group
@@ -63,7 +65,11 @@ block body
                                                             i.check-box
                                                             | Privado
                                                 .form-group
-                                                    input(type="text", id="tags", name="tags")
+                                                    input(type="file", id="conteudo", name="conteudo", accept=".pdf,.zip,.doc,.docx,.xls,.xlsx,.txt")
+                                                    label(class='control-label', for="conteudo") Ficheiro
+                                                    i.mtrl-select
+                                                .form-group
+                                                    input(type="text", id="tags", name="tags", required)
                                                     label(class='control-label', for="tags") Tags (separadas por vírgulas)
                                                     i.mtrl-select
                                                 input(type="hidden", id="username", name="username" value=username)

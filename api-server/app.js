@@ -3,6 +3,7 @@ const express = require('express')
 const logger = require('morgan')
 const mongoose = require('mongoose')
 const cors = require('cors')
+var bodyParser = require('body-parser')
 
 const mongoDB = 'mongodb://127.0.0.1/RepositoriDOIS'
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true})
@@ -15,17 +16,17 @@ db.once('open', function() {
     console.log('Connected to MongoDB...')
 })
 
-const usersRouter = require('./routes/utilizador')
+const usersRouter = require('./routes/utilizadores')
 const postsRouter = require('./routes/posts')
-const tiposRouter = require('./routes/tipo')
-const recursosRouter = require('./routes/recurso')
+const tiposRouter = require('./routes/tipos')
+const recursosRouter = require('./routes/recursos')
 
 var app = express()
 
 app.use(cors())
 app.use(logger('dev'))
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/utilizadores', usersRouter)
 app.use('/recursos', recursosRouter)

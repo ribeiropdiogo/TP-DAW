@@ -55,18 +55,7 @@ router.post('/login', function(req, res) {
 
 
 //Logout --> Tem que se adicionar os tokens a uma BLACKLIST
-/*
-router.get('/logout', function(req, res){
-    req.logout();
-    req.session.destroy(function (err) {
-      if (!err) {
-          res.redirect('/');
-      } else {
-          console.log('Destroy session error: ', err)
-      }
-    });
-  });
-*/
+
 
 //Editar dados
 router.put('/editar', function(req, res, next) {

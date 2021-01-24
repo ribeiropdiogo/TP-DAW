@@ -63,7 +63,7 @@ function login(){
 function register(){
     var data = {};
     data.nome = $("input[name=name]").val();
-    data.pass  = $("input[name=rpassword]").val();
+    data.password  = $("input[name=rpassword]").val();
     data.email  = $("input[name=email]").val();
     
     if($("input[name=curso]").val())

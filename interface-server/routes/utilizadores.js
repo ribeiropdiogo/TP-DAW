@@ -37,34 +37,25 @@ router.post('/', [check('email').isEmail(), check('pass').isLength({ min: 5 })],
     
 });
 
-
 //Login
-/*
 router.post('/login', function(req, res) {
-    
-    //console.log(req.body);
-    
-    axios.post('http://localhost:7000/utilizadores/login', req.body)
-        .then(resp => {
-            console.log(resp.data)
-            res.jsonp(resp.data)
-        })
-        .catch(erro => {
-            res.jsonp(erro)
-        })
-    
-});
-*/
+    axios.post('http://localhost:6000/utilizadores/login', req.body)
+      .then(resp => {
+        res.cookie('token', resp.data.token, {
+          expires: new Date(Date.now() + '3h'),
+          secure: false, 
+          httpOnly: true
+        });
+        res.redirect('/feed')
+        //res.redirect('/feed').send() -- ver
+    })
+      .catch(e => res.render('error', {error: e}))
+  });
 
-//Login -- Passport
 
-router.post('/login', passport.authenticate('local'), function(req, res) {
-        
-    res.redirect("/feed")
-    
-});
 
-//Logout
+//Logout --> Tem que se adicionar os tokens a uma BLACKLIST
+/*
 router.get('/logout', function(req, res){
     req.logout();
     req.session.destroy(function (err) {
@@ -75,7 +66,7 @@ router.get('/logout', function(req, res){
       }
     });
   });
-  
+*/
 
 //Editar dados
 router.put('/editar', function(req, res, next) {

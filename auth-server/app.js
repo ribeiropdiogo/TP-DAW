@@ -24,14 +24,14 @@ const LocalStrategy = require('passport-local').Strategy
 const Utilizador = require('./controllers/utilizador')
 
 passport.use(new LocalStrategy(
-    {usernameField: 'username', passwordField: 'password'},
-    (username, password, done) => {
+    {usernameField: 'username', passwordField: 'pass'},
+    (username, pass, done) => {
         console.log('Verificar password...')
         Utilizador.lookupWithCredentials(username)
             .then(ut => {
                 if (!ut)
                     return done(null, false, {message: 'Utilizador inexistente!\n'})
-                if (!crypto.compare(password, ut))
+                if (!crypto.compare(pass, ut))
                     return done(null, false, {message: 'Credenciais inválidas!\n'})
                 return done(null, Utilizador.filter(ut))
             })

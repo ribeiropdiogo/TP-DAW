@@ -1,7 +1,6 @@
 const createError = require('http-errors')
 const express = require('express')
 const logger = require('morgan')
-const crypto = require('./util/crypto')
 
 
 // Mongo
@@ -17,41 +16,6 @@ db.once('open', function() {
 })
 
 
-// Passport
-const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
-
-const Utilizador = require('./controllers/utilizador')
-
-passport.use(new LocalStrategy(
-    {usernameField: 'username', passwordField: 'pass'},
-    (username, pass, done) => {
-        console.log('Verificar password...')
-        Utilizador.lookupWithCredentials(username)
-            .then(ut => {
-                if (!ut)
-                    return done(null, false, {message: 'Utilizador inexistente!\n'})
-                if (!crypto.compare(pass, ut))
-                    return done(null, false, {message: 'Credenciais inválidas!\n'})
-                return done(null, Utilizador.filter(ut))
-            })
-            .catch(e => done(e))
-    }
-))
-
-passport.serializeUser((ut, done) => {
-    console.log('Serielização, username: ' + ut.username)
-    done(null, ut.username)
-})
-
-passport.deserializeUser((username, done) => {
-    console.log('Desserielização, username: ' + username)
-    Utilizador.lookup(username)
-        .then(ut => done(null, ut))
-        .catch(e => done(e, false))
-})
-
-
 const utilizadoresRouter = require('./routes/utilizadores')
 
 var app = express()
@@ -59,9 +23,6 @@ var app = express()
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-
-app.use(passport.initialize())
-app.use(passport.session())
 
 app.use('/utilizadores', utilizadoresRouter)
 

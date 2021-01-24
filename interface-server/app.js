@@ -2,6 +2,10 @@ const createError = require('http-errors')
 const express = require('express')
 const path = require('path')
 const logger = require('morgan')
+var bodyParser = require('body-parser')
+
+var multer = require('multer')
+var upload = multer({ dest: 'uploads/' })
 
 var cookieParser = require('cookie-parser');
 
@@ -29,11 +33,21 @@ app.set('view engine', 'pug')
 
 app.use(logger('dev'))
 app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser('wazzzup'));
 app.use(express.static(path.join(__dirname, 'public')))
 
+app.use(passport.initialize());
+app.use(passport.session());
 
+app.use(function(req, res, next){
+    //console.log('Signed Cookies: ', JSON.stringify(req.signedCookies))
+    //console.log('Session: ', JSON.stringify(req.session))
+    next()
+  })
+
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/posts', postsRouter)
 app.use('/recursos', recursosRouter)
 app.use('/utilizadores', usersRouter)

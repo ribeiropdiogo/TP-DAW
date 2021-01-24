@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const passport = require('passport')
 const jwt = require('jsonwebtoken')
 const crypto = require('../util/crypto')
 
@@ -8,7 +7,7 @@ const Utilizador = require('../controllers/utilizador')
 
 
 // POST /utilizadores
-router.post('/', function(req, res) {
+router.post('/', function(req, res, next) {
     const user = req.body
 
     // valores por omissão
@@ -24,22 +23,8 @@ router.post('/', function(req, res) {
 
     Utilizador.insert(user)
         .then(dados => {
-            jwt.sign(
-                {username: dados.username, admin: dados.admin},
-                'RepositoriDOIS',
-                {expiresIn: '3h'},
-                function(e, token) {
-                    if (e) {
-                        res.status(500).jsonp({error: 'Erro na geração do token: ' + e}) 
-                    } else {
-                        var res_obj = {
-                            token: token,
-                            utilizador: Utilizador.filter(dados)
-                        }
-                        res.status(201).jsonp(res_obj)
-                    }
-                }
-            )
+            req.user = Utilizador.filter(dados)
+            next()
         })
         .catch(e => {
             if (e.name === 'MongoError' && e.code === 11000)
@@ -48,28 +33,55 @@ router.post('/', function(req, res) {
                 res.status(500)
             res.jsonp({error: e})
         })
+
+}, sign, function(req, res) {
+    res.status(201).jsonp({token: req.token, utilizador: req.user})
 })
 
 
 // POST /utilizadores/login
-router.post('/login', passport.authenticate('local'), function(req, res) {
+router.post('/login', authenticate, sign, function(req, res) {
+    res.status(200).jsonp({token: req.token, utilizador: req.user})
+})
+
+
+// Authentication middleware
+function authenticate(req, res, next) {
+    Utilizador.lookupWithCredentials(req.body.username)
+        .then(dados => {
+            if (!dados) {
+                res.status(401).jsonp({error: 'Utilizador inexistente!'})
+
+            } else if (!crypto.compare(req.body.password, dados)) {
+                res.status(401).jsonp({error: 'Credenciais inválidas!'})
+
+            } else {
+                req.user = Utilizador.filter(dados)
+                next()
+            }
+        })
+        .catch(e => res.status(500).jsonp({error: e}))
+}
+
+
+// Token signing middleware
+function sign(req, res, next) {
+    const user = req.user
+
     jwt.sign(
-        {username: req.user.username, admin: req.user.admin},
+        {username: user.username, admin: user.admin},
         'RepositoriDOIS',
         {expiresIn: '3h'},
         function(e, token) {
             if (e) {
-                res.status(500).jsonp({error: 'Erro na geração do token: ' + e}) 
+                res.status(500).jsonp({error: e})
             } else {
-                var res_obj = {
-                    token: token,
-                    utilizador: req.user
-                }
-                res.status(200).jsonp(res_obj)
+                req.token = token
+                next()
             }
         }
     )
-})
+}
 
 
 module.exports = router

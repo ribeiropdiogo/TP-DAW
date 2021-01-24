@@ -34,12 +34,12 @@ $(function() {
 
 
 
-  //On Click -> Login
-  function login(){
+//On Click -> Login
+function login(){
     var data = {};
 
     data.username  = $("input[name=username]").val();
-    data.pass = $("input[name=password]").val();
+    data.password = $("input[name=password]").val();
 
     var json = JSON.stringify(data);
 
@@ -63,7 +63,7 @@ $(function() {
 function register(){
     var data = {};
     data.nome = $("input[name=name]").val();
-    data.pass  = $("input[name=rpassword]").val();
+    data.password  = $("input[name=rpassword]").val();
     data.email  = $("input[name=email]").val();
     
     if($("input[name=curso]").val())

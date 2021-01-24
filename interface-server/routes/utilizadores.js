@@ -27,7 +27,7 @@ router.post('/', [check('email').isEmail(), check('pass').isLength({ min: 5 })],
         return res.status(422).json({ errors: errors.array() })
     }
     
-    axios.post('http://localhost:7000/utilizadores/', req.body)
+    axios.post('http://localhost:6000/utilizadores/', req.body)
         .then(resp => {
             res.jsonp(resp)
         })

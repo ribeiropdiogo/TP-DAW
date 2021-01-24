@@ -3,6 +3,8 @@ const express = require('express')
 const logger = require('morgan')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const jwt = require('jsonwebtoken')
+
 var bodyParser = require('body-parser')
 
 const mongoDB = 'mongodb://127.0.0.1/RepositoriDOIS'
@@ -27,6 +29,24 @@ app.use(cors())
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+
+//Verifica se o pedido vem com token de acesso
+app.use(function(req, res, next) {
+    var myToken = req.query.token || req.body.token
+    if(myToken){
+        jwt.verify(myToken, "RepositoriDOIS", function(e, payload){
+            if(e){
+                res.status(401).jsonp({error: e})
+            }else{
+                next()
+            }
+        })
+    }else{
+        res.status(401).jsonp({error: "Token Inexistente!"})
+    }
+})
+
 
 app.use('/utilizadores', usersRouter)
 app.use('/recursos', recursosRouter)

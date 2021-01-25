@@ -3,7 +3,23 @@ const Recurso = require('../models/recurso')
 
 // Returns Resource list
 module.exports.list = function() {
+    return Recurso.find({visibilidade: "Público"}).exec()
+}
+
+module.exports.listAll = function() {
     return Recurso.find().exec()
+}
+
+module.exports.listByTipo = function(t) {
+    return Recurso.find({visibilidade: "Público", tipo: t}).exec()
+}
+
+module.exports.listByUser = function(a) {
+    return Recurso.find({visibilidade: "Público", autor: a}).exec()
+}
+
+module.exports.listAllByUser = function(a) {
+    return Recurso.find({autor: a}).exec()
 }
 
 // Returns a resource record

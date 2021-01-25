@@ -40,7 +40,7 @@ block body
                                             ul.naves
                                                 each t in tipos
                                                     li
-                                                        a(href='/tipos'+t._id, title='')= t._id
+                                                        a(href='/recursos?tipo='+t._id, title='')= t._id
                                 .col-lg-6
                                 .col-lg-4
                                     aside(class='sidebar static')
@@ -89,6 +89,9 @@ block footer
                 .widget
                     .widget-title
                         h4 Links Úteis
+                    ul.list-style
+                        li
+                            a(href='/recursos/', title='') Recursos
             .col-lg-4.col-md-4
                 .widget
                     .widget-title

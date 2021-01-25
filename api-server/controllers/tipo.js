@@ -10,7 +10,7 @@ module.exports.list = function() {
 module.exports.listTop = function(top) {
     return Tipo
         .find()
-        .sort({'recursos': 1})
+        .sort({'recursos': -1})
         .limit(parseInt(top))
         .exec()
 }
@@ -18,6 +18,11 @@ module.exports.listTop = function(top) {
 // Returns a type record
 module.exports.lookup = function(id) {
     return Tipo.findOne({_id: id}).exec()
+}
+
+// Returns a type record
+module.exports.increment = function(t) {
+    return Tipo.findOneAndUpdate({_id: t}, {$inc: {recursos: 1}}).exec()
 }
 
 // Inserts a new type

@@ -29,6 +29,8 @@ router.get('/novo', function(req, res) {
         .catch(e => res.render('error', {error: e}))
 });
 
+
+
 router.post('/', upload.single('conteudo'), function(req, res) {
 
   let path = __dirname + '/../' + req.file.path
@@ -38,10 +40,12 @@ router.post('/', upload.single('conteudo'), function(req, res) {
   form.append('conteudo', fs.createReadStream(path));
 
   const request_config = {
-    headers: form.getHeaders()
+    headers: form.getHeaders(),
   };
+  
 
-  axios.post('http://localhost:7000/recursos', form, request_config)
+  axios.post('http://localhost:7000/recursos?token=' + req.cookies.token, form, request_config)
+
       .then(resp => {
         fs.unlinkSync(path);
         res.status(201).jsonp(resp);

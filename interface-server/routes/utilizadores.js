@@ -55,6 +55,10 @@ router.post('/login', function(req, res) {
 
 
 //Logout --> Tem que se adicionar os tokens a uma BLACKLIST
+router.get('/logout', function(req, res, next) {
+    res.clearCookie("token")
+    res.redirect('/login')
+});
 
 
 //Editar dados

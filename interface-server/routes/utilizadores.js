@@ -17,7 +17,7 @@ router.get('/dados/:id', function(req, res, next) {
 
 //Registar novo utilziador
 //Valida se é um email e se pwd tem pelo menos tamanho 5
-router.post('/', [check('email').isEmail(), check('pass').isLength({ min: 5 })], function(req, res) {
+router.post('/', [check('email').isEmail(), check('password').isLength({ min: 5 })], function(req, res) {
     console.log(req.body);
 
     const errors = validationResult(req)

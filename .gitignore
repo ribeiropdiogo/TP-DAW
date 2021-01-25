@@ -1,6 +1,6 @@
 # App Resources
 
-#api-server/recursos/*
+api-server/recursos/*
 api-server/uploads/*.zip
 
 # Logs

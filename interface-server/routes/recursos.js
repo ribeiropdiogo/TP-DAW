@@ -60,12 +60,7 @@ router.post('/', upload.single('conteudo'), function(req, res) {
       })
       .catch(err => {
             
-        if(err.response.data.error.name == 'TokenExpiredError'){
-            res.clearCookie("token")
-            res.redirect('/login')
-        }else{
             res.render('error', {error: err})
-        }
     })
 });
 

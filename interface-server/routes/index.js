@@ -47,6 +47,8 @@ router.get('/', function(req, res, next) {
 //Obter Lista de Posts dos users que subscreve
 router.get('/feed', function(req, res) {
     
+    if(req.cookies.token != null){
+
     let usrname = jwt.decode(req.cookies.token).username
 
     axios.get('http://localhost:7000/utilizadores/' + usrname + '?token=' + req.cookies.token)
@@ -60,8 +62,21 @@ router.get('/feed', function(req, res) {
                 .catch(e => res.render('error', {error: e}))
 
         })
-        .catch(err => res.render('error', {error: err}))
+        .catch(err => {
+            console.log(err.response.data.error.name)
+            
+            if(err.response.data.error.name == 'TokenExpiredError'){
+                res.clearCookie("token")
+                res.redirect('/login')
+            }else{
+                res.render('error', {error: err})
+            }
+        })
 
+    }else{
+
+        res.redirect('/login')
+    }
     
   });
 

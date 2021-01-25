@@ -1,3 +1,8 @@
+# App Resources
+
+api-server/recursos/*
+api-server/uploads/*
+
 # Logs
 logs
 *.log

@@ -65,6 +65,7 @@ router.post('/', upload.single('conteudo'), function(req, res) {
                                 Recurso.insert(meta)
                                     .then(data => { 
                                         var newPath = __dirname + '/../' + 'recursos/' + getPath(data._id.toString()) + '/' + meta.nome;
+                                        
                                         // Create path if not exists
                                         if (!fs.existsSync(__dirname + '/../' + 'recursos/' + getPath(data._id.toString()))){
                                             fs.mkdirSync(
@@ -72,10 +73,12 @@ router.post('/', upload.single('conteudo'), function(req, res) {
                                                 { recursive: true }
                                             );
                                         }
+                                        
                                         // Move file to storage tree
                                         fs.rename(fpath, newPath, function(err) {
                                             if (err) console.log(err)
                                         })
+
                                         res.status(201).jsonp(data)
                                     })
                                     .catch(error => res.status(500).jsonp(error))

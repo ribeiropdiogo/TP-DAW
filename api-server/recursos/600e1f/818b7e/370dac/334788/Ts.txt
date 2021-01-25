@@ -1,0 +1,6 @@
+###Ficha 1##
+
+4.  	CWE-20 - Inproper Input Validation - An attacker could use malicious input to modify data or possibly alter control flow in unexpected ways, including arbitrary command execution. 
+
+
+	

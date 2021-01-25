@@ -28,9 +28,13 @@ router.get('/', function(req, res, next) {
             })
             .catch(err => {
                 console.log(err.response.data.error.name)
-                if(err.response.data.error.name == 'TokenExpiredError')
-                    res.clearCookie("token").redirect('/login')
-                res.render('error', {error: err})
+                
+                if(err.response.data.error.name == 'TokenExpiredError'){
+                    res.clearCookie("token")
+                    res.redirect('/login')
+                }else{
+                    res.render('error', {error: err})
+                }
             })
 
     }else{

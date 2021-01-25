@@ -42,7 +42,7 @@ router.post('/login', function(req, res) {
     axios.post('http://localhost:6000/utilizadores/login', req.body)
       .then(resp => {
         res.cookie('token', resp.data.token, {
-          expires: new Date(Date.now() + '3h'),
+          expires: new Date(Date.now() + '1h'),
           secure: false, 
           httpOnly: true
         });
@@ -55,9 +55,17 @@ router.post('/login', function(req, res) {
 
 
 //Logout --> Tem que se adicionar os tokens a uma BLACKLIST
-router.get('/logout', function(req, res, next) {
-    res.clearCookie("token")
-    res.redirect('/login')
+router.get('/logout', function(req, res) {
+
+    req.body.token = req.cookies.token
+    req.body.blacklist = true
+
+    axios.post('http://localhost:7000/logout', req.body)
+    .then(resp => {
+        res.clearCookie("token")
+        res.redirect('/login')
+      })
+    .catch(e => res.render('error', {error: e}))
 });
 
 

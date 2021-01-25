@@ -2,26 +2,10 @@
 const Utilizador = require('../models/utilizador')
 
 
-module.exports.filter = function(u) {
-    u.hashedPassword = undefined
-    u.salt = undefined
-    u.__v = undefined
-    return u
-}
-
-
-// Returns a user record
-module.exports.lookup = function(id) {
+// Returns a user's login credentials
+module.exports.lookupCredentials = function(id) {
     return Utilizador
-        .findOne({username: id}, {hashedPassword: 0, salt: 0, __v: 0})
-        .exec()
-}
-
-
-// Returns a user with the login credentials
-module.exports.lookupWithCredentials = function(id) {
-    return Utilizador
-        .findOne({username: id}, {__v: 0})
+        .findOne({username: id}, {_id: 0, username: 1, admin: 1, salt: 1, hashedPassword: 1})
         .exec()
 }
 

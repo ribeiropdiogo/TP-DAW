@@ -8,11 +8,7 @@ request
 response
     success
         status_code = 201
-        body = {
-                   token,
-                   utilizador: {_id, username, nome, email, filiacao, curso, departamento,
-                                instituicao, admin, dataRegisto, ultimoAcesso}
-               }
+        body = { token }
     error
         username or email already exists
             status_code = 409
@@ -32,11 +28,7 @@ request
 response
     success
         status_code = 200
-        body = {
-                   token,
-                   utilizador: {_id, username, nome, email, filiacao, curso, departamento,
-                                instituicao, admin, dataRegisto, ultimoAcesso}
-               }
+        body = { token }
     error
         invalid username or password
             status_code = 401

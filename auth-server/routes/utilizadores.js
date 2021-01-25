@@ -71,7 +71,7 @@ function sign(req, res, next) {
     jwt.sign(
         {username: user.username, admin: user.admin},
         'RepositoriDOIS',
-        {expiresIn: '3h'},
+        {expiresIn: '1h'},
         function(e, token) {
             if (e) {
                 res.status(500).jsonp({error: e})

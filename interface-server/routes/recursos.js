@@ -26,7 +26,15 @@ router.get('/novo', function(req, res) {
                 .catch(e => res.render('error', {error: e}));
 
         })
-        .catch(e => res.render('error', {error: e}))
+        .catch(err => {
+            
+            if(err.response.data.error.name == 'TokenExpiredError'){
+                res.clearCookie("token")
+                res.redirect('/login')
+            }else{
+                res.render('error', {error: err})
+            }
+        })
 });
 
 
@@ -50,9 +58,15 @@ router.post('/', upload.single('conteudo'), function(req, res) {
         fs.unlinkSync(path);
         res.status(201).jsonp(resp);
       })
-      .catch(erro => {
-          res.jsonp(erro)
-      })
+      .catch(err => {
+            
+        if(err.response.data.error.name == 'TokenExpiredError'){
+            res.clearCookie("token")
+            res.redirect('/login')
+        }else{
+            res.render('error', {error: err})
+        }
+    })
 });
 
 

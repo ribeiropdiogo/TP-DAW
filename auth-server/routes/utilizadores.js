@@ -7,7 +7,18 @@ const Utilizador = require('../controllers/utilizador')
 
 
 // POST /utilizadores
-router.post('/', function(req, res, next) {
+router.post('/', createAccount, sign, function(req, res) {
+    res.status(201).jsonp({token: req.token})
+})
+
+
+// POST /utilizadores/login
+router.post('/login', authenticate, sign, function(req, res) {
+    res.status(200).jsonp({token: req.token})
+})
+
+
+function createAccount(req, res, next) {
     const user = req.body
 
     // valores por omissão
@@ -23,7 +34,7 @@ router.post('/', function(req, res, next) {
 
     Utilizador.insert(user)
         .then(dados => {
-            req.user = Utilizador.filter(dados)
+            req.user = {username: dados.username, admin: dados.admin}
             next()
         })
         .catch(e => {
@@ -33,21 +44,11 @@ router.post('/', function(req, res, next) {
                 res.status(500)
             res.jsonp({error: e})
         })
-
-}, sign, function(req, res) {
-    res.status(201).jsonp({token: req.token, utilizador: req.user})
-})
+}
 
 
-// POST /utilizadores/login
-router.post('/login', authenticate, sign, function(req, res) {
-    res.status(200).jsonp({token: req.token, utilizador: req.user})
-})
-
-
-// Authentication middleware
 function authenticate(req, res, next) {
-    Utilizador.lookupWithCredentials(req.body.username)
+    Utilizador.lookupCredentials(req.body.username)
         .then(dados => {
             if (!dados) {
                 res.status(401).jsonp({error: 'Utilizador inexistente!'})
@@ -56,7 +57,7 @@ function authenticate(req, res, next) {
                 res.status(401).jsonp({error: 'Credenciais inválidas!'})
 
             } else {
-                req.user = Utilizador.filter(dados)
+                req.user = {username: dados.username, admin: dados.admin}
                 next()
             }
         })
@@ -64,7 +65,6 @@ function authenticate(req, res, next) {
 }
 
 
-// Token signing middleware
 function sign(req, res, next) {
     const user = req.user
 

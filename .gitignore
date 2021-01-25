@@ -1,7 +1,7 @@
 # App Resources
 
-api-server/recursos/*
-api-server/uploads/*
+#api-server/recursos/*
+api-server/uploads/*.zip
 
 # Logs
 logs

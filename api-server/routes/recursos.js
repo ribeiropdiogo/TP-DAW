@@ -8,6 +8,7 @@ var fs = require('fs')
 var CryptoJS = require("crypto-js");
 
 const Recurso = require('../controllers/recurso')
+const Tipo = require('../controllers/tipo')
 
 function getPath(str){
     var path = str.substring(0, 6) + '/' + str.substring(6, 12) + '/' + str.substring(12, 18) + '/' + str.substring(18, 24);
@@ -16,9 +17,20 @@ function getPath(str){
 
 // GET /recursos
 router.get('/', function(req, res) {
-    Recurso.list()
-        .then(data => res.status(200).jsonp(data))
-        .catch(error => res.status(500).jsonp(error))
+
+    if(req.query.tipo){
+        Recurso.listByTipo(req.query.tipo)
+            .then(data => res.status(200).jsonp(data))
+            .catch(error => res.status(500).jsonp(error))
+    } else if(req.query.username){
+        Recurso.listByUser(req.query.username)
+            .then(data => res.status(200).jsonp(data))
+            .catch(error => res.status(500).jsonp(error))
+    } else {
+        Recurso.list()
+            .then(data => res.status(200).jsonp(data))
+            .catch(error => res.status(500).jsonp(error))
+    }
 })
 
 // GET /recursos/:id
@@ -43,6 +55,7 @@ router.post('/', upload.single('conteudo'), function(req, res) {
                 metadados.then(function(result) {
                     // Deconstruct metadata and add creation time
                     var meta = JSON.parse(result); 
+
                     meta.dataRegisto = new Date().toISOString().slice(0,19);
 
                     var payload = zip.file("data/"+meta.nome).async("string")
@@ -78,8 +91,12 @@ router.post('/', upload.single('conteudo'), function(req, res) {
                                         fs.rename(fpath, newPath, function(err) {
                                             if (err) console.log(err)
                                         })
-
-                                        res.status(201).jsonp(data)
+                                        
+                                        Tipo.increment(meta.tipo)
+                                        .then(
+                                            res.status(201).jsonp(data)
+                                        )
+                                        .catch(error => console.log(error))
                                     })
                                     .catch(error => res.status(500).jsonp(error))
                             }

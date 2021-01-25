@@ -88,10 +88,10 @@ function postRecurso() {
                         alert("Ocorreu um erro!");
                     }
                 }
-
+                
                 xhr.open("POST", '/recursos', true);
                 //xhr.setRequestHeader('Content-type','multipart/form-data');
                 xhr.send(formData);
-            });
+        });
     }
 }

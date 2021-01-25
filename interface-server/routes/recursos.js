@@ -59,9 +59,54 @@ router.post('/', upload.single('conteudo'), function(req, res) {
         res.status(201).jsonp(resp);
       })
       .catch(err => {
-            
+        res.render('error', {error: err})
+        /*
+        if(err.response.data.error.name == 'TokenExpiredError'){
+            res.clearCookie("token")
+            res.redirect('/login')
+        }else{
             res.render('error', {error: err})
+        }
+        */
     })
+});
+
+
+router.get('/', function(req, res, next) {
+    if(req.cookies.token != null){
+        let usrname = jwt.decode(req.cookies.token).username
+        let cond = "";
+
+        if(req.query.tipo)
+            cond = "tipo=" + req.query.tipo + "&"
+        else if(req.query.username)
+            cond = "username=" + req.query.username + "&"
+        
+        axios.get('http://localhost:7000/recursos?' + cond + 'token=' + req.cookies.token)
+            .then(r => {
+                axios.get('http://localhost:7000/utilizadores/' + usrname + '?token=' + req.cookies.token)
+                    .then(resp => {
+                        axios.get('http://localhost:7000/tipos/top/5?token=' + req.cookies.token)
+                            .then(t => {
+                                //res.cookie(req.cookies.token)
+                                res.render('recursos', {title: 'RepositóriDOIS', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data, recursos: r.data})
+                            })
+                            .catch(e => res.render('error', {error: e}))
+                    })
+                    .catch(err => res.render('error', {error: err}))
+            })
+            .catch(err => {
+                if(err.response.data.error.name == 'TokenExpiredError'){
+                    res.clearCookie("token")
+                    res.redirect('/login')
+                }else{
+                    res.render('error', {error: err})
+                }
+            })
+
+    } else {
+        res.redirect('/login')
+    }
 });
 
 

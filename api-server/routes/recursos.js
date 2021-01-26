@@ -15,6 +15,50 @@ function getPath(str){
     return path;
 }
 
+// GET /recursos/:id
+router.get('/:id', function(req, res) {
+    Recurso.lookup(req.params.id)
+        .then(data => res.status(200).jsonp(data))
+        .catch(error => res.status(500).jsonp(error))
+})
+
+// GET /recursos/:id
+router.get('/zip/:id', function(req, res) {
+    var path = __dirname + '/../recursos/' + getPath(req.params.id);
+
+    Recurso.lookup(req.params.id)
+        .then(meta => {
+            path = path + '/' + meta.nome
+
+            fs.readFile(path, function (err,readStream) {
+                var zip = new JSZip();
+                // bagit
+                zip.file(
+                    "bagit.txt", 
+                    "(BagIt-version: 1.0 )\n(Tag-File-Character-Encoding: UTF-8)\n");
+                // metadata
+                zip.file(
+                    "metadata.json", 
+                    JSON.stringify(meta, null, 3));
+                // payload
+                var data = zip.folder("data");
+                data.file(meta.nome, readStream, {base64: true});
+                // manifest
+                var file_wordArr = CryptoJS.lib.WordArray.create(readStream);
+                var sha256_hash = CryptoJS.SHA256(file_wordArr);
+                zip.file(
+                    "manifest-sha256.txt", 
+                    "(" + sha256_hash.toString() + " data/" + meta.nome + ")\n");
+
+                zip.generateAsync({type:"nodebuffer"})
+                    .then(function(content) {
+                        res.setHeader('Content-Type', 'application/octet-stream');
+                        res.status(200).send(content)
+                    });
+            });
+        })
+})
+
 // GET /recursos
 router.get('/', function(req, res) {
 
@@ -33,12 +77,6 @@ router.get('/', function(req, res) {
     }
 })
 
-// GET /recursos/:id
-router.get('/:id', function(req, res) {
-    Recurso.lookup(req.params.id)
-        .then(data => res.status(200).jsonp(data))
-        .catch(error => res.status(500).jsonp(error))
-})
 
 // POST /recursos
 router.post('/', upload.single('conteudo'), function(req, res) {
@@ -58,12 +96,12 @@ router.post('/', upload.single('conteudo'), function(req, res) {
 
                     meta.dataRegisto = new Date().toISOString().slice(0,19);
 
-                    var payload = zip.file("data/"+meta.nome).async("string")
+                    var payload = zip.file("data/"+meta.nome).async("nodebuffer")
 
                     payload.then(function(p) {
 
                         let fpath = __dirname + '/../' + 'recursos/' + meta.nome
-                        fs.writeFileSync(fpath, p)
+                        fs.writeFileSync(fpath, p,'binary')
 
                         var file_wordArr = CryptoJS.lib.WordArray.create(fs.createReadStream(fpath));
                         var sha256_hash = CryptoJS.SHA256(file_wordArr);
@@ -72,9 +110,10 @@ router.post('/', upload.single('conteudo'), function(req, res) {
                         hash.then(function(line){
                             // Validate checksums
                             const r = line.split(' ')[0];
-                            if(sha256_hash.toString() != r.substring(1))
+                            if(sha256_hash.toString() != r.substring(1)){
                                 console.log("> Invalid SIP: Checksum comparison failed")
-                            else {
+                                res.status(500).send("Invalid Checksum")
+                            } else {
                                 Recurso.insert(meta)
                                     .then(data => { 
                                         var newPath = __dirname + '/../' + 'recursos/' + getPath(data._id.toString()) + '/' + meta.nome;

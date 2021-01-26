@@ -1,0 +1,128 @@
+extends layout
+
+block head
+    title RepositóriDOIS
+    link(rel='stylesheet', href='/stylesheets/main.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/color.css')
+    link(rel='stylesheet', href='/stylesheets/responsive.css')
+    link(rel='icon', href='/img/favicon.png', type='image/png' sizes='16x16') 
+    script(src='/javascript/main.min.js')
+    script(src='/javascript/custom.js')
+    script(src='/javascript/script.js')
+    script(src='/javascript/recurso.js')
+    script(src='/javascript/jszip.min.js')
+
+block body
+    .theme-layout
+        .responsive-header
+            .mh-head.first.Sticky
+                span.mh-text
+                    h3 RepositóriDOIS
+            
+        .topbar.stick
+            .logo
+                h3(style='margin-top: 12px')
+                    a(href='/') RepositóriDOIS
+            .top-area
+                ul.main-menu
+                ul.setting-area
+                    h6
+                        a(href='/utilizadores/logout', title='Logout') Logout
+        section
+            .gap.gray-bg
+                .container-fluid
+                    .row
+                        .col-lg-12
+                            div(class='row', id='page-contents')
+                                .col-lg-2
+                                    aside(class='sidebar static')
+                                        .widget
+                                            h2.widget-title Tipos
+                                            ul.naves
+                                                each t in tipos
+                                                    li
+                                                        a(href='/recursos?tipo='+t._id, title='')= t._id
+                                .col-lg-6
+                                    .central-meta
+                                        .about
+                                            .personal
+                                                h5.f-title= recurso.titulo
+                                                p= recurso.subtitulo
+                                                div(id="viewer")
+                                                p
+                                                    strong Autor: 
+                                                    | #{recurso.autor}
+                                                p
+                                                    strong Data de Criação: 
+                                                    | #{recurso.dataCriacao}
+                                                p
+                                                    strong Tags: 
+                                                    each tag in recurso.tags
+                                                        | ##{tag} 
+                                .col-lg-4
+                                    aside(class='sidebar static')
+                                        .widget
+                                            h4.widget-title Perfil
+                                            .your-page
+                                                .page-meta
+                                                    a(href='/', title='', class='underline')= nome
+                                                    span
+                                                        i.ti-email
+                                                        a= email
+                                                    span
+                                                        i.ti-book
+                                                        a= instituicao
+                                    aside(class='sidebar static')
+                                        .widget
+                                            h4.widget-title Recursos
+                                            ul.naves
+                                                li
+                                                    a(href='/recursos/novo', title='') Adicionar Recurso
+                                                li
+                                                    a(href='/recursos?username='+username, title='') Meus Recursos
+                                    aside(class='sidebar static')
+                                        .widget
+                                            h4.widget-title Opções
+                                            ul.naves
+                                                li(id="descarregar")
+    
+block footer
+    .container
+        .row
+            .col-lg-4.col-md-4
+                .widget
+                    .foot-logo
+                        .logo
+                            h5(style='margin-top: 12px')
+                                a(href='/') RepositóriDOIS
+                        p RepositóriDOIS @ DAW2020
+            .col-lg-2.col-md-4
+                .widget
+                    .widget-title
+                        h4 Tipos
+                    ul.list-style
+                        li
+                            a(href='/tipos/'+tipos[0]._id, title='')= tipos[0]._id
+                        li
+                            a(href='/tipos/'+tipos[1]._id, title='')= tipos[1]._id
+                        li
+                            a(href='/tipos/'+tipos[2]._id, title='')= tipos[2]._id
+            .col-lg-2.col-md-4
+                .widget
+                    .widget-title
+                        h4 Links Úteis
+                    ul.list-style
+                        li
+                            a(href='/recursos/', title='') Recursos
+            .col-lg-4.col-md-4
+                .widget
+                    .widget-title
+                        h4 Desenvilvido por
+                    ul.list-style
+                        li
+                            a(href='mailto:pg42816@alunos.uminho.pt', title='') Cândido Vale
+                        li
+                            a(href='mailto:a84442@alunos.uminho.pt', title='') Diogo Ribeiro
+                        li
+                            a(href='mailto:a84244@alunos.uminho.pt', title='') Luís Cunha

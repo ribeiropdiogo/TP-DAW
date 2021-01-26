@@ -130,6 +130,10 @@ router.post('/', upload.single('conteudo'), function(req, res) {
                                         fs.rename(fpath, newPath, function(err) {
                                             if (err) console.log(err)
                                         })
+
+                                        fs.unlink(npath, (err) => {
+                                            if (err) throw err
+                                        })
                                         
                                         Tipo.increment(meta.tipo)
                                         .then(

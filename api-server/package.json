@@ -11,6 +11,7 @@
     "crypto-js": "^4.0.0",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "form-data": "^3.0.0",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
     "jszip": "^3.5.0",

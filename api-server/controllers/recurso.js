@@ -3,7 +3,7 @@ const Recurso = require('../models/recurso')
 
 // Returns Resource list
 module.exports.list = function() {
-    return Recurso.find({visibilidade: "Público"}).exec()
+    return Recurso.find().exec()
 }
 
 module.exports.listAll = function() {

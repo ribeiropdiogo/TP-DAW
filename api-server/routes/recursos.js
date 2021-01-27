@@ -6,6 +6,7 @@ var upload = multer({ dest: 'uploads/' })
 var JSZip = require("jszip");
 var fs = require('fs')
 var CryptoJS = require("crypto-js");
+const jwt = require('jsonwebtoken')
 
 const Recurso = require('../controllers/recurso')
 const Tipo = require('../controllers/tipo')
@@ -15,28 +16,47 @@ function getPath(str){
     return path;
 }
 
+function filterResources(data,query_user){
+    var i;
+    var response = [];
+    for (i = 0; i < data.length; i++) {
+        if(data[i].visibilidade == "Público" || data[i].autor == query_user)
+            response.push(data[i]);
+    } 
+    return response;
+}
+
 // GET /recursos
 router.get('/', function(req, res) {
 
+    var myToken = req.query.token || req.body.token
+    var query_user = jwt.decode(myToken).username
+
     if(req.query.tipo){
         Recurso.listByTipo(req.query.tipo)
-            .then(data => res.status(200).jsonp(data))
+            .then(data => {
+                res.status(200).jsonp(filterResources(data,query_user))
+            })
             .catch(error => res.status(500).jsonp(error))
     } else if(req.query.username){
         Recurso.listByUser(req.query.username)
-            .then(data => res.status(200).jsonp(data))
+            .then(data => res.status(200).jsonp(filterResources(data,query_user)))
             .catch(error => res.status(500).jsonp(error))
     } else {
         Recurso.list()
-            .then(data => res.status(200).jsonp(data))
+            .then(data => res.status(200).jsonp(filterResources(data,query_user)))
             .catch(error => res.status(500).jsonp(error))
     }
 })
 
 // GET /recursos/:id
 router.get('/:id', function(req, res) {
+
+    var myToken = req.query.token || req.body.token
+    var query_user = jwt.decode(myToken).username
+
     Recurso.lookup(req.params.id)
-        .then(data => res.status(200).jsonp(data))
+        .then(data => res.status(200).jsonp(filterResources(data,query_user)))
         .catch(error => res.status(500).jsonp(error))
 })
 

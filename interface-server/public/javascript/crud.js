@@ -49,6 +49,7 @@ function postRecurso() {
         data.autor = $("input[name=username]").val();
         data.tags = finalTags;
         data.nome = conteudo.name;
+        data.mimetype = conteudo.type;
 
         var json = JSON.stringify(data, null, 3);
 
@@ -95,3 +96,4 @@ function postRecurso() {
         });
     }
 }
+

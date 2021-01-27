@@ -17,7 +17,7 @@ function getRecurso() {
                     payload.then(function(p) {
                         var extension = meta.nome.split('.').pop();
                         var isFirefox = typeof InstallTrigger !== 'undefined';
-                        alert(meta.mimetype)
+                        
                         var mimetype = meta.mimetype;
                         
                         var file = new Blob([p], {type: mimetype});

@@ -11,11 +11,11 @@ module.exports.listAll = function() {
 }
 
 module.exports.listByTipo = function(t) {
-    return Recurso.find({visibilidade: "Público", tipo: t}).exec()
+    return Recurso.find({tipo: t}).exec()
 }
 
 module.exports.listByUser = function(a) {
-    return Recurso.find({visibilidade: "Público", autor: a}).exec()
+    return Recurso.find({autor: a}).exec()
 }
 
 module.exports.listAllByUser = function(a) {

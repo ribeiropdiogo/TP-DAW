@@ -167,6 +167,7 @@ router.get('/:id', function(req, res, next) {
                         axios.get('http://localhost:7000/tipos/top/5?token=' + req.cookies.token)
                             .then(t => {
                                 //res.cookie(req.cookies.token)
+                                console.log(r.data)
                                 res.render('recurso', {title: r.data.titulo, nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data, recurso: r.data})
                             })
                             .catch(e => res.render('error', {error: e}))

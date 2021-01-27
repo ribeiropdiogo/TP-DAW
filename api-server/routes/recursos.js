@@ -54,7 +54,12 @@ router.get('/:id', function(req, res) {
     var query_user = jwt.decode(myToken).username
 
     Recurso.lookup(req.params.id)
-        .then(data => res.status(200).jsonp(filterResources(data,query_user)))
+        .then(data => {
+            if(data.autor == query_user || data.visibilidade == "Público")
+                res.status(200).jsonp(data)
+            else 
+                res.status(401).jsonp()
+        })
         .catch(error => res.status(500).jsonp(error))
 })
 

@@ -182,15 +182,22 @@ router.put('/:id', function(req, res) {
 
 // DELETE /recursos/:id
 router.delete('/:id', function(req, res) {
+
+    var myToken = req.query.token || req.body.token
+    var query_user = jwt.decode(myToken).username
+
     Recurso.lookup(req.params.id)
         .then(data => {
-            Recurso.remove(req.params.id)
-                .then(data => {
-                    Tipo.decrement(data.tipo)
-                        .then(res.status(200).jsonp(data))
-                        .catch(error => console.log(error))
-                })
-                .catch(error => res.status(500).jsonp(error))
+            if(data.autor == query_user){
+                Recurso.remove(req.params.id)
+                    .then(data => {
+                        Tipo.decrement(data.tipo)
+                            .then(res.status(200).jsonp(data))
+                            .catch(error => console.log(error))
+                    })
+                    .catch(error => res.status(500).jsonp(error))
+            } else
+                res.status(401).jsonp()
         })
         .catch(error => res.status(500).jsonp(error))
     

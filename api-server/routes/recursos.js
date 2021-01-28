@@ -182,9 +182,18 @@ router.put('/:id', function(req, res) {
 
 // DELETE /recursos/:id
 router.delete('/:id', function(req, res) {
-    Recurso.remove(req.params.id)
-        .then(data => res.status(200).jsonp(data))
+    Recurso.lookup(req.params.id)
+        .then(data => {
+            Recurso.remove(req.params.id)
+                .then(data => {
+                    Tipo.decrement(data.tipo)
+                        .then(res.status(200).jsonp(data))
+                        .catch(error => console.log(error))
+                })
+                .catch(error => res.status(500).jsonp(error))
+        })
         .catch(error => res.status(500).jsonp(error))
+    
 })
 
 module.exports = router

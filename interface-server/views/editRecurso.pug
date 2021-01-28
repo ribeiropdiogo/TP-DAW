@@ -9,8 +9,8 @@ block head
     link(rel='icon', href='/img/favicon.png', type='image/png' sizes='16x16') 
     script(src='/javascript/main.min.js')
     script(src='/javascript/script.js')
-    script(src='/javascript/crud.js')
     script(src='/javascript/jszip.min.js')
+    script(src='/javascript/editRecurso.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/sha256.js')
 
 block body
@@ -38,7 +38,7 @@ block body
                                 .col-lg-8
                                     .central-meta
                                         .editing-info
-                                            h5.f-title Adicionar Recurso
+                                            h5.f-title Editar Recurso
                                             form
                                                 .form-group.half
                                                     input(type="text", id="titulo", name="titulo", required)
@@ -49,33 +49,28 @@ block body
                                                     label(class='control-label', for="subtitulo") Subtítulo
                                                     i.mtrl-select
                                                 .form-group
-                                                    select(style="display: none;", id="tipo")
-                                                        option(value="Tipo", disabled) Tipo
-                                                        each tipo in tipos
-                                                            option(value=tipo._id)= tipo._id
+                                                    input(type="text", id="tipo", name="tipo", required)
+                                                    label(class='control-label', for="tipo") Tipo
+                                                    i.mtrl-select
                                                 .form-radio
                                                     .radio
                                                         label
-                                                            input(type="radio", id="visibilidade", name="visibilidade", value="Público" )
+                                                            input(type="radio", id="publico", name="visibilidade", value="Público" )
                                                             i.check-box
                                                             | Público
                                                     .radio
                                                         label
-                                                            input(type="radio", id="visibilidade", name="visibilidade", value="Privado", checked="checked" )
+                                                            input(type="radio", id="privado", name="visibilidade", value="Privado")
                                                             i.check-box
                                                             | Privado
-                                                .form-group
-                                                    input(type="file", id="conteudo", name="conteudo", accept=".pdf,.zip,.doc,.docx,.xls,.xlsx,.txt")
-                                                    label(class='control-label', for="conteudo") Ficheiro
-                                                    i.mtrl-select
                                                 .form-group
                                                     input(type="text", id="tags", name="tags", required)
                                                     label(class='control-label', for="tags") Tags (separadas por vírgulas)
                                                     i.mtrl-select
                                                 input(type="hidden", id="username", name="username" value=username)
                                                 .submit-btns
-                                                    button.mtr-btn(type='button', id='adicionar', onclick='postRecurso()', style='margin-right: 5px;')
-                                                        span Adicionar
+                                                    button.mtr-btn(type='button', id='adicionar', onclick='updateRecurso()', style='margin-right: 5px;')
+                                                        span Atualizar
                                                     button.mtr-btn(type='button', onclick='history.back();')
                                                         span Cancelar
                                 .col-lg-4

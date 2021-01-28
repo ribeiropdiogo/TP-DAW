@@ -92,11 +92,11 @@ block footer
                         h4 Tipos
                     ul.list-style
                         li
-                            a(href='', title='') Categoria1
+                            a(href='/recursos?tipo='+tipos[0]._id, title='')= tipos[0]._id
                         li
-                            a(href='', title='') Categoria2
+                            a(href='/recursos?tipo='+tipos[1]._id, title='')= tipos[1]._id
                         li
-                            a(href='', title='') Categoria3
+                            a(href='/recursos?tipo='+tipos[2]._id, title='')= tipos[2]._id
             .col-lg-2.col-md-4
                 .widget
                     .widget-title

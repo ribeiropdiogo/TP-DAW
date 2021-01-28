@@ -1,0 +1,38 @@
+[
+    {
+        "_id" : "Slides"
+        , "recursos" : 0
+    },
+    {
+        "_id" : "Teste",
+        "recursos" : 0
+    },
+    {
+        "_id" : "Exame",
+        "recursos" : 0
+    },
+    {
+        "_id" : "Guião",
+        "recursos" : 0
+    },
+    {
+        "_id" : "Relatório",
+        "recursos" : 0
+    },
+    {
+        "_id" : "Código",
+        "recursos" : 0
+    },
+    {
+        "_id" : "Ficha",
+        "recursos" : 0
+    },
+    {
+        "_id" : "Apontamentos",
+        "recursos" : 0
+    },
+    {
+        "_id" : "Resumo", 
+        "recursos" : 0
+    }
+]

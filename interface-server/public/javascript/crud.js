@@ -20,6 +20,22 @@ function postTipo() {
     xhr.send(json);
 }
 
+function deleteRecurso(id) {
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+        if(xhr.status == 200) {
+            window.location.replace("/");
+        } else if(xhr.status == 500){
+            alert("Ocorreu um erro!");
+        }
+    }
+
+    xhr.open("DELETE", '/recursos/'+id, true);
+    xhr.send(null);
+}
+
 function postRecurso() {
 
     

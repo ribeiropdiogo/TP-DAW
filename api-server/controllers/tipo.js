@@ -20,9 +20,12 @@ module.exports.lookup = function(id) {
     return Tipo.findOne({_id: id}).exec()
 }
 
-// Returns a type record
 module.exports.increment = function(t) {
     return Tipo.findOneAndUpdate({_id: t}, {$inc: {recursos: 1}}).exec()
+}
+
+module.exports.decrement = function(t) {
+    return Tipo.findOneAndUpdate({_id: t}, {$inc: {recursos: -1}}).exec()
 }
 
 // Inserts a new type

@@ -12,6 +12,7 @@ block head
     script(src='/javascript/script.js')
     script(src='/javascript/recurso.js')
     script(src='/javascript/jszip.min.js')
+    script(src='/javascript/crud.js')
 
 block body
     .theme-layout
@@ -66,7 +67,7 @@ block body
                                             h4.widget-title Perfil
                                             .your-page
                                                 .page-meta
-                                                    a(href='/', title='', class='underline')= nome
+                                                    a(href='/utilizador/'+username, title='', class='underline', id="user_link")= nome
                                                     span
                                                         i.ti-email
                                                         a= email
@@ -86,6 +87,8 @@ block body
                                             h4.widget-title Opções
                                             ul.naves
                                                 li(id="descarregar")
+                                                li(id="editar")
+                                                li(id="apagar")
     
 block footer
     .container

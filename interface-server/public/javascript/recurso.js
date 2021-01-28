@@ -35,6 +35,13 @@ function getRecurso() {
                         
                         $("#descarregar").append("<a href='" + fileURL + "' download='" + meta.nome + "'>Descarregar Recurso</a>")
 
+                        var user_link = document.getElementById("user_link").href;
+                        var username = user_link.split("/").pop();
+
+                        if(meta.autor == username ){
+                            $("#editar").append("<a href='/recursos/editar/" + meta._id + "'>Editar Recurso</a>")
+                            $("#apagar").append("<a href='javascript:deleteRecurso(\""+meta._id+"\");'>Apagar Recurso</a>")
+                        }
                     })
                 })
             })

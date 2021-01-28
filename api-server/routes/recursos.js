@@ -175,8 +175,19 @@ router.post('/', upload.single('conteudo'), function(req, res) {
 
 // PUT /recursos/:id
 router.put('/:id', function(req, res) {
-    Recurso.edit(req.params.id, req.body)
-        .then(data => res.status(200).jsonp(data))
+
+    var myToken = req.query.token || req.body.token
+    var query_user = jwt.decode(myToken).username
+
+    Recurso.lookup(req.params.id)
+        .then(data => {
+            if(data.autor == query_user){
+                Recurso.edit(req.params.id, req.body)
+                    .then(data => res.status(200).jsonp(data))
+                    .catch(error => res.status(500).jsonp(error))
+            } else
+                res.status(401).jsonp()
+        })
         .catch(error => res.status(500).jsonp(error))
 })
 
@@ -190,7 +201,12 @@ router.delete('/:id', function(req, res) {
         .then(data => {
             if(data.autor == query_user){
                 Recurso.remove(req.params.id)
-                    .then(data => {
+                    .then(r => {
+                        let path = __dirname + '/../' + 'recursos/' + getPath(data._id.toString()) + "/" + data.nome
+                        console.log(path)
+                        fs.unlink(path, (err) => {
+                            if (err) throw err
+                        })
                         Tipo.decrement(data.tipo)
                             .then(res.status(200).jsonp(data))
                             .catch(error => console.log(error))

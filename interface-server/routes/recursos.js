@@ -15,7 +15,6 @@ function getPath(str){
 }
 
 // Formulário para adicionar um recurso
-// Formulário para adicionar um recurso
 router.get('/novo', function(req, res) {
   
     var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}

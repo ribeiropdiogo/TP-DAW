@@ -27,6 +27,120 @@ function filterResources(data,query_user){
     return response;
 }
 
+
+// ### MEUS RECURSOS ###//
+router.get('/', function(req, res) {
+
+    let usrname = getUsername(req)
+
+    if(req.query.tipo){
+        Recurso.listByTipo(req.query.tipo)
+            .then(r => {
+                
+                Utilizador.lookup(usrname)
+                    .then(u => {
+
+                        Tipo.listTop(req.query.n)
+                            .then(t => { 
+
+                                let data = {}
+
+                                data.recurso = r
+                                data.user = u
+                                data.tipo = t
+                                res.status(200).jsonp(data)
+                        
+                            })
+                            .catch(error => res.status(500).jsonp(error))
+                    })
+                    .catch(erro => res.status(500).jsonp(erro))
+            })
+            .catch(error => res.status(500).jsonp(error))
+
+    }
+    else if(req.query.username){
+
+        Recurso.listByUser(req.query.username)
+        .then(r => {
+            
+            Utilizador.lookup(req.query.username)
+                .then(u => {
+
+                    Tipo.listTop(req.query.n)
+                        .then(t => { 
+
+                            let data = {}
+
+                            data.recurso = r
+                            data.user = u
+                            data.tipo = t
+
+                            res.status(200).jsonp(data)
+                    
+                        })
+                        .catch(error => res.status(500).jsonp(error)) 
+                })
+                .catch(erro => res.status(500).jsonp(erro))
+        })
+        .catch(error => res.status(500).jsonp(error))
+
+    }else{
+        
+        Recurso.list()
+        .then(r => {
+            
+            Utilizador.lookup(usrname)
+                .then(u => {
+
+                    Tipo.listTop(req.query.n)
+                        .then(t => { 
+
+                            let data = {}
+
+                            data.recurso = r
+                            data.user = u
+                            data.tipo = t
+                            res.status(200).jsonp(data)
+                    
+                        })
+                        .catch(error => res.status(500).jsonp(error))
+            
+                })
+                .catch(erro => res.status(500).jsonp(erro))
+        })
+        .catch(error => res.status(500).jsonp(error))
+
+    }
+
+})
+
+
+//######### Get Form Novo Recurso #############//
+
+router.get('/novo', function(req, res) {
+
+    let usrname = getUsername(req)
+ 
+    Utilizador.lookup(usrname)
+        .then(u => {
+
+            Tipo.list()
+                .then(t => { 
+
+                    let data = {}
+
+                    data.user = u
+                    data.tipo = t
+
+                    res.status(200).jsonp(data)    
+                })
+                .catch(error => res.status(500).jsonp(error)) 
+        })
+        .catch(erro => res.status(500).jsonp(erro))   
+
+})
+
+/*
 // GET /recursos
 router.get('/', function(req, res) {
 
@@ -47,6 +161,7 @@ router.get('/', function(req, res) {
             .catch(error => res.status(500).jsonp(error))
     }
 })
+*/
 
 // GET /recursos/:id
 router.get('/:id', function(req, res) {
@@ -176,8 +291,19 @@ router.post('/', upload.single('conteudo'), function(req, res) {
 
 // PUT /recursos/:id
 router.put('/:id', function(req, res) {
-    Recurso.edit(req.params.id, req.body)
-        .then(data => res.status(200).jsonp(data))
+
+    var myToken = req.query.token || req.body.token
+    var query_user = jwt.decode(myToken).username
+
+    Recurso.lookup(req.params.id)
+        .then(data => {
+            if(data.autor == query_user){
+                Recurso.edit(req.params.id, req.body)
+                    .then(data => res.status(200).jsonp(data))
+                    .catch(error => res.status(500).jsonp(error))
+            } else
+                res.status(401).jsonp()
+        })
         .catch(error => res.status(500).jsonp(error))
 })
 
@@ -191,7 +317,12 @@ router.delete('/:id', function(req, res) {
         .then(data => {
             if(data.autor == query_user){
                 Recurso.remove(req.params.id)
-                    .then(data => {
+                    .then(r => {
+                        let path = __dirname + '/../' + 'recursos/' + getPath(data._id.toString()) + "/" + data.nome
+                        console.log(path)
+                        fs.unlink(path, (err) => {
+                            if (err) throw err
+                        })
                         Tipo.decrement(data.tipo)
                             .then(res.status(200).jsonp(data))
                             .catch(error => console.log(error))
@@ -236,4 +367,13 @@ router.put('/star/:id', function(req, res) {
         .catch(error => res.status(500).jsonp(error))
 });
 
+function getUsername(request){
+    
+    authHeader = request.headers['authorization']
+    var myToken = authHeader && authHeader.split(' ')[1]
+
+    let username = jwt.decode(myToken).username
+
+    return username;
+}
 module.exports = router

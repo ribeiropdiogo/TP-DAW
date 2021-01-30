@@ -44,6 +44,13 @@ block body
                                                 each t in tipos
                                                     li
                                                         a(href='/recursos?tipo='+t._id, title='')= t._id
+                                        .widget
+                                            h2.widget-title Estrelas
+                                            ul.naves
+                                                li
+                                                    i.ti-star
+                                                    a(href="", onclick="star()")= recurso.stars
+
                                 .col-lg-6
                                     .central-meta
                                         .about

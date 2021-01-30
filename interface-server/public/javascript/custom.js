@@ -75,6 +75,7 @@ function register(){
     data.curso  = $("input[name=curso]").val();
     data.departamento  = $("input[name=departamento]").val();
     data.instituicao = $("input[name=instituicao]").val();
+    data.starred = [];
 
     var json = JSON.stringify(data);
 

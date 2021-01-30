@@ -11,6 +11,7 @@ var resourceSchema = new mongoose.Schema({
     nome: String,
     mimetype: String,
     autor: String,
+    stars: Number,
     tags: [String]
 })
 

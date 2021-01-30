@@ -51,3 +51,18 @@ function getRecurso() {
     xhttp.responseType = "arraybuffer";
     xhttp.send();
 }
+
+function star(){
+
+    var recurso = window.location.href.split("/").pop();
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            
+        }
+    };
+
+    xhttp.open("PUT", "/recursos/star/"+recurso, true);
+    xhttp.send();
+}

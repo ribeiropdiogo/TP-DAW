@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken')
 
 const Recurso = require('../controllers/recurso')
 const Tipo = require('../controllers/tipo')
+const Utilizador = require('../controllers/utilizador')
 
 function getPath(str){
     var path = str.substring(0, 6) + '/' + str.substring(6, 12) + '/' + str.substring(12, 18) + '/' + str.substring(18, 24);
@@ -202,5 +203,37 @@ router.delete('/:id', function(req, res) {
         .catch(error => res.status(500).jsonp(error))
     
 })
+
+router.put('/star/:id', function(req, res) {
+    var myToken = req.query.token || req.body.token
+    var query_user = jwt.decode(myToken).username
+
+    Utilizador.lookup(query_user)
+        .then(data => {
+            console.log("found")
+            if(data.starred.includes(req.params.id)){
+                console.log("unstar")
+                Utilizador.unstar(query_user,req.params.id)
+                    .then(r => {
+                        console.log("unstar")
+                        Recurso.unstar(req.params.id)
+                            .then(res.status(200).send())
+                            .catch(error => console.log(error))
+                    })
+                    .catch(error => res.status(500).jsonp(error))
+            } else {
+                console.log("star")
+                Utilizador.star(query_user,req.params.id)
+                    .then(r => {
+                        console.log("star")
+                        Recurso.star(req.params.id)
+                            .then(res.status(200).send())
+                            .catch(error => console.log(error))
+                    })
+                    .catch(error => res.status(500).jsonp(error))
+            }
+        })
+        .catch(error => res.status(500).jsonp(error))
+});
 
 module.exports = router

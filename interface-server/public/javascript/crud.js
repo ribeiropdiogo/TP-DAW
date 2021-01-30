@@ -66,6 +66,7 @@ function postRecurso() {
         data.tags = finalTags;
         data.nome = conteudo.name;
         data.mimetype = conteudo.type;
+        data.stars = 0;
 
         var json = JSON.stringify(data, null, 3);
 

@@ -42,3 +42,14 @@ module.exports.remove = function(id) {
 module.exports.edit = function(id, r) {
     return Recurso.findByIdAndUpdate(id, r, {new: true}).exec()
 }
+
+// Star one resource
+module.exports.star = function(id) {
+    return Recurso.findByIdAndUpdate(id, {$inc: {stars: 1}}, {new: true}).exec()
+}
+
+// Unstar one resource
+module.exports.unstar = function(id) {
+    return Recurso.findByIdAndUpdate(id, {$inc: {stars: -1}}, {new: true}).exec()
+}
+

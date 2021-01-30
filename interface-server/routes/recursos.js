@@ -195,4 +195,21 @@ router.delete('/:id', function(req, res) {
         .catch(error => res.status(500).jsonp(error))
 })
 
+router.put('/star/:id', function(req, res) {
+    if(req.cookies.token != null){
+        let usrname = jwt.decode(req.cookies.token).username
+  
+        axios.put('http://localhost:7000/recursos/star/' + req.params.id + '?token=' + req.cookies.token,{})
+            .then(r => {
+                res.status(201).send();
+            })
+            .catch(err => {
+                res.render('error', {error: err})
+        })
+
+    } else {
+        res.redirect('/login')
+    }
+});
+
 module.exports = router;

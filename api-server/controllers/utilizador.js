@@ -17,6 +17,17 @@ module.exports.lookup = function(id) {
         .exec()
 }
 
+module.exports.star = function(id, recurso) {
+    return Utilizador
+        .findOneAndUpdate({username: id}, { $push: { starred: recurso } }, {new: true})
+        .exec()
+}
+
+module.exports.unstar = function(id, recurso) {
+    return Utilizador
+        .findOneAndUpdate({username: id}, { $pull: { starred: recurso } }, {new: true})
+        .exec()
+}
 
 // Edit one user
 module.exports.edit = function(id, u) {

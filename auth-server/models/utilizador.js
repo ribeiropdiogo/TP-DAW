@@ -14,6 +14,7 @@ var userSchema = new mongoose.Schema({
     dataRegisto: Date,
     ultimoAcesso: Date,
     hashedPassword: String,
+    starred: [String],
     salt: String
 })
 

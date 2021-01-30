@@ -25,6 +25,7 @@ function createAccount(req, res, next) {
     user.admin = false
     user.dataRegisto = new Date()
     user.ultimoAcesso = user.dataRegisto
+    user.starred = [];
 
     // hashing da palavra-passe
     var hash = crypto.hasher(user.password, crypto.generateSalt())

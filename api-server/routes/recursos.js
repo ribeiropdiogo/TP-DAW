@@ -10,6 +10,8 @@ const jwt = require('jsonwebtoken')
 
 const Recurso = require('../controllers/recurso')
 const Tipo = require('../controllers/tipo')
+const Utilizador = require('../controllers/utilizador')
+
 
 function getPath(str){
     var path = str.substring(0, 6) + '/' + str.substring(6, 12) + '/' + str.substring(12, 18) + '/' + str.substring(18, 24);
@@ -73,6 +75,7 @@ router.get('/', function(req, res) {
                             data.recurso = r
                             data.user = u
                             data.tipo = t
+
                             res.status(200).jsonp(data)
                     
                         })

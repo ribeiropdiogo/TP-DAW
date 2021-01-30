@@ -90,6 +90,8 @@ router.get('/', function(req, res, next) {
         axios.get('http://localhost:7000/recursos?' + cond + 'n=5', headers)
             .then(resp => {
 
+                console.log(resp.data)
+
                 res.render('recursos', {title: 'RepositóriDOIS', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo, recursos: resp.data.recurso})
 
             })

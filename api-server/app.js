@@ -22,6 +22,7 @@ const usersRouter = require('./routes/utilizadores')
 const postsRouter = require('./routes/posts')
 const tiposRouter = require('./routes/tipos')
 const recursosRouter = require('./routes/recursos')
+const pagsRouter = require('./routes/paginas')
 
 var blacklist = []
 
@@ -35,8 +36,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 //Verifica se o pedido vem com token de acesso
 app.use(function(req, res, next) {
-    var myToken = req.query.token || req.body.token
-    
+
+    authHeader = req.headers['authorization']
+    var myToken = authHeader && authHeader.split(' ')[1] || req.query.token || req.body.token
+
     if(myToken){
         jwt.verify(myToken, "RepositoriDOIS", function(e, payload){
             if(e){
@@ -74,6 +77,7 @@ app.use('/utilizadores', usersRouter)
 app.use('/recursos', recursosRouter)
 app.use('/posts', postsRouter)
 app.use('/tipos', tiposRouter)
+app.use('/paginas', pagsRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

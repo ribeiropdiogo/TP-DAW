@@ -22,12 +22,21 @@ router.get('/feed', function(req, res) {
 
     var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
 
-        axios.get('http://localhost:7000/paginas/feed' , headers)
-        
-        .then(resp => {
-            res.render('home', {title: 'RepositóriDOIS', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo})
-        })
+    let usrname = jwt.decode(req.cookies.token).username
 
+        axios.get('http://localhost:7000/utilizadores/' + usrname, headers)
+        .then(resp => {
+
+            console.log(resp.data)
+
+            axios.get('http://localhost:7000/tipos/top/5', headers)
+                .then(t => {
+                    //res.cookie(req.cookies.token)
+                    res.render('home', {title: 'RepositóriDOIS', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data})
+                })
+                .catch(e => res.render('error', {error: e}))
+
+        })
         .catch(err => {
             console.log(err.response.data.error.name)
             

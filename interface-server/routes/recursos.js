@@ -20,7 +20,7 @@ router.get('/novo', function(req, res) {
   
     var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
 
-    axios.get('http://localhost:7000/paginas/recursos/novo', headers)
+    axios.get('http://localhost:7000/recursos/novo', headers)
         
         .then(resp => {
             res.render('addRecurso', { title: 'Adicionar Recurso', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo})
@@ -87,7 +87,7 @@ router.get('/', function(req, res, next) {
             cond = "username=" + req.query.username + "&"
         
 
-        axios.get('http://localhost:7000/paginas/recursos?' + cond + 'n=5', headers)
+        axios.get('http://localhost:7000/recursos?' + cond + 'n=5', headers)
             .then(resp => {
 
                 res.render('recursos', {title: 'RepositóriDOIS', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo, recursos: resp.data.recurso})

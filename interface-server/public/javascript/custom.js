@@ -98,3 +98,7 @@ function getRecursosByTag(){
     var tag = $("input[name=tag]").val()
     window.location.replace("/recursos?tag="+tag);
 }
+
+function logout(){
+    window.location.replace("/utilizadores/logout");
+}

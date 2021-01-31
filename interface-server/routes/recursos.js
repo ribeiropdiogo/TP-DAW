@@ -84,6 +84,8 @@ router.get('/', function(req, res, next) {
             cond = "tipo=" + req.query.tipo + "&"
         else if(req.query.username)
             cond = "username=" + req.query.username + "&"
+        else if(req.query.tag)
+            cond = "tag=" + req.query.tag + "&"
         
 
         axios.get('http://localhost:7000/recursos?' + cond + 'n=5', headers)
@@ -131,9 +133,6 @@ router.get('/', function(req, res, next) {
         res.redirect('/login')
     }
 });
-
-
-//#### NEW ####//
 
 router.get('/zip/:id', function(req, res, next) {
     if(req.cookies.token != null){
@@ -255,6 +254,10 @@ router.put('/star/:id', function(req, res) {
             .catch(err => {
                 res.render('error', {error: err})
         })
+    } else {
+        res.redirect('/login')
+    }
+});
       
 router.get("/editar/:id", function (req, res) {
     if(req.cookies.token != null){

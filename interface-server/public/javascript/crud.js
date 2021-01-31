@@ -20,15 +20,23 @@ function postTipo() {
     xhr.send(json);
 }
 
+//DELETE RECURSO
 function deleteRecurso(id) {
 
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function() {
-        if(xhr.status == 200) {
-            window.location.replace("/");
-        } else if(xhr.status == 500){
-            alert("Ocorreu um erro!");
+
+        if(xhr.readyState === XMLHttpRequest.DONE) {
+
+            if(xhr.status == 200) {
+                window.location.replace("/");
+            }else if(xhr.status == 401){
+                window.location.replace("/login");
+                alert("A Sua Sessão Expirou... Volte a Fazer Login!");
+            }else if(xhr.status == 500){
+                alert("Ocorreu um erro!");
+            }
         }
     }
 
@@ -36,9 +44,9 @@ function deleteRecurso(id) {
     xhr.send(null);
 }
 
+//POST RECURSO
 function postRecurso() {
-
-    
+ 
     var e = document.getElementById("tipo");
     // Process Tags
     var unprocessedTags = $("input[name=tags]").val();
@@ -92,6 +100,7 @@ function postRecurso() {
 
 
         zip.generateAsync({type:"blob"})
+
             .then(function(content) {
 
                 var formData = new FormData();
@@ -100,11 +109,18 @@ function postRecurso() {
                 var xhr = new XMLHttpRequest();
 
                 xhr.onreadystatechange = function() {
+
+                if(xhr.readyState === XMLHttpRequest.DONE) {
+
                     if(xhr.status == 201) {
                         window.location.replace("/");
-                    } else if(xhr.status == 500){
+                    }else if(xhr.status == 401){
+                        window.location.replace("/login");
+                        alert("A Sua Sessão Expirou... Volte a Fazer Login!");
+                    }else if(xhr.status == 500){
                         alert("Ocorreu um erro!");
                     }
+                }
                 }
                 
                 xhr.open("POST", '/recursos', true);

@@ -31,13 +31,13 @@ function filterResources(data,query_user){
 // ### MEUS RECURSOS ###//
 router.get('/', function(req, res) {
 
-    let usrname = getUsername(req)
+    let query_user = getUsername(req)
 
     if(req.query.tipo){
         Recurso.listByTipo(req.query.tipo)
             .then(r => {
                 
-                Utilizador.lookup(usrname)
+                Utilizador.lookup(query_user)
                     .then(u => {
 
                         Tipo.listTop(req.query.n)
@@ -89,7 +89,7 @@ router.get('/', function(req, res) {
         Recurso.list()
         .then(r => {
             
-            Utilizador.lookup(usrname)
+            Utilizador.lookup(query_user)
                 .then(u => {
 
                     Tipo.listTop(req.query.n)
@@ -119,9 +119,9 @@ router.get('/', function(req, res) {
 
 router.get('/novo', function(req, res) {
 
-    let usrname = getUsername(req)
+    let query_user = getUsername(req)
  
-    Utilizador.lookup(usrname)
+    Utilizador.lookup(query_user)
         .then(u => {
 
             Tipo.list()
@@ -166,8 +166,7 @@ router.get('/', function(req, res) {
 // GET /recursos/:id
 router.get('/:id', function(req, res) {
 
-    var myToken = req.query.token || req.body.token
-    var query_user = jwt.decode(myToken).username
+    let query_user = getUsername(req)
 
     Recurso.lookup(req.params.id)
         .then(data => {
@@ -179,8 +178,10 @@ router.get('/:id', function(req, res) {
         .catch(error => res.status(500).jsonp(error))
 })
 
-// GET /recursos/:id
+
+
 router.get('/zip/:id', function(req, res) {
+
     var path = __dirname + '/../recursos/' + getPath(req.params.id);
 
     Recurso.lookup(req.params.id)
@@ -292,8 +293,7 @@ router.post('/', upload.single('conteudo'), function(req, res) {
 // PUT /recursos/:id
 router.put('/:id', function(req, res) {
 
-    var myToken = req.query.token || req.body.token
-    var query_user = jwt.decode(myToken).username
+    let query_user = getUsername(req)
 
     Recurso.lookup(req.params.id)
         .then(data => {
@@ -310,8 +310,7 @@ router.put('/:id', function(req, res) {
 // DELETE /recursos/:id
 router.delete('/:id', function(req, res) {
 
-    var myToken = req.query.token || req.body.token
-    var query_user = jwt.decode(myToken).username
+    let query_user = getUsername(req)
 
     Recurso.lookup(req.params.id)
         .then(data => {
@@ -336,8 +335,8 @@ router.delete('/:id', function(req, res) {
 })
 
 router.put('/star/:id', function(req, res) {
-    var myToken = req.query.token || req.body.token
-    var query_user = jwt.decode(myToken).username
+
+    let query_user = getUsername(req)
 
     Utilizador.lookup(query_user)
         .then(data => {

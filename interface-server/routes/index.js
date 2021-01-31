@@ -27,8 +27,6 @@ router.get('/feed', function(req, res) {
         axios.get('http://localhost:7000/utilizadores/' + usrname, headers)
         .then(resp => {
 
-            console.log(resp.data)
-
             axios.get('http://localhost:7000/tipos/top/5', headers)
                 .then(t => {
                     //res.cookie(req.cookies.token)

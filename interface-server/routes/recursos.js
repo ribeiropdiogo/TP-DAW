@@ -25,8 +25,7 @@ router.get('/novo', function(req, res) {
             res.render('addRecurso', { title: 'Adicionar Recurso', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo})
         })
         .catch(err => {
-            
-            if(err.response.data.error.name == 'TokenExpiredError'){
+            if(err.response.status == 401){
                 res.clearCookie("token")
                 res.redirect('/login')
             }else{
@@ -36,6 +35,7 @@ router.get('/novo', function(req, res) {
 });
 
 
+//POST RECURSO //
 router.post('/', upload.single('conteudo'), function(req, res) {
 
     let path = __dirname + '/../' + req.file.path
@@ -54,24 +54,21 @@ router.post('/', upload.single('conteudo'), function(req, res) {
     axios.post('http://localhost:7000/recursos', form, headers)
 
         .then(resp => {
-        fs.unlinkSync(path);
-        res.status(201).jsonp(resp);
+            fs.unlinkSync(path);
+            res.status(201).jsonp(resp);
         })
         .catch(err => {
-        res.render('error', {error: err})
-        /*
-        if(err.response.data.error.name == 'TokenExpiredError'){
-            res.clearCookie("token")
-            res.redirect('/login')
-        }else{
-            res.render('error', {error: err})
-        }
-        */
-    })
+            if(err.response.status==401){
+                res.status(401).jsonp("Token Expirado!");
+            }else{
+                res.render('error', {error: err}) 
+            }
+        })
 });
 
 
 
+//GET Recursos
 router.get('/', function(req, res, next) {
 
     var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
@@ -89,13 +86,12 @@ router.get('/', function(req, res, next) {
         axios.get('http://localhost:7000/recursos?' + cond + 'n=5', headers)
             .then(resp => {
 
-                console.log(resp.data)
-
                 res.render('recursos', {title: 'RepositóriDOIS', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo, recursos: resp.data.recurso})
 
             })
             .catch(err => {
-                if(err.response.data.error.name == 'TokenExpiredError'){
+                //Se for código 401 / Aqui vai ser obrigatoriamente por ter expirado, já se verificou se existe
+                if(err.response.status == 401){
                     res.clearCookie("token")
                     res.redirect('/login')
                 }else{
@@ -137,12 +133,16 @@ router.get('/', function(req, res, next) {
 
 router.get('/zip/:id', function(req, res, next) {
     if(req.cookies.token != null){
+
+        var req_config = { headers: { Authorization: `Bearer ${req.cookies.token}` }, responseType: 'stream'}
+        
         let usrname = jwt.decode(req.cookies.token).username
 
         var fid =  usrname + "_" + req.params.id;
         var path = __dirname + '/../downloads/' + fid + ".zip"
         
-        axios.get('http://localhost:7000/recursos/zip/' + req.params.id + '?token=' + req.cookies.token, {responseType: 'stream'})
+        axios.get('http://localhost:7000/recursos/zip/' + req.params.id, req_config)
+
             .then(r => {
                 // Recebe o zip e guarda na pasta
                 r.data.pipe(fs.createWriteStream(path));
@@ -164,14 +164,13 @@ router.get('/zip/:id', function(req, res, next) {
                     }) 
                 });
             })
-            .catch(err => {/*
-                if(err.response.data.error.name == 'TokenExpiredError'){
+            .catch(err => {
+                if(err.response.status == 401){
                     res.clearCookie("token")
                     res.redirect('/login')
                 }else{
                     res.render('error', {error: err})
-                }*/
-                res.render('error', {error: err})
+                }
             })
 
     } else {
@@ -179,18 +178,18 @@ router.get('/zip/:id', function(req, res, next) {
     }
 });
 
+
 router.get('/meta/:id', function(req, res, next) {
     if(req.cookies.token != null){
-        let usrname = jwt.decode(req.cookies.token).username
-        let cond = "";
+
+        var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
         
-        axios.get('http://localhost:7000/recursos/' + req.params.id + '?token=' + req.cookies.token)
+        axios.get('http://localhost:7000/recursos/' + req.params.id, headers)
             .then(r => {
                 res.status(200).send(r.data)
             })
             .catch(err => {
-                console.log(err)
-                if(err.response.data.error.name == 'TokenExpiredError'){
+                if(err.response.status == 401){
                     res.clearCookie("token")
                     res.redirect('/login')
                 }else{
@@ -203,18 +202,21 @@ router.get('/meta/:id', function(req, res, next) {
     }
 })
 
+
 router.get('/:id', function(req, res, next) {
     if(req.cookies.token != null){
+
         let usrname = jwt.decode(req.cookies.token).username
-        let cond = "";
+        var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
         
-        axios.get('http://localhost:7000/recursos/' + req.params.id + '?token=' + req.cookies.token)
+        axios.get('http://localhost:7000/recursos/' + req.params.id, headers)
             .then(r => {
-                axios.get('http://localhost:7000/utilizadores/' + usrname + '?token=' + req.cookies.token)
+                axios.get('http://localhost:7000/utilizadores/' + usrname, headers)
+
                     .then(resp => {
-                        axios.get('http://localhost:7000/tipos/top/5?token=' + req.cookies.token)
+
+                        axios.get('http://localhost:7000/tipos/top/5', headers)
                             .then(t => {
-                                //res.cookie(req.cookies.token)
                                 res.render('recurso', {title: r.data.titulo, nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data, recurso: r.data})
                             })
                             .catch(e => res.render('error', {error: e}))
@@ -222,14 +224,13 @@ router.get('/:id', function(req, res, next) {
                     .catch(err => res.render('error', {error: err}))
             })
             .catch(err => {
-                if(err.response.data.error.name == 'TokenExpiredError'){
+                if(err.response.status == 401){
                     res.clearCookie("token")
                     res.redirect('/login')
                 }else{
                     res.render('error', {error: err})
                 }
             })
-
     } else {
         res.redirect('/login')
     }
@@ -238,47 +239,64 @@ router.get('/:id', function(req, res, next) {
 // DELETE /recursos/:id
 router.delete('/:id', function(req, res) {
 
-    axios.delete('http://localhost:7000/recursos/' + req.params.id + '?token=' + req.cookies.token)
-        .then(res.status(200).jsonp())
-        .catch(error => res.status(500).jsonp(error))
+    var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
+
+    axios.delete('http://localhost:7000/recursos/' + req.params.id, headers)
+        .then(resp => {
+            res.status(200).jsonp()
+        })
+        .catch(error => {
+            if(error.response.status==401){
+                res.clearCookie("token")
+                res.status(401).jsonp("Token Expirado!");
+            }else{
+                res.status(500).jsonp(error)
+            } 
+        })
 })
 
 
+// ADD|REMOVE STAR //
 router.put('/star/:id', function(req, res) {
     if(req.cookies.token != null){
-        let usrname = jwt.decode(req.cookies.token).username
-  
-        axios.put('http://localhost:7000/recursos/star/' + req.params.id + '?token=' + req.cookies.token,{})
+
+        var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
+
+        axios.put('http://localhost:7000/recursos/star/' + req.params.id,{}, headers)
             .then(r => {
                 res.status(201).send();
             })
             .catch(err => {
-                res.render('error', {error: err})
-        })
-      
+                if(err.response.status == 401){
+                    res.clearCookie("token")
+                    res.status(401).jsonp("Token Expirado!");
+                }else{
+                    res.render('error', {error: err})
+                }
+            })
+    }
+})
+
+//GET FORM EDITAR
 router.get("/editar/:id", function (req, res) {
     if(req.cookies.token != null){
+        
         let usrname = jwt.decode(req.cookies.token).username
-        let cond = "";
-    
-                axios.get('http://localhost:7000/utilizadores/' + usrname + '?token=' + req.cookies.token)
+        var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
+        
+                axios.get('http://localhost:7000/utilizadores/' + usrname, headers)
                     .then(resp => {
-                        axios.get('http://localhost:7000/tipos/top/5?token=' + req.cookies.token)
+                        axios.get('http://localhost:7000/tipos/top/5', headers)
                             .then(t => {
                                 //res.cookie(req.cookies.token)
                                 res.render('editRecurso', {title: "Editar Recurso", nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data})
                             })
                             .catch(e => {
-                                if(err.response.data.error.name == 'TokenExpiredError'){
-                                    res.clearCookie("token")
-                                    res.redirect('/login')
-                                }else{
-                                    res.render('error', {error: err})
-                                }
+                                res.render('error', {error: e})
                             })
                     })
                     .catch(err => {
-                        if(err.response.data.error.name == 'TokenExpiredError'){
+                        if(err.response.status == 401){
                             res.clearCookie("token")
                             res.redirect('/login')
                         }else{
@@ -291,21 +309,24 @@ router.get("/editar/:id", function (req, res) {
     }
 });
 
+
+//UPDATE RECURSO
 router.put("/:id", function (req, res) {
     if(req.cookies.token != null){
-        let usrname = jwt.decode(req.cookies.token).username
-        let cond = "";
-        axios.put('http://localhost:7000/recursos/' + req.params.id + '?token=' + req.cookies.token, req.body)
+
+        var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
+
+        axios.put('http://localhost:7000/recursos/' + req.params.id, req.body, headers)
                 .then(resp => {
                     res.status(200).jsonp()
                 })
                 .catch(err => {
-                    if(err.response.data.error.name == 'TokenExpiredError'){
+                    if(err.response.status==401){
                         res.clearCookie("token")
-                        res.redirect('/login')
+                        res.status(401).jsonp("Token Expirado!");
                     }else{
-                        res.render('error', {error: err})
-                    }
+                        res.render('error', {error: err}) 
+                    }                
                 })
     } else {
         res.redirect('/login')

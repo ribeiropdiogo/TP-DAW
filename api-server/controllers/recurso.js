@@ -14,6 +14,10 @@ module.exports.listByTipo = function(t) {
     return Recurso.find({tipo: t}).exec()
 }
 
+module.exports.listByTag = function(tag) {
+    return Recurso.find({tags: tag}).exec()
+}
+
 module.exports.listByUser = function(a) {
     return Recurso.find({autor: a}).exec()
 }

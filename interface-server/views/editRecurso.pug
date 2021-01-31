@@ -11,6 +11,7 @@ block head
     script(src='/javascript/script.js')
     script(src='/javascript/jszip.min.js')
     script(src='/javascript/editRecurso.js')
+    script(src='/javascript/custom.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/sha256.js')
 
 block body
@@ -27,8 +28,19 @@ block body
             .top-area
                 ul.main-menu
                 ul.setting-area
-                    h6
-                        a(href='/utilizadores/logout', title='Logout') Logout
+                    li
+                        a(href='', title='Search', data-ripple='')
+                            i.ti-search
+                            span.ripple
+                                span.ink(style='height: 21px; width: 21px; background-color: rgb(217, 217, 217); top: -0.25px; left: 0.983337px;')
+                        .searched
+                            form.form-search
+                                input(type="text", placeholder='Procurar Tag', name='tag')
+                                button(data-ripple='', onclick='getRecursosByTag()')
+                                    i.ti-search
+                    li
+                        h6
+                            a(href='/utilizadores/logout', title='Logout') Logout
         section
             .gap.gray-bg
                 .container-fluid

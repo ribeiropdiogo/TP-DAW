@@ -28,7 +28,6 @@ function filterResources(data,query_user){
 }
 
 
-// ### MEUS RECURSOS ###//
 router.get('/', function(req, res) {
 
     let usrname = getUsername(req)
@@ -36,86 +35,78 @@ router.get('/', function(req, res) {
     if(req.query.tipo){
         Recurso.listByTipo(req.query.tipo)
             .then(r => {
-                
                 Utilizador.lookup(usrname)
                     .then(u => {
-
                         Tipo.listTop(req.query.n)
                             .then(t => { 
-
                                 let data = {}
-
                                 data.recurso = r
                                 data.user = u
                                 data.tipo = t
                                 res.status(200).jsonp(data)
-                        
                             })
                             .catch(error => res.status(500).jsonp(error))
                     })
                     .catch(erro => res.status(500).jsonp(erro))
             })
             .catch(error => res.status(500).jsonp(error))
-
-    }
-    else if(req.query.username){
-
+    } else if(req.query.username) {
         Recurso.listByUser(req.query.username)
-        .then(r => {
-            
-            Utilizador.lookup(req.query.username)
-                .then(u => {
-
-                    Tipo.listTop(req.query.n)
-                        .then(t => { 
-
-                            let data = {}
-
-                            data.recurso = r
-                            data.user = u
-                            data.tipo = t
-
-                            res.status(200).jsonp(data)
-                    
-                        })
-                        .catch(error => res.status(500).jsonp(error)) 
+            .then(r => {
+                Utilizador.lookup(req.query.username)
+                    .then(u => {
+                        Tipo.listTop(req.query.n)
+                            .then(t => { 
+                                let data = {}
+                                data.recurso = r
+                                data.user = u
+                                data.tipo = t
+                                res.status(200).jsonp(data)
+                            })
+                            .catch(error => res.status(500).jsonp(error)) 
+                    })
+                    .catch(erro => res.status(500).jsonp(erro))
+            })
+            .catch(error => res.status(500).jsonp(error))
+    } else if(req.query.tag) {
+        Recurso.listByTag(req.query.tag)
+            .then(r => {
+                Utilizador.lookup(usrname)
+                    .then(u => {
+                        Tipo.listTop(req.query.n)
+                            .then(t => { 
+                                let data = {}
+                                data.recurso = r
+                                data.user = u
+                                data.tipo = t
+                                res.status(200).jsonp(data)
+                            })
+                            .catch(error => res.status(500).jsonp(error))
+                    })
+                    .catch(erro => res.status(500).jsonp(erro))
                 })
-                .catch(erro => res.status(500).jsonp(erro))
-        })
-        .catch(error => res.status(500).jsonp(error))
-
-    }else{
-        
+            .catch(error => res.status(500).jsonp(error))
+    } else {  
         Recurso.list()
-        .then(r => {
-            
-            Utilizador.lookup(usrname)
-                .then(u => {
-
-                    Tipo.listTop(req.query.n)
-                        .then(t => { 
-
-                            let data = {}
-
-                            data.recurso = r
-                            data.user = u
-                            data.tipo = t
-                            res.status(200).jsonp(data)
-                    
-                        })
-                        .catch(error => res.status(500).jsonp(error))
-            
-                })
-                .catch(erro => res.status(500).jsonp(erro))
-        })
-        .catch(error => res.status(500).jsonp(error))
-
+            .then(r => {
+                Utilizador.lookup(usrname)
+                    .then(u => {
+                        Tipo.listTop(req.query.n)
+                            .then(t => { 
+                                let data = {}
+                                data.recurso = r
+                                data.user = u
+                                data.tipo = t
+                                res.status(200).jsonp(data)
+                            })
+                            .catch(error => res.status(500).jsonp(error))
+                    })
+                    .catch(erro => res.status(500).jsonp(erro))
+            })
+            .catch(error => res.status(500).jsonp(error))
     }
-
 })
 
-
-//######### Get Form Novo Recurso #############//
 
 router.get('/novo', function(req, res) {
 
@@ -123,21 +114,16 @@ router.get('/novo', function(req, res) {
  
     Utilizador.lookup(usrname)
         .then(u => {
-
             Tipo.list()
                 .then(t => { 
-
                     let data = {}
-
                     data.user = u
                     data.tipo = t
-
                     res.status(200).jsonp(data)    
                 })
                 .catch(error => res.status(500).jsonp(error)) 
         })
         .catch(erro => res.status(500).jsonp(erro))   
-
 })
 
 /*

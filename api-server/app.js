@@ -35,8 +35,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 //Verifica se o pedido vem com token de acesso
 app.use(function(req, res, next) {
-    var myToken = req.query.token || req.body.token
-    
+
+    authHeader = req.headers['authorization']
+    var myToken = authHeader && authHeader.split(' ')[1] || req.query.token || req.body.token
+
     if(myToken){
         jwt.verify(myToken, "RepositoriDOIS", function(e, payload){
             if(e){

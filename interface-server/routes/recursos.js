@@ -17,16 +17,12 @@ function getPath(str){
 // Formulário para adicionar um recurso
 router.get('/novo', function(req, res) {
   
-    let usrname = jwt.decode(req.cookies.token).username
+    var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
 
-    axios.get('http://localhost:7000/utilizadores/' + usrname + '?token=' + req.cookies.token)
+    axios.get('http://localhost:7000/recursos/novo', headers)
         
         .then(resp => {
-
-            axios.get('http://localhost:7000/tipos?token=' + req.cookies.token)
-                .then(t => res.render('addRecurso', { title: 'Adicionar Recurso', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data}))
-                .catch(e => res.render('error', {error: e}));
-
+            res.render('addRecurso', { title: 'Adicionar Recurso', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo})
         })
         .catch(err => {
             
@@ -40,27 +36,28 @@ router.get('/novo', function(req, res) {
 });
 
 
-
 router.post('/', upload.single('conteudo'), function(req, res) {
 
-  let path = __dirname + '/../' + req.file.path
-  const FormData = require('form-data');
+    let path = __dirname + '/../' + req.file.path
+    const FormData = require('form-data');
 
-  const form = new FormData();
-  form.append('conteudo', fs.createReadStream(path));
+    const form = new FormData();
+    form.append('conteudo', fs.createReadStream(path));
 
-  const request_config = {
-    headers: form.getHeaders(),
-  };
+    //request_config alterado
+    const headers = {headers: {
+        'Content-Type': form.getHeaders()['content-type'],
+        'Authorization':  `Bearer ${req.cookies.token}`
+    }}
   
 
-  axios.post('http://localhost:7000/recursos?token=' + req.cookies.token, form, request_config)
+    axios.post('http://localhost:7000/recursos', form, headers)
 
-      .then(resp => {
+        .then(resp => {
         fs.unlinkSync(path);
         res.status(201).jsonp(resp);
-      })
-      .catch(err => {
+        })
+        .catch(err => {
         res.render('error', {error: err})
         /*
         if(err.response.data.error.name == 'TokenExpiredError'){
@@ -73,16 +70,42 @@ router.post('/', upload.single('conteudo'), function(req, res) {
     })
 });
 
+
+
 router.get('/', function(req, res, next) {
+
+    var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
+
     if(req.cookies.token != null){
-        let usrname = jwt.decode(req.cookies.token).username
+
         let cond = "";
 
         if(req.query.tipo)
             cond = "tipo=" + req.query.tipo + "&"
         else if(req.query.username)
             cond = "username=" + req.query.username + "&"
+        else if(req.query.tag)
+            cond = "tag=" + req.query.tag + "&"
         
+
+        axios.get('http://localhost:7000/recursos?' + cond + 'n=5', headers)
+            .then(resp => {
+
+                console.log(resp.data)
+
+                res.render('recursos', {title: 'RepositóriDOIS', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo, recursos: resp.data.recurso})
+
+            })
+            .catch(err => {
+                if(err.response.data.error.name == 'TokenExpiredError'){
+                    res.clearCookie("token")
+                    res.redirect('/login')
+                }else{
+                    res.render('error', {error: err})
+                }
+            })
+
+        /*
         axios.get('http://localhost:7000/recursos?' + cond + 'token=' + req.cookies.token)
             .then(r => {
                 axios.get('http://localhost:7000/utilizadores/' + usrname + '?token=' + req.cookies.token)
@@ -104,6 +127,7 @@ router.get('/', function(req, res, next) {
                     res.render('error', {error: err})
                 }
             })
+            */
 
     } else {
         res.redirect('/login')
@@ -218,6 +242,23 @@ router.delete('/:id', function(req, res) {
         .catch(error => res.status(500).jsonp(error))
 })
 
+
+router.put('/star/:id', function(req, res) {
+    if(req.cookies.token != null){
+        let usrname = jwt.decode(req.cookies.token).username
+  
+        axios.put('http://localhost:7000/recursos/star/' + req.params.id + '?token=' + req.cookies.token,{})
+            .then(r => {
+                res.status(201).send();
+            })
+            .catch(err => {
+                res.render('error', {error: err})
+        })
+    } else {
+        res.redirect('/login')
+    }
+});
+      
 router.get("/editar/:id", function (req, res) {
     if(req.cookies.token != null){
         let usrname = jwt.decode(req.cookies.token).username

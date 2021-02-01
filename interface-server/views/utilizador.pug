@@ -8,11 +8,8 @@ block head
     link(rel='stylesheet', href='/stylesheets/responsive.css')
     link(rel='icon', href='/img/favicon.png', type='image/png' sizes='16x16') 
     script(src='/javascript/main.min.js')
-    script(src='/javascript/script.js')
-    script(src='/javascript/jszip.min.js')
-    script(src='/javascript/editRecurso.js')
     script(src='/javascript/custom.js')
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/sha256.js')
+    script(src='/javascript/script.js')
 
 block body
     .theme-layout
@@ -47,44 +44,33 @@ block body
                     .row
                         .col-lg-12
                             div(class='row', id='page-contents')
-                                .col-lg-8
+                                .col-lg-2
+                                    aside(class='sidebar static')
+                                        .widget
+                                            h2.widget-title Tipos
+                                            ul.naves
+                                                each t in tipos
+                                                    li
+                                                        a(href='/recursos?tipo='+t._id, title='')= t._id
+                                .col-lg-6
                                     .central-meta
-                                        .editing-info
-                                            h5.f-title Editar Recurso
-                                            form
-                                                .form-group.half
-                                                    input(type="text", id="titulo", name="titulo", required)
-                                                    label(class='control-label', for="titulo") Título
-                                                    i.mtrl-select
-                                                .form-group.half
-                                                    input(type="text", id="subtitulo", name="subtitulo", required)
-                                                    label(class='control-label', for="subtitulo") Subtítulo
-                                                    i.mtrl-select
-                                                .form-group
-                                                    input(type="text", id="tipo", name="tipo", required)
-                                                    label(class='control-label', for="tipo") Tipo
-                                                    i.mtrl-select
-                                                .form-radio
-                                                    .radio
-                                                        label
-                                                            input(type="radio", id="publico", name="visibilidade", value="Público" )
-                                                            i.check-box
-                                                            | Público
-                                                    .radio
-                                                        label
-                                                            input(type="radio", id="privado", name="visibilidade", value="Privado")
-                                                            i.check-box
-                                                            | Privado
-                                                .form-group
-                                                    input(type="text", id="tags", name="tags", required)
-                                                    label(class='control-label', for="tags") Tags (separadas por vírgulas)
-                                                    i.mtrl-select
-                                                input(type="hidden", id="username", name="username" value=username)
-                                                .submit-btns
-                                                    button.mtr-btn(type='button', id='adicionar', onclick='updateRecurso()', style='margin-right: 5px;')
-                                                        span Atualizar
-                                                    button.mtr-btn(type='button', onclick='history.back();')
-                                                        span Cancelar
+                                        h4.widget-title Detalhes Utilizador
+                                        h5 Nome: 
+                                            strong #{owner.nome}
+                                        h5 Instituição: 
+                                            strong #{owner.instituicao} - #{owner.curso} #{owner.departamento}
+
+                                    .central-meta
+                                        h4.widget-title Recursos do Utilizador
+                                        ul.nearby-contct
+                                            each recurso in recursos
+                                                li
+                                                    .nearly-pepls
+                                                        .pepl-info
+                                                            h4= recurso.titulo
+                                                            span= recurso.tipo
+                                                            em= recurso.autor
+                                                            a(href='/recursos/'+recurso._id, title='', class='add-butn') Ver Recurso
                                 .col-lg-4
                                     aside(class='sidebar static')
                                         .widget
@@ -106,12 +92,6 @@ block body
                                                     a(href='/recursos/novo', title='') Adicionar Recurso
                                                 li
                                                     a(href='/recursos?username='+username, title='') Meus Recursos
-                                    aside(class='sidebar static')
-                                        .widget
-                                            h4.widget-title Tipos
-                                            ul.naves
-                                                li
-                                                    a(href='/tipos/novo', title='') Criar Tipo
     
 block footer
     .container

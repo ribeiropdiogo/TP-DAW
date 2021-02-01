@@ -75,6 +75,7 @@ function register(){
     data.curso  = $("input[name=curso]").val();
     data.departamento  = $("input[name=departamento]").val();
     data.instituicao = $("input[name=instituicao]").val();
+    data.starred = [];
 
     var json = JSON.stringify(data);
 
@@ -91,4 +92,13 @@ function register(){
     xhr.open("POST", '/utilizadores', true);
     xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
     xhr.send(json);
+}
+
+function getRecursosByTag(){
+    var tag = $("input[name=tag]").val()
+    window.location.replace("/recursos?tag="+tag);
+}
+
+function logout(){
+    window.location.replace("/utilizadores/logout");
 }

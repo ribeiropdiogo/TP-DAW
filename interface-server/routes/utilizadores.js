@@ -10,11 +10,6 @@ router.get('/', function(req, res, next) {
     res.render('index', { title: 'Works' });
 });
 
-//Obter detalhes pessoais
-router.get('/dados/:id', function(req, res, next) {
-    res.render('index', { title: 'Express' });
-});
-
 //Registar novo utilziador
 //Valida se é um email e se pwd tem pelo menos tamanho 5
 router.post('/', [check('email').isEmail(), check('password').isLength({ min: 5 })], function(req, res) {
@@ -77,6 +72,24 @@ router.put('/editar', function(req, res, next) {
 //Apagar conta
 router.delete('/delete', function(req, res, next) {
     res.render('index', { title: 'Express' });
+});
+
+//Obter detalhes pessoais
+router.get('/:id', function(req, res, next) {
+    var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
+
+    if(req.cookies.token != null){
+
+        axios.get('http://localhost:7000/utilizadores/detalhes/' + req.params.id, headers)
+            .then(resp => {
+                res.render('utilizador', {title: 'RepositóriDOIS', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo, recursos: resp.data.recursos, owner: resp.data.owner})
+            })
+            .catch(err => {
+                res.render('error', {error: err})
+            })
+    } else {
+        res.redirect('/login')
+    }
 });
 
 module.exports = router;

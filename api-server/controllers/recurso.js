@@ -14,6 +14,10 @@ module.exports.listByTipo = function(t) {
         .exec()
 }
 
+module.exports.listByTag = function(tag) {
+    return Recurso.find({tags: tag}).exec()
+}
+
 module.exports.listByUser = function(a) {
     return Recurso
         .find({autor: a})
@@ -46,3 +50,14 @@ module.exports.edit = function(id, r) {
         .findByIdAndUpdate(id, r, {new: true})
         .exec()
 }
+
+// Star one resource
+module.exports.star = function(id) {
+    return Recurso.findByIdAndUpdate(id, {$inc: {stars: 1}}, {new: true}).exec()
+}
+
+// Unstar one resource
+module.exports.unstar = function(id) {
+    return Recurso.findByIdAndUpdate(id, {$inc: {stars: -1}}, {new: true}).exec()
+}
+

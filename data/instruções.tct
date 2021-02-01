@@ -1,1 +1,0 @@
-mongoimport --db RepositoriDOIS --collection tipos --file tipos.json --jsonArray  

@@ -44,15 +44,29 @@ block body
                     .row
                         .col-lg-12
                             div(class='row', id='page-contents')
-                                .col-lg-2
+                                .col-lg-3
                                     aside(class='sidebar static')
                                         .widget
-                                            h2.widget-title Tipos
+                                            h2.widget-title Opções
                                             ul.naves
-                                                each t in tipos
-                                                    li
-                                                        a(href='/recursos?tipo='+t._id, title='')= t._id
-                                .col-lg-6
+                                                li
+                                                    a(href='', title='') Importar
+                                                li
+                                                    a(href='', title='') Exportar
+                                                li
+                                                    a(href='/estatisticas', title='') Estatísticas
+                                .col-lg-5
+                                    .central-meta
+                                        .new-postbox
+                                            .newpst-input
+                                             form
+                                                textarea(name="noticia", rows="2", placeholder="Adicionar notícia...")
+                                                .attachments
+                                                    ul
+                                                        li
+                                                            button(type='submit') Publicar
+                                    .central-meta
+                                        h6 Notícias Publicadas
                                 .col-lg-4
                                     aside(class='sidebar static')
                                         .widget
@@ -74,6 +88,8 @@ block body
                                                     a(href='/recursos/novo', title='') Adicionar Recurso
                                                 li
                                                     a(href='/recursos?username='+username, title='') Meus Recursos
+                                                li
+                                                    a(href='/recursos', title='') Gerir Recursos
     
 block footer
     .container

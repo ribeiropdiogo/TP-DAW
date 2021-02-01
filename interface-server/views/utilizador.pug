@@ -10,9 +10,6 @@ block head
     script(src='/javascript/main.min.js')
     script(src='/javascript/custom.js')
     script(src='/javascript/script.js')
-    script(src='/javascript/recurso.js')
-    script(src='/javascript/jszip.min.js')
-    script(src='/javascript/crud.js')
 
 block body
     .theme-layout
@@ -55,37 +52,32 @@ block body
                                                 each t in tipos
                                                     li
                                                         a(href='/recursos?tipo='+t._id, title='')= t._id
-                                        .widget
-                                            h2.widget-title Estrelas
-                                            ul.naves
-                                                li
-                                                    i.ti-star
-                                                    a(href="", onclick="star()")= recurso.stars
-
                                 .col-lg-6
                                     .central-meta
-                                        .about
-                                            .personal
-                                                h5.f-title= recurso.titulo
-                                                p= recurso.subtitulo
-                                                div(id="viewer")
-                                                p
-                                                    strong Autor: 
-                                                        a(href='/utilizadores/'+recurso.autor) #{recurso.autor}
-                                                p
-                                                    strong Data de Criação: 
-                                                    | #{recurso.dataCriacao}
-                                                p
-                                                    strong Tags: 
-                                                    each tag in recurso.tags
-                                                        a(href='/recursos?tag='+tag) ##{tag} 
+                                        h4.widget-title Detalhes Utilizador
+                                        h5 Nome: 
+                                            strong #{owner.nome}
+                                        h5 Instituição: 
+                                            strong #{owner.instituicao} - #{owner.curso} #{owner.departamento}
+
+                                    .central-meta
+                                        h4.widget-title Recursos do Utilizador
+                                        ul.nearby-contct
+                                            each recurso in recursos
+                                                li
+                                                    .nearly-pepls
+                                                        .pepl-info
+                                                            h4= recurso.titulo
+                                                            span= recurso.tipo
+                                                            em= recurso.autor
+                                                            a(href='/recursos/'+recurso._id, title='', class='add-butn') Ver Recurso
                                 .col-lg-4
                                     aside(class='sidebar static')
                                         .widget
                                             h4.widget-title Perfil
                                             .your-page
                                                 .page-meta
-                                                    a(href='/utilizador/'+username, title='', class='underline', id="user_link")= nome
+                                                    a(href='/', title='', class='underline')= nome
                                                     span
                                                         i.ti-email
                                                         a= email
@@ -100,13 +92,6 @@ block body
                                                     a(href='/recursos/novo', title='') Adicionar Recurso
                                                 li
                                                     a(href='/recursos?username='+username, title='') Meus Recursos
-                                    aside(class='sidebar static')
-                                        .widget
-                                            h4.widget-title Opções
-                                            ul.naves
-                                                li(id="descarregar")
-                                                li(id="editar")
-                                                li(id="apagar")
     
 block footer
     .container

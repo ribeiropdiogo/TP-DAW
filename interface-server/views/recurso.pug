@@ -28,8 +28,19 @@ block body
             .top-area
                 ul.main-menu
                 ul.setting-area
-                    h6
-                        a(href='/utilizadores/logout', title='Logout') Logout
+                    li
+                        a(href='', title='Search', data-ripple='')
+                            i.ti-search
+                            span.ripple
+                                span.ink(style='height: 21px; width: 21px; background-color: rgb(217, 217, 217); top: -0.25px; left: 0.983337px;')
+                        .searched
+                            form.form-search
+                                input(type="text", placeholder='Procurar Tag', name='tag')
+                                button(data-ripple='', onclick='getRecursosByTag()')
+                                    i.ti-search
+                    li
+                        h6
+                            a(href='', title='Logout', onclick='logout()') Logout
         section
             .gap.gray-bg
                 .container-fluid
@@ -60,27 +71,27 @@ block body
                                                 div(id="viewer")
                                                 p
                                                     strong Autor: 
-                                                    | #{recurso.autor}
+                                                        a(href='/utilizadores/'+recurso.autor) #{recurso.autor}
                                                 p
                                                     strong Data de Criação: 
                                                     | #{recurso.dataCriacao}
                                                 p
                                                     strong Tags: 
                                                     each tag in recurso.tags
-                                                        | ##{tag} 
+                                                        a(href='/recursos?tag='+tag) ##{tag} 
                                 .col-lg-4
                                     aside(class='sidebar static')
                                         .widget
                                             h4.widget-title Perfil
                                             .your-page
                                                 .page-meta
-                                                    a(href='/utilizador/'+username, title='', class='underline', id="user_link")= nome
+                                                    a(href='/utilizador/'+user.username, title=""+user.admin, class='underline', id="user_link")= user.nome
                                                     span
                                                         i.ti-email
-                                                        a= email
+                                                        a= user.email
                                                     span
                                                         i.ti-book
-                                                        a= instituicao
+                                                        a= user.instituicao
                                     aside(class='sidebar static')
                                         .widget
                                             h4.widget-title Recursos
@@ -88,7 +99,7 @@ block body
                                                 li
                                                     a(href='/recursos/novo', title='') Adicionar Recurso
                                                 li
-                                                    a(href='/recursos?username='+username, title='') Meus Recursos
+                                                    a(href='/recursos?username='+user.username, title='') Meus Recursos
                                     aside(class='sidebar static')
                                         .widget
                                             h4.widget-title Opções

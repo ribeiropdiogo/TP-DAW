@@ -1,0 +1,5 @@
+mongoimport --db RepositoriDOIS --collection tipos --file tipos.json --jsonArray  
+
+Para ter um user a admin:
+
+ no mongo -> db.utilizadores.update({username: "ribeiro"},{$set: {admin: true}})

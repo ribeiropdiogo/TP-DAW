@@ -95,6 +95,7 @@ function register(){
     xhr.send(json);
 }
 
+<<<<<<< HEAD
 // Recuperar PWD
 //On Click -> Send Reset Token
 function sendResetPassword(){
@@ -170,3 +171,13 @@ function updatePassword(){
         alert('As Passwords Introduzidas não correspondem!... Tente de novo.')
     }
 }
+=======
+function getRecursosByTag(){
+    var tag = $("input[name=tag]").val()
+    window.location.replace("/recursos?tag="+tag);
+}
+
+function logout(){
+    window.location.replace("/utilizadores/logout");
+}
+>>>>>>> main

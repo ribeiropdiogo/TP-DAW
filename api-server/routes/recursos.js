@@ -17,105 +17,98 @@ function getPath(str){
     return path;
 }
 
-function filterResources(data,query_user){
+function filterResources(data,query_user,admin){
     var i;
     var response = [];
+            
     for (i = 0; i < data.length; i++) {
-        if(data[i].visibilidade == "Público" || data[i].autor == query_user)
+        if(data[i].visibilidade == "Público" || data[i].autor == query_user || admin == true)
             response.push(data[i]);
     } 
+
     return response;
 }
 
 
-// ### MEUS RECURSOS ###//
 router.get('/', function(req, res) {
 
-    let query_user = getUsername(req)
+    let username = getUsername(req)
 
     if(req.query.tipo){
         Recurso.listByTipo(req.query.tipo)
             .then(r => {
-                
-                Utilizador.lookup(query_user)
+                Utilizador.lookup(username)
                     .then(u => {
-
                         Tipo.listTop(req.query.n)
                             .then(t => { 
-
                                 let data = {}
-
-                                data.recurso = r
+                                data.recurso = filterResources(r,username,u.admin)
                                 data.user = u
                                 data.tipo = t
                                 res.status(200).jsonp(data)
-                        
                             })
                             .catch(error => res.status(500).jsonp(error))
                     })
                     .catch(erro => res.status(500).jsonp(erro))
             })
             .catch(error => res.status(500).jsonp(error))
-
-    }
-    else if(req.query.username){
-
+    } else if(req.query.username) {
         Recurso.listByUser(req.query.username)
-        .then(r => {
-            
-            Utilizador.lookup(req.query.username)
-                .then(u => {
-
-                    Tipo.listTop(req.query.n)
-                        .then(t => { 
-
-                            let data = {}
-
-                            data.recurso = r
-                            data.user = u
-                            data.tipo = t
-
-                            res.status(200).jsonp(data)
-                    
-                        })
-                        .catch(error => res.status(500).jsonp(error)) 
+            .then(r => {
+                Utilizador.lookup(req.query.username)
+                    .then(u => {
+                        Tipo.listTop(req.query.n)
+                            .then(t => { 
+                                let data = {}
+                                data.recurso = filterResources(r,username,u.admin)
+                                data.user = u
+                                data.tipo = t
+                                res.status(200).jsonp(data)
+                            })
+                            .catch(error => res.status(500).jsonp(error)) 
+                    })
+                    .catch(erro => res.status(500).jsonp(erro))
+            })
+            .catch(error => res.status(500).jsonp(error))
+    } else if(req.query.tag) {
+        Recurso.listByTag(req.query.tag)
+            .then(r => {
+                Utilizador.lookup(username)
+                    .then(u => {
+                        Tipo.listTop(req.query.n)
+                            .then(t => { 
+                                let data = {}
+                                data.recurso = filterResources(r,username,u.admin)
+                                data.user = u
+                                data.tipo = t
+                                res.status(200).jsonp(data)
+                            })
+                            .catch(error => res.status(500).jsonp(error))
+                    })
+                    .catch(erro => res.status(500).jsonp(erro))
                 })
-                .catch(erro => res.status(500).jsonp(erro))
-        })
-        .catch(error => res.status(500).jsonp(error))
-
-    }else{
-        
+            .catch(error => res.status(500).jsonp(error))
+    } else {  
         Recurso.list()
-        .then(r => {
-            
-            Utilizador.lookup(query_user)
-                .then(u => {
-
-                    Tipo.listTop(req.query.n)
-                        .then(t => { 
-
-                            let data = {}
-
-                            data.recurso = r
-                            data.user = u
-                            data.tipo = t
-                            res.status(200).jsonp(data)
-                    
-                        })
-                        .catch(error => res.status(500).jsonp(error))
-            
-                })
-                .catch(erro => res.status(500).jsonp(erro))
-        })
-        .catch(error => res.status(500).jsonp(error))
-
+            .then(r => {
+                Utilizador.lookup(username)
+                    .then(u => {
+                        Tipo.listTop(req.query.n)
+                            .then(t => { 
+                                let data = {}
+                                data.recurso = filterResources(r,username,u.admin)
+                                data.user = u
+                                data.tipo = t
+                                res.status(200).jsonp(data)
+                            })
+                            .catch(error => res.status(500).jsonp(error))
+                    })
+                    .catch(erro => res.status(500).jsonp(erro))
+            })
+            .catch(error => res.status(500).jsonp(error))
     }
-
 })
 
-
-//######### Get Form Novo Recurso #############//
 
 router.get('/novo', function(req, res) {
 
@@ -123,21 +116,16 @@ router.get('/novo', function(req, res) {
  
     Utilizador.lookup(query_user)
         .then(u => {
-
             Tipo.list()
                 .then(t => { 
-
                     let data = {}
-
                     data.user = u
                     data.tipo = t
-
                     res.status(200).jsonp(data)    
                 })
                 .catch(error => res.status(500).jsonp(error)) 
         })
         .catch(erro => res.status(500).jsonp(erro))   
-
 })
 
 /*
@@ -170,10 +158,14 @@ router.get('/:id', function(req, res) {
 
     Recurso.lookup(req.params.id)
         .then(data => {
-            if(data.autor == query_user || data.visibilidade == "Público")
-                res.status(200).jsonp(data)
-            else 
-                res.status(401).jsonp()
+            Utilizador.lookup(query_user)
+                .then(u => {
+                    if(data.autor == query_user || data.visibilidade == "Público" || u.admin == true)
+                        res.status(200).jsonp(data)
+                    else 
+                        res.status(401).jsonp()
+                })
+                .catch(error => res.status(500).jsonp(error))
         })
         .catch(error => res.status(500).jsonp(error))
 })
@@ -297,12 +289,16 @@ router.put('/:id', function(req, res) {
 
     Recurso.lookup(req.params.id)
         .then(data => {
-            if(data.autor == query_user){
-                Recurso.edit(req.params.id, req.body)
-                    .then(data => res.status(200).jsonp(data))
-                    .catch(error => res.status(500).jsonp(error))
-            } else
-                res.status(401).jsonp()
+            Utilizador.lookup(query_user)
+                .then(u => {
+                    if(data.autor == query_user|| u.admin == true){
+                        Recurso.edit(req.params.id, req.body)
+                            .then(data => res.status(200).jsonp(data))
+                            .catch(error => res.status(500).jsonp(error))
+                    } else
+                        res.status(401).jsonp()
+                })
+                .catch(error => res.status(500).jsonp(error))
         })
         .catch(error => res.status(500).jsonp(error))
 })
@@ -314,21 +310,24 @@ router.delete('/:id', function(req, res) {
 
     Recurso.lookup(req.params.id)
         .then(data => {
-            if(data.autor == query_user){
-                Recurso.remove(req.params.id)
-                    .then(r => {
-                        let path = __dirname + '/../' + 'recursos/' + getPath(data._id.toString()) + "/" + data.nome
-                        console.log(path)
-                        fs.unlink(path, (err) => {
-                            if (err) throw err
-                        })
-                        Tipo.decrement(data.tipo)
-                            .then(res.status(200).jsonp(data))
-                            .catch(error => console.log(error))
-                    })
-                    .catch(error => res.status(500).jsonp(error))
-            } else
-                res.status(401).jsonp()
+            Utilizador.lookup(query_user)
+                .then(u => {
+                    if(data.autor == query_user || u.admin == true){
+                        Recurso.remove(req.params.id)
+                            .then(r => {
+                                let path = __dirname + '/../' + 'recursos/' + getPath(data._id.toString()) + "/" + data.nome
+                                fs.unlink(path, (err) => {
+                                    if (err) throw err
+                                })
+                                Tipo.decrement(data.tipo)
+                                    .then(res.status(200).jsonp(data))
+                                    .catch(error => console.log(error))
+                            })
+                            .catch(error => res.status(500).jsonp(error))
+                    } else
+                        res.status(401).jsonp()
+                })
+                .catch(error => res.status(500).jsonp(error))
         })
         .catch(error => res.status(500).jsonp(error))
     
@@ -340,22 +339,17 @@ router.put('/star/:id', function(req, res) {
 
     Utilizador.lookup(query_user)
         .then(data => {
-            console.log("found")
             if(data.starred.includes(req.params.id)){
-                console.log("unstar")
                 Utilizador.unstar(query_user,req.params.id)
                     .then(r => {
-                        console.log("unstar")
                         Recurso.unstar(req.params.id)
                             .then(res.status(200).send())
                             .catch(error => console.log(error))
                     })
                     .catch(error => res.status(500).jsonp(error))
             } else {
-                console.log("star")
                 Utilizador.star(query_user,req.params.id)
                     .then(r => {
-                        console.log("star")
                         Recurso.star(req.params.id)
                             .then(res.status(200).send())
                             .catch(error => console.log(error))

@@ -81,11 +81,12 @@ router.get('/', function(req, res, next) {
             cond = "tipo=" + req.query.tipo + "&"
         else if(req.query.username)
             cond = "username=" + req.query.username + "&"
+        else if(req.query.tag)
+            cond = "tag=" + req.query.tag + "&"
         
 
         axios.get('http://localhost:7000/recursos?' + cond + 'n=5', headers)
             .then(resp => {
-
                 res.render('recursos', {title: 'RepositóriDOIS', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo, recursos: resp.data.recurso})
 
             })
@@ -127,9 +128,6 @@ router.get('/', function(req, res, next) {
         res.redirect('/login')
     }
 });
-
-
-//#### NEW ####//
 
 router.get('/zip/:id', function(req, res, next) {
     if(req.cookies.token != null){
@@ -206,18 +204,16 @@ router.get('/meta/:id', function(req, res, next) {
 router.get('/:id', function(req, res, next) {
     if(req.cookies.token != null){
 
-        let usrname = jwt.decode(req.cookies.token).username
+        let username = jwt.decode(req.cookies.token).username
         var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
         
         axios.get('http://localhost:7000/recursos/' + req.params.id, headers)
             .then(r => {
-                axios.get('http://localhost:7000/utilizadores/' + usrname, headers)
-
+                axios.get('http://localhost:7000/utilizadores/' + username, headers)
                     .then(resp => {
-
                         axios.get('http://localhost:7000/tipos/top/5', headers)
                             .then(t => {
-                                res.render('recurso', {title: r.data.titulo, nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data, recurso: r.data})
+                                res.render('recurso', {title: r.data.titulo, user: resp.data, tipos: t.data, recurso: r.data})
                             })
                             .catch(e => res.render('error', {error: e}))
                     })

@@ -55,7 +55,7 @@ router.post('/', upload.single('conteudo'), function(req, res) {
 
         .then(resp => {
             fs.unlinkSync(path);
-            res.status(201).jsonp(resp);
+            res.status(201).jsonp(resp.data);
         })
         .catch(err => {
             if(err.response.status==401){

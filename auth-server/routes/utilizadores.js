@@ -20,13 +20,13 @@ router.post('/login', authenticate, sign, function(req, res) {
 
 
 // Forgot PWD
-router.post('/esqueceuPassword', forgotPwd, function(req, res) {
+router.post('/recuperaPassword', forgotPwd, function(req, res) {
     res.status(200).jsonp({msg: req.msg})
 })
 
 
 // Forgot PWD
-router.post('/recuperaPassword/:token', verificaToken, atualizaPwd, authenticate, sign, function(req, res) {
+router.post('/redefinePassword/:token', verificaToken, atualizaPwd, authenticate, sign, function(req, res) {
     res.status(200).jsonp({token: req.token})
 })
 
@@ -112,6 +112,8 @@ function verificaToken(req, res, next) {
     
 }
 
+
+//## RESET PWD ##//
 function atualizaPwd(req, res, next) {
 
     //Gerar nova Hash e Update
@@ -132,7 +134,7 @@ function atualizaPwd(req, res, next) {
         })
         .catch(e => res.status(500).jsonp({error: e}))
 }
-
+//#################//
 
 function createAccount(req, res, next) {
     const user = req.body

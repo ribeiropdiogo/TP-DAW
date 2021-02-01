@@ -1,14 +1,12 @@
 // User Controller
 const Utilizador = require('../models/utilizador')
 
-
 // Returns user list
 module.exports.list = function() {
     return Utilizador
         .find({}, {hashedPassword: 0, salt: 0, __v: 0})
         .exec()
 }
-
 
 // Returns a user record
 module.exports.lookup = function(n) {
@@ -36,7 +34,6 @@ module.exports.edit = function(n, u) {
         .select({hashedPassword: 0, salt: 0, __v: 0})
         .exec()
 }
-
 
 // Removes one user
 module.exports.remove = function(n) {

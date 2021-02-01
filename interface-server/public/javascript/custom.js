@@ -60,6 +60,7 @@ function login(){
     xhr.send(json);
 }
 
+//On Click -> Register
 function register(){
     var data = {};
     data.nome = $("input[name=name]").val();
@@ -93,3 +94,5 @@ function register(){
     xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
     xhr.send(json);
 }
+
+// Recuperar PWD

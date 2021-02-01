@@ -7,11 +7,13 @@ const jwt = require('jsonwebtoken')
 // Formulário para adicionar um tipo
 router.get('/novo', function(req, res) {
   
+    var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
     let usrname = jwt.decode(req.cookies.token).username
 
-    axios.get('http://localhost:7000/utilizadores/' + usrname + '?token=' + req.cookies.token)
+    axios.get('http://localhost:7000/utilizadores/' + usrname, headers)
         .then(resp => {
 
+            console.log(resp.data)
             res.render('addTipo', { title: 'Adicionar Tipo', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email});
         
         })

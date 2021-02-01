@@ -5,7 +5,7 @@ const Utilizador = require('../models/utilizador')
 // Returns a user's login credentials
 module.exports.lookupCredentials = function(id) {
     return Utilizador
-        .findOne({username: id}, {_id: 0, username: 1, admin: 1, salt: 1, hashedPassword: 1})
+        .findOne({username: id}, {_id: 0, username: 1, admin: 1, salt: 1, hashedPassword: 1, email: 1})
         .exec()
 }
 
@@ -17,18 +17,19 @@ module.exports.insert = function(u) {
 }
 
 // Verificar se o user associado a um email existe
-module.exports.lookupUser = function(id) {
+module.exports.lookupUserByEmail = function(id) {
     return Utilizador
-        .findOne({email: id}, {_id: 0, username: 1, salt: 1})
+        //.findOne({email: id}, {_id: 0, salt: 1, resetToken: 1, resetTokenExp: 1})
+        .findOne({email: id}, {_id: 0, username: 1, hashedPassword: 1})
         .exec()
 }
 
-//Inserir reset token e tokenExpTime na DB
-// Edit one user
-module.exports.updateResetToken = function(id, tkn, tknExp) {
+
+//Reset Password
+module.exports.updatePwd = function(id, hsh, slt) {
     return Utilizador
         // Mongoose sends an `updateOne({ _id: doc._id }, { $set: { name: 'foo' } })`
-        .findOneAndUpdate({email: id}, { $set: { resetToken: tkn, resetTokenExp: tknExp } }, {new: true})
+        .findOneAndUpdate({username: id}, { $set: { hashedPassword: hsh, salt: slt } }, {new: true})
         .select({hashedPassword: 0, salt: 0, __v: 0})
         .exec()
 }

@@ -16,8 +16,6 @@ var userSchema = new mongoose.Schema({
     hashedPassword: String,
     starred: [String],
     salt: String,
-    resetToken: String,
-    resetTokenExp: Date
 })
 
 

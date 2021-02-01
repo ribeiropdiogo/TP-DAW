@@ -19,29 +19,32 @@ router.post('/login', authenticate, sign, function(req, res) {
 })
 
 
-// RECUPERAR PWD
+// Forgot PWD
 router.post('/esqueceuPassword', forgotPwd, function(req, res) {
     res.status(200).jsonp({msg: req.msg})
 })
 
 
+// Forgot PWD
+router.post('/recuperaPassword/:token', verificaToken, atualizaPwd, authenticate, sign, function(req, res) {
+    res.status(200).jsonp({token: req.token})
+})
+
+
+
 function forgotPwd(req, res, next) {
     
-    Utilizador.lookupUser(req.body.email)
+    Utilizador.lookupUserByEmail(req.body.email)
         .then(dados => {
             if (!dados) {
                 res.status(401).jsonp({error: 'Utilizador inexistente!'})
             } else {
 
-                //Gerar Token, guardar na DB e enviar por email
-                var token = crypto.generateResetToken()
-                var hashedToken = crypto.generateTokenHash(token, dados.salt)
+                const novo_token = jwt.sign({username: dados.username, purpose:'password-reset'}, 
+                                    dados.hashedPassword, {expiresIn: '20m'});
 
-                //Tempo máximo para Reset -> milissegundos
-                var tokenExpira = Date.now() + 30 * 60 * 1000
-
-                Utilizador.updateResetToken(req.body.email, hashedToken, tokenExpira)
-
+                console.log(novo_token)
+                
                 //Enviar Email//
                 const transporter = nodemailer.createTransport({
 
@@ -56,8 +59,8 @@ function forgotPwd(req, res, next) {
                     from: 'daw.smtp@gmail.com',
                     to: req.body.email,
                     subject: 'Recuperação de Password - RepositoriDOIS',
-                    text: 'Se efetuou um pedido de reposição de password pode aceder a: '
-                        + `http:\//127.0.0.1:8000/recuperaPassword/${token}` + ' para repô-la, caso contrário, simplesmente ignore este email.'
+                    text: 'Se efetuou um pedido de reposição de password pode aceder a: \n'
+                        + `http:\//127.0.0.1:8000/recuperaPassword/${novo_token}` + ' para repô-la, caso contrário, simplesmente ignore este email.'
                 };
 
                 try{
@@ -70,6 +73,62 @@ function forgotPwd(req, res, next) {
 
                 next()
             }
+        })
+        .catch(e => res.status(500).jsonp({error: e}))
+}
+
+
+function verificaToken(req, res, next) {
+
+    var rec_token = req.params.token
+
+
+    if(jwt.decode(rec_token).purpose){
+
+        var usrname = jwt.decode(rec_token).username        
+ 
+        Utilizador.lookupCredentials(usrname)
+            .then(dados => {
+                if (!dados) {
+                    res.status(401).jsonp({error: 'Utilizador inexistente!'})
+
+                    //IF TOKEN IGUAL && NÃO TIVER EXPIRADO
+                }else {
+                    jwt.verify(rec_token, dados.hashedPassword, function(e, payload){
+                        if(e){
+                            res.status(401).jsonp({error: e})
+                        }else{
+                            req.body.username = dados.username
+                            next()
+                        }
+                    })
+                }
+            })
+            .catch(e => res.status(500).jsonp({error: e}))
+    
+    }else{
+        res.status(401).jsonp({error: 'Token de Reset Inválido!'})
+    }
+    
+}
+
+function atualizaPwd(req, res, next) {
+
+    //Gerar nova Hash e Update
+    var hash = crypto.hasher(req.body.newPassword, crypto.generateSalt())
+    
+    hashedPassword = hash.hashedPassword
+    salt = hash.salt
+    //Para mandar para o authenticate
+    req.body.password = req.body.newPassword
+    req.body.newPassword = undefined
+    req.body.passwordConfirm = undefined
+
+    Utilizador.updatePwd(req.body.username, hashedPassword, salt)
+
+        .then(d => {
+            req.msg = 'Password Atualizada!'
+            next()
         })
         .catch(e => res.status(500).jsonp({error: e}))
 }

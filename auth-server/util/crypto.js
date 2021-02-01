@@ -1,15 +1,6 @@
 const crypto = require('crypto')
 
 
-module.exports.generateResetToken = function() {
-    return crypto.randomBytes(32).toString('hex')
-}
-
-//Gerar um hash mais pequeno para o token
-module.exports.generateTokenHash = function(tkn, salt) {
-    return crypto.createHmac('sha256', salt).update(tkn).digest('hex')
-}
-
 module.exports.generateSalt = function() {
     const rounds = 12
     return crypto.randomBytes(Math.ceil(rounds / 2)).toString('hex').slice(0, rounds)

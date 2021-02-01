@@ -14,7 +14,6 @@ router.put('/:id', function(req, res, next) {
 });
 
 
-//Likes / Stars ? 
 
 //Comentario
 router.post('/comentario', function(req, res, next) {

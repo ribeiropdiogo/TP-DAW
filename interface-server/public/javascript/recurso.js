@@ -7,7 +7,9 @@ function getRecurso() {
     var recurso = window.location.href.split("/").pop();
 
     var xhttp = new XMLHttpRequest();
+
     xhttp.onreadystatechange = function() {
+
         if (this.readyState == 4 && this.status == 200) {
             JSZip.loadAsync(xhttp.response).then(function(zip){
                 var metadados = zip.file("metadata.json").async("string");
@@ -42,7 +44,7 @@ function getRecurso() {
 
                         if(meta.autor == username || admin == "true"){
                             $("#editar").append("<a href='/recursos/editar/" + meta._id + "'>Editar Recurso</a>")
-                            $("#apagar").append("<a href='javascript:deleteRecurso(\""+meta._id+"\");'>Apagar Recurso</a>")
+                            $("#apagar").append("<a href='javascript:deleteRecurso(\"" + meta._id + "\");'>Apagar Recurso</a>")
                         }
                     })
                 })
@@ -54,17 +56,31 @@ function getRecurso() {
     xhttp.send();
 }
 
+
+// ADD|REMOVE STARS
 function star(){
 
     var recurso = window.location.href.split("/").pop();
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
+
+        if(this.readyState === XMLHttpRequest.DONE) {
+        
+            if(this.status == 200){
+                alert('Teste')
+            }else if(this.status == 401){
+                window.location.replace("/login");
+                alert("A Sua Sessão Expirou... Volte a Fazer Login!");
+            }
+        }
+
+        /*
         if (this.readyState == 4 && this.status == 200) {
             
-        }
+        }*/
     };
 
-    xhttp.open("PUT", "/recursos/star/"+recurso, true);
+    xhttp.open("PUT", "/recursos/star/" + recurso, true);
     xhttp.send();
 }

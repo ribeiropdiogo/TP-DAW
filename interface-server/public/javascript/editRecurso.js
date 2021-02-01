@@ -106,8 +106,15 @@ function updateRecurso(){
         var xhr = new XMLHttpRequest();
 
         xhr.onreadystatechange = function() {
-            if (this.status == 200) {
-                window.location.replace("/recursos/"+recurso);
+
+            if(xhr.readyState === XMLHttpRequest.DONE) {
+
+                if (this.status == 200) {
+                    window.location.replace("/recursos/" + recurso);
+                }else if(this.status == 401){
+                    window.location.replace("/login");
+                    alert("A Sua Sessão Expirou... Volte a Fazer Login!");
+                }
             }
         }
 

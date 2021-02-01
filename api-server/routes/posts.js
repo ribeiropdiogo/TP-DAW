@@ -45,4 +45,11 @@ router.post('/comentarios/:id', function(req, res) {
         .catch(e => res.status(500).jsonp({error: e}))
 })
 
+// DELETE /posts/comentarios/:id
+router.delete('/comentarios/:id', function(req, res) {
+    Post.removeComment(req.params.id, req.body.comentario)
+        .then(data => res.status(200).jsonp(data))
+        .catch(e => res.status(500).jsonp({error: e}))
+})
+
 module.exports = router

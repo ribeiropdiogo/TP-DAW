@@ -41,3 +41,10 @@ module.exports.insertComment = function(id, c) {
         .update({_id: id}, {$push: {comentarios: c}})
         .exec()
 }
+
+// Removes a comment
+module.exports.removeComment = function(id, c) {
+    return Post
+        .update({_id: id}, {$pull: {comentarios: {utilizador: c.utilizador, data: c.data}}})
+        .exec()
+}

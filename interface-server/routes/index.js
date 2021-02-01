@@ -58,18 +58,16 @@ router.get('/login', function(req, res, next) {
     res.render('login', { title: 'Login' })
 });
 
+router.get('/recuperaPassword', function(req, res, next){
+    res.render('recoverPassword', { title: 'Recuperar Password' })
+})
 
-router.get('/registo', function(req, res, next) {
-    res.render('registo')
+
+router.get('/redefinePassword/:token', function(req, res, next) {
+    res.render('resetPassword', { title: 'Recuperar Password' })
 });
 
-router.post('/login', function(req, res, next) {
-    res.render('registo')
-});
 
-router.post('/registo', function(req, res, next) {
-    res.render('registo')
-});
 
 
 

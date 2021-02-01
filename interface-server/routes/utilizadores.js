@@ -18,7 +18,6 @@ router.get('/dados/:id', function(req, res, next) {
 //Registar novo utilziador
 //Valida se é um email e se pwd tem pelo menos tamanho 5
 router.post('/', [check('email').isEmail(), check('password').isLength({ min: 5 })], function(req, res) {
-    console.log(req.body);
 
     const errors = validationResult(req)
 
@@ -47,11 +46,49 @@ router.post('/login', function(req, res) {
           httpOnly: true
         });
         res.redirect('/feed')
-        //res.redirect('/feed').send() -- ver
     })
       .catch(e => res.render('error', {error: e}))
   });
 
+
+  //Gerar resetToken
+router.post('/recuperaPassword', function(req, res) {
+    axios.post('http://localhost:6000/utilizadores/recuperaPassword', req.body)
+      .then(resp => {
+        res.status(200).jsonp(resp);
+    })
+      .catch(e => res.render('error', {error: e}))
+  });
+
+
+//Definir Nova Password
+router.post('/redefinePassword', [check('newPassword').isLength({ min: 5 })], function(req, res) {
+
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() })
+    }
+
+    axios.post('http://localhost:6000/utilizadores/redefinePassword/', req.body)
+    .then(resp => {
+        console.log(resp.data)
+        res.cookie('token', resp.data.token, {
+          expires: new Date(Date.now() + '1h'),
+          secure: false, 
+          httpOnly: true
+        });
+        res.redirect('/feed')
+        console.log('teste')
+    })
+    .catch(err => {
+        if(err.response.status==401){
+            res.status(401).jsonp("Problema com o Token");
+        }else{
+            res.render('error', {error: err}) 
+        }
+    })
+  });
 
 
 //Logout --> Tem que se adicionar os tokens a uma BLACKLIST

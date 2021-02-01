@@ -302,8 +302,8 @@ $(function() {
 	  $('.already-have').on("click", function(){
 		$('.login-reg-bg').removeClass('show');
 		return false;
-	  });
-	
+      });
+      
 //----- count down timer		
 	if ($.isFunction($.fn.downCount)) {
 		$('.countdown').downCount({

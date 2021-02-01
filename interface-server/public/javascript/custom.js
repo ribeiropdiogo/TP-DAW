@@ -96,3 +96,77 @@ function register(){
 }
 
 // Recuperar PWD
+//On Click -> Send Reset Token
+function sendResetPassword(){
+    var data = {};
+
+    data.email  = $("input[name=email]").val();
+
+    var json = JSON.stringify(data);
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+
+        if(xhr.readyState === XMLHttpRequest.DONE) {
+            if(xhr.status == 500){
+                window.location.replace("/login");
+                alert("Ocorreu um erro... Volte a tentar.");
+            }else{
+                window.location.replace("/login");
+                alert("O Email Enviado. Por favor verifique o endereço correspondente.");
+            }
+        }   
+    } 
+
+    xhr.open("POST", '/utilizadores/recuperaPassword', true);
+    xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+    xhr.send(json);
+}
+
+
+//On Click -> Update Password
+function updatePassword(){
+
+    var data = {};
+
+    data.newPassword  = $("input[name=npassword]").val();
+    var pwd_confirm = $("input[name=password_conf]").val()
+
+    var reset_token = String(window.location).match(/\/([^\/]+)\/?$/)[1]
+
+    if(data.newPassword === pwd_confirm){
+
+        data.token = reset_token
+
+        var json = JSON.stringify(data);
+    
+        var xhr = new XMLHttpRequest();
+    
+        xhr.onreadystatechange = function() {
+
+            if(xhr.readyState === XMLHttpRequest.DONE) {
+
+                if(xhr.status == 200) {
+                    window.location.replace("/feed");
+                }else if(xhr.status == 401){
+                    window.location.replace("/login");
+                    alert("Ocorreu um problema no processo de reposição... Tente de Novo.");
+                }else if(xhr.status == 422){
+                    alert("A Password deve ter mais de 5 caracteres.");
+                }else{
+                    window.location.replace("/login");
+                    alert("Ocorreu um problema, volte a tentar...");
+                }
+            }
+        } 
+    
+        xhr.open("POST", '/utilizadores/redefinePassword', true);
+        xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+        xhr.send(json);
+
+    }else{
+
+        alert('As Passwords Introduzidas não correspondem!... Tente de novo.')
+    }
+}

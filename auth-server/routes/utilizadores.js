@@ -26,7 +26,7 @@ router.post('/recuperaPassword', forgotPwd, function(req, res) {
 
 
 // Forgot PWD
-router.post('/redefinePassword/:token', verificaToken, atualizaPwd, authenticate, sign, function(req, res) {
+router.post('/redefinePassword/', verificaToken, atualizaPwd, authenticate, sign, function(req, res) {
     res.status(200).jsonp({token: req.token})
 })
 
@@ -60,7 +60,7 @@ function forgotPwd(req, res, next) {
                     to: req.body.email,
                     subject: 'Recuperação de Password - RepositoriDOIS',
                     text: 'Se efetuou um pedido de reposição de password pode aceder a: \n'
-                        + `http:\//127.0.0.1:8000/recuperaPassword/${novo_token}` + ' para repô-la, caso contrário, simplesmente ignore este email.'
+                        + `http:\//127.0.0.1:8000/redefinePassword/${novo_token}` + ' para repô-la, caso contrário, simplesmente ignore este email.'
                 };
 
                 try{
@@ -80,8 +80,7 @@ function forgotPwd(req, res, next) {
 
 function verificaToken(req, res, next) {
 
-    var rec_token = req.params.token
-
+    var rec_token = req.body.token
 
     if(jwt.decode(rec_token).purpose){
 

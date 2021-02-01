@@ -20,9 +20,8 @@ router.get('/feed', function(req, res) {
     
     if(req.cookies.token != null){
 
-    var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
-
-    let usrname = jwt.decode(req.cookies.token).username
+        var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
+        let usrname = jwt.decode(req.cookies.token).username
 
         axios.get('http://localhost:7000/utilizadores/' + usrname, headers)
         .then(resp => {
@@ -32,7 +31,6 @@ router.get('/feed', function(req, res) {
                     res.render('home', {title: 'RepositóriDOIS', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data})
                 })
                 .catch(e => res.render('error', {error: e}))
-
         })
         .catch(err => {
             console.log(err.response.data.error.name)
@@ -44,12 +42,9 @@ router.get('/feed', function(req, res) {
                 res.render('error', {error: err})
             }
         })
-
-    }else{
-
+    } else {
         res.redirect('/login')
     }
-    
   });
 
 
@@ -69,6 +64,36 @@ router.post('/login', function(req, res, next) {
 
 router.post('/registo', function(req, res, next) {
     res.render('registo')
+});
+
+router.get('/admin', function(req, res, next) {
+    if(req.cookies.token != null){
+            var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
+            let username = jwt.decode(req.cookies.token).username
+    
+            axios.get('http://localhost:7000/utilizadores/' + username, headers)
+            .then(resp => {
+                if(resp.data.admin == true){
+                    axios.get('http://localhost:7000/tipos/top/5', headers)
+                    .then(t => {
+                        res.render('admin', {title: 'RepositóriDOIS', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data})
+                    })
+                    .catch(e => res.render('error', {error: e}))
+                } else {
+                    res.redirect('/feed')
+                }
+            })
+            .catch(err => {
+                if(err.response.data.error.name == 'TokenExpiredError'){
+                    res.clearCookie("token")
+                    res.redirect('/login')
+                }else{
+                    res.render('error', {error: err})
+                }
+            })
+        } else {
+            res.redirect('/login')
+        }
 });
 
 

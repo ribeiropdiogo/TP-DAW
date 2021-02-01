@@ -11,25 +11,25 @@ module.exports.list = function() {
 
 
 // Returns a user record
-module.exports.lookup = function(id) {
+module.exports.lookup = function(n) {
     return Utilizador
-        .findOne({username: id}, {hashedPassword: 0, salt: 0, __v: 0})
+        .findOne({username: n}, {hashedPassword: 0, salt: 0, __v: 0})
         .exec()
 }
 
 
 // Edit one user
-module.exports.edit = function(id, u) {
+module.exports.edit = function(n, u) {
     return Utilizador
-        .findOneAndUpdate({username: id}, u, {new: true})
+        .findOneAndUpdate({username: n}, u, {new: true})
         .select({hashedPassword: 0, salt: 0, __v: 0})
         .exec()
 }
 
 
 // Removes one user
-module.exports.remove = function(id) {
+module.exports.remove = function(n) {
     return Utilizador
-        .deleteOne({username: id})
+        .deleteOne({username: n})
         .exec()
 }

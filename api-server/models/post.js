@@ -2,12 +2,14 @@
 const mongoose = require('mongoose')
 
 var postSchema = new mongoose.Schema({
+    _id: mongoose.ObjectId,
     utilizador: String,
     texto: String,
-    recurso: String,
+    recurso: mongoose.ObjectId,
     comentarios: [
         {
             utilizador: String,
+            data: Date,
             texto: String
         }
     ]

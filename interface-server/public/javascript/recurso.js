@@ -38,7 +38,9 @@ function getRecurso() {
                         var user_link = document.getElementById("user_link").href;
                         var username = user_link.split("/").pop();
 
-                        if(meta.autor == username ){
+                        var admin = document.getElementById("user_link").title;
+
+                        if(meta.autor == username || admin == "true"){
                             $("#editar").append("<a href='/recursos/editar/" + meta._id + "'>Editar Recurso</a>")
                             $("#apagar").append("<a href='javascript:deleteRecurso(\""+meta._id+"\");'>Apagar Recurso</a>")
                         }

@@ -1,0 +1,132 @@
+extends layout
+
+block head
+    title RepositóriDOIS
+    link(rel='stylesheet', href='/stylesheets/main.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/color.css')
+    link(rel='stylesheet', href='/stylesheets/responsive.css')
+    link(rel='icon', href='/img/favicon.png', type='image/png' sizes='16x16') 
+    script(src='/javascript/main.min.js')
+    script(src='/javascript/custom.js')
+    script(src='/javascript/script.js')
+
+block body
+    .theme-layout
+        .responsive-header
+            .mh-head.first.Sticky
+                span.mh-text
+                    h3 RepositóriDOIS
+            
+        .topbar.stick
+            .logo
+                h3(style='margin-top: 12px')
+                    a(href='/') RepositóriDOIS
+            .top-area
+                ul.main-menu
+                ul.setting-area
+                    li
+                        a(href='', title='Search', data-ripple='')
+                            i.ti-search
+                            span.ripple
+                                span.ink(style='height: 21px; width: 21px; background-color: rgb(217, 217, 217); top: -0.25px; left: 0.983337px;')
+                        .searched
+                            form.form-search
+                                input(type="text", placeholder='Procurar Tag', name='tag')
+                                button(data-ripple='', onclick='getRecursosByTag()')
+                                    i.ti-search
+                    li
+                        h6
+                            a(href='', title='Logout', onclick='logout()') Logout
+        section
+            .gap.gray-bg
+                .container-fluid
+                    .row
+                        .col-lg-12
+                            div(class='row', id='page-contents')
+                                .col-lg-3
+                                    aside(class='sidebar static')
+                                        .widget
+                                            h2.widget-title Opções
+                                            ul.naves
+                                                li
+                                                    a(href='', title='') Importar
+                                                li
+                                                    a(href='', title='') Exportar
+                                                li
+                                                    a(href='/estatisticas', title='') Estatísticas
+                                .col-lg-5
+                                    .central-meta
+                                        .new-postbox
+                                            .newpst-input
+                                             form
+                                                textarea(name="noticia", rows="2", placeholder="Adicionar notícia...")
+                                                .attachments
+                                                    ul
+                                                        li
+                                                            button(type='submit') Publicar
+                                    .central-meta
+                                        h6 Notícias Publicadas
+                                .col-lg-4
+                                    aside(class='sidebar static')
+                                        .widget
+                                            h4.widget-title Perfil
+                                            .your-page
+                                                .page-meta
+                                                    a(href='', title='', class='underline')= nome
+                                                    span
+                                                        i.ti-email
+                                                        a= email
+                                                    span
+                                                        i.ti-book
+                                                        a= instituicao
+                                    aside(class='sidebar static')
+                                        .widget
+                                            h4.widget-title Recursos
+                                            ul.naves
+                                                li
+                                                    a(href='/recursos/novo', title='') Adicionar Recurso
+                                                li
+                                                    a(href='/recursos?username='+username, title='') Meus Recursos
+                                                li
+                                                    a(href='/recursos', title='') Gerir Recursos
+    
+block footer
+    .container
+        .row
+            .col-lg-4.col-md-4
+                .widget
+                    .foot-logo
+                        .logo
+                            h5(style='margin-top: 12px')
+                                a(href='/') RepositóriDOIS
+                        p RepositóriDOIS @ DAW2020
+            .col-lg-2.col-md-4
+                .widget
+                    .widget-title
+                        h4 Tipos
+                    ul.list-style
+                        li
+                            a(href='/recursos?tipo='+tipos[0]._id, title='')= tipos[0]._id
+                        li
+                            a(href='/recursos?tipo='+tipos[1]._id, title='')= tipos[1]._id
+                        li
+                            a(href='/recursos?tipo='+tipos[2]._id, title='')= tipos[2]._id
+            .col-lg-2.col-md-4
+                .widget
+                    .widget-title
+                        h4 Links Úteis
+                    ul.list-style
+                        li
+                            a(href='/recursos/', title='') Recursos
+            .col-lg-4.col-md-4
+                .widget
+                    .widget-title
+                        h4 Desenvolvido por
+                    ul.list-style
+                        li
+                            a(href='mailto:pg42816@alunos.uminho.pt', title='') Cândido Vale
+                        li
+                            a(href='mailto:a84442@alunos.uminho.pt', title='') Diogo Ribeiro
+                        li
+                            a(href='mailto:a84244@alunos.uminho.pt', title='') Luís Cunha

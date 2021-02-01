@@ -82,7 +82,6 @@ router.get('/:id', function(req, res, next) {
 
         axios.get('http://localhost:7000/utilizadores/detalhes/' + req.params.id, headers)
             .then(resp => {
-                console.log(resp.data)
                 res.render('utilizador', {title: 'RepositóriDOIS', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo, recursos: resp.data.recursos, owner: resp.data.owner})
             })
             .catch(err => {

@@ -35,24 +35,19 @@ router.get('/detalhes/:id', function(req, res) {
 
     let username = getUsername(req)
 
-    console.log("1 -------")
     Utilizador.lookup(req.params.id)
         .then(dono => {
-            console.log("2 ------- " + req.params.id)
             Recurso.listByUser(req.params.id)
                 .then(recursos => {
-                    console.log("3 -------")
                     Utilizador.lookup(username)
                     .then(u => {
                         Tipo.listTop(7)
                             .then(t => { 
-                                console.log("4 -------")
                                 let data = {}
                                 data.recursos = recursos
                                 data.user = u
                                 data.tipo = t
                                 data.owner = dono;
-                                console.log(data)
                                 res.status(200).jsonp(data)
                             })
                             .catch(error => res.status(500).jsonp(error))

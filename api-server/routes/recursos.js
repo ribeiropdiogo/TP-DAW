@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken')
 
 const Recurso = require('../controllers/recurso')
 const Tipo = require('../controllers/tipo')
-const Utilizador = require('../controllers/utilizador')
+const Utilizador = require('../controllers/utilizador');
 
 function getPath(str){
     var path = str.substring(0, 6) + '/' + str.substring(6, 12) + '/' + str.substring(12, 18) + '/' + str.substring(18, 24);
@@ -150,6 +150,66 @@ router.get('/', function(req, res) {
     }
 })
 */
+
+
+
+router.get('/exportar', function(req, res) {
+    var query_user = getUsername(req)
+    Utilizador.lookup(query_user)
+        .then(u => {
+            if(u.admin == true){
+                var exportzip = new JSZip();
+                Recurso.listAll()
+                    .then(recursos => {
+                        var index = 0;
+                        recursos.forEach(item => {
+                            Recurso.lookup(item._id)
+                                .then(meta => {
+                                    var path = __dirname + '/../recursos/' + getPath(item._id.toString());
+                                    path = path + '/' + meta.nome
+
+                                    fs.readFile(path, function (err,readStream) {
+                                        var zip = new JSZip();
+                                        // bagit
+                                        zip.file(
+                                            "bagit.txt", 
+                                            "(BagIt-version: 1.0 )\n(Tag-File-Character-Encoding: UTF-8)\n");
+                                        // metadata
+                                        zip.file(
+                                            "metadata.json", 
+                                            JSON.stringify(meta, null, 3));
+                                        // payload
+                                        var data = zip.folder("data");
+                                        data.file(meta.nome, readStream, {base64: true});
+                                        // manifest
+                                        var file_wordArr = CryptoJS.lib.WordArray.create(readStream);
+                                        var sha256_hash = CryptoJS.SHA256(file_wordArr);
+                                        zip.file(
+                                            "manifest-sha256.txt", 
+                                            "(" + sha256_hash.toString() + " data/" + meta.nome + ")\n");
+
+                                        zip.generateAsync({type:"nodebuffer"})
+                                            .then(function(content) {
+                                                exportzip.file(item._id.toString()+".zip",content)
+                                                index++;
+                                                if(index==recursos.length){
+                                                    exportzip.generateAsync({type:"nodebuffer"})
+                                                    .then(function(e) {
+                                                        res.setHeader('Content-Type', 'application/octet-stream');
+                                                        res.status(200).send(e)
+                                                    });
+                                                }
+                                            });
+                                    });
+                            })
+                        })
+                    })
+                    .catch(error => /*res.status(500).jsonp(error)*/console.log(error))
+            } else
+                res.status(401).send()
+        })
+        .catch(error => /*res.status(500).jsonp(error)*/console.log(error))
+})
 
 // GET /recursos/:id
 router.get('/:id', function(req, res) {
@@ -369,4 +429,5 @@ function getUsername(request){
 
     return username;
 }
+
 module.exports = router

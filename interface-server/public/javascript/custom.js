@@ -14,7 +14,6 @@ var departamento = $(`
 `)
 
 $(document).ready(function(){
-
     $("#sec_filiacao").append(curso);
 });
 
@@ -173,6 +172,23 @@ function updatePassword(){
 function getRecursosByTag(){
     var tag = $("input[name=tag]").val()
     window.location.replace("/recursos?tag="+tag);
+}
+
+function exportarRecursos(){
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var a = document.getElementById("exportar");
+            var file = new Blob([xhttp.response], {type: "application/zip"});
+            a.href = URL.createObjectURL(file);
+            a.download = "export.zip";
+        }
+    };
+
+    xhttp.open("GET", "/recursos/exportar", true);
+    xhttp.responseType = "arraybuffer";
+    xhttp.send();
 }
 
 function logout(){

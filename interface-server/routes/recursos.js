@@ -34,6 +34,51 @@ router.get('/novo', function(req, res) {
         })
 });
 
+router.get('/exportar', function(req, res, next) {
+    if(req.cookies.token != null){
+
+        var req_config = { headers: { Authorization: `Bearer ${req.cookies.token}` }, responseType: 'stream'}
+        
+        let username = jwt.decode(req.cookies.token).username
+
+        var fid =  username + "_export";
+        var path = __dirname + '/../downloads/' + fid + ".zip"
+        axios.get('http://localhost:7000/recursos/exportar', req_config)
+            .then(r => {
+                // Recebe o zip e guarda na pasta
+                r.data.pipe(fs.createWriteStream(path));
+
+                r.data.on('end', function () {
+                    fs.readFile(path, function(err, file) {
+                        if (err) throw err
+                        JSZip.loadAsync(file).then(function (zip) {
+                            zip.generateAsync({type:"nodebuffer"})
+                            .then(function(content) {
+                                res.setHeader('Content-Type', 'application/octet-stream');
+                                res.status(200).send(content)
+                            });
+                            
+                            fs.unlink(path, (err) => {
+                                if (err) throw err
+                            })
+                        })
+                    }) 
+                });
+            })
+            .catch(err => {
+                if(err.response.status == 401){
+                    res.clearCookie("token")
+                    res.redirect('/login')
+                }else{
+                    res.render('error', {error: err})
+                }
+            })
+
+    } else {
+        res.redirect('/login')
+    }
+});
+
 
 //POST RECURSO //
 router.post('/', upload.single('conteudo'), function(req, res) {
@@ -327,5 +372,6 @@ router.put("/:id", function (req, res) {
         res.redirect('/login')
     }
 });
+
 
 module.exports = router;

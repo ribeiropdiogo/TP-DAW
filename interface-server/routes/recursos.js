@@ -52,7 +52,6 @@ router.post('/', upload.single('conteudo'), function(req, res) {
   
 
     axios.post('http://localhost:7000/recursos', form, headers)
-
         .then(resp => {
             fs.unlinkSync(path);
             res.status(201).jsonp(resp);

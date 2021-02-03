@@ -14,7 +14,6 @@ var departamento = $(`
 `)
 
 $(document).ready(function(){
-
     $("#sec_filiacao").append(curso);
 });
 
@@ -173,6 +172,56 @@ function updatePassword(){
 function getRecursosByTag(){
     var tag = $("input[name=tag]").val()
     window.location.replace("/recursos?tag="+tag);
+}
+
+function exportarRecursos(){
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var a = document.getElementById("exportar");
+            var file = new Blob([xhttp.response], {type: "application/zip"});
+            window.open(URL.createObjectURL(file))
+        }
+    };
+
+    xhttp.open("GET", "/recursos/exportar", true);
+    xhttp.responseType = "arraybuffer";
+    xhttp.send();
+}
+
+function importarRecursos(){
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept="application/zip"
+    input.click();
+
+    input.onchange = function(event) {
+        var file = event.target.files[0];
+
+        var formData = new FormData();
+        formData.append('conteudo', file);
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if(xhr.readyState === XMLHttpRequest.DONE) {
+                if(xhr.status == 201) {
+                    if(xhr.response == -1)
+                        alert("Todos os registos já existem!")
+                    else
+                        alert("Registos importados com sucesso: " + xhr.response)
+                }else if(xhr.status == 401){
+                    window.location.replace("/login");
+                    alert("A Sua Sessão Expirou... Volte a Fazer Login!");
+                }else if(xhr.status == 500){
+                    alert("Ocorreu um erro!");
+                }
+            }
+        }
+                
+        xhr.open("POST", '/recursos/importar', true);
+        xhr.send(formData);
+    }
 }
 
 function logout(){

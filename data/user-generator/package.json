@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "axios": "^0.21.1",
+    "node-random-name": "^1.0.1",
+    "sleep": "^6.3.0",
+    "username-generator": "^1.1.0"
+  }
+}

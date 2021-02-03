@@ -159,7 +159,7 @@ router.get('/exportar', function(req, res) {
         .then(u => {
             if(u.admin == true){
                 var exportzip = new JSZip();
-                Recurso.listAll()
+                Recurso.list()
                     .then(recursos => {
                         var index = 0;
                         recursos.forEach(item => {

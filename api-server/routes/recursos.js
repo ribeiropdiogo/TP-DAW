@@ -342,6 +342,105 @@ router.post('/', upload.single('conteudo'), function(req, res) {
     })
 })
 
+function getTotalImportar(importzip,callback) {
+    
+  }
+
+// POST /recursos/importar
+router.post('/importar', upload.single('conteudo'), function(req, res) {
+
+    let path = __dirname + '/../' + req.file.path
+    let npath = __dirname + '/../' + req.file.path + '.zip'
+    
+    fs.rename(path, npath, function(err) {
+        if (err) throw err
+        fs.readFile(npath, function(err, data) {
+            if (err) throw err
+            JSZip.loadAsync(data).then(function (importzip) {
+                var total = 0;
+                var imported = 0;
+                var failed = 0;
+
+                importzip.forEach(function(relativePath, file){
+                    total++
+                })
+                
+                if(total > 0){
+                    importzip.forEach(function(relativePath, file){
+                        var id = relativePath.split(".")[0];
+                        var temppath = __dirname + '/../uploads/' + relativePath 
+                        
+                        Recurso.exists(id).then(e => {
+                            if(e == false){
+                                console.log("> Importando recurso...")
+                                JSZip.loadAsync(file._data.compressedContent).then(function (zip) {
+                                    var metadados = zip.file("metadata.json").async("string");
+                                    metadados.then(function(result) {
+                                        // Deconstruct metadata and add creation time
+                                        var meta = JSON.parse(result); 
+                                        var payload = zip.file("data/"+meta.nome).async("nodebuffer")
+        
+                                        payload.then(function(p) {
+                                            let fpath = __dirname + '/../' + 'recursos/' + id + "/" + meta.nome
+        
+                                            // Create path if not exists
+                                            if (!fs.existsSync(__dirname + '/../' + 'recursos/' + id)){
+                                                fs.mkdirSync(
+                                                    __dirname + '/../' + 'recursos/' + id, 
+                                                    { recursive: true }
+                                                );
+                                            }
+                                            fs.writeFileSync(fpath, p,'binary')
+        
+                                            Recurso.insert(meta)
+                                                .then(data => { 
+                                                    var newPath = __dirname + '/../' + 'recursos/' + getPath(data._id.toString()) + '/' + meta.nome;
+                                                    // Create path if not exists
+                                                    if (!fs.existsSync(__dirname + '/../' + 'recursos/' + getPath(data._id.toString()))){
+                                                        fs.mkdirSync(
+                                                            __dirname + '/../' + 'recursos/' + getPath(data._id.toString()), 
+                                                            { recursive: true }
+                                                        );
+                                                    }
+        
+                                                    fs.rmdir(__dirname + '/../' + 'recursos/' + id, { recursive: true }, (err) => {
+                                                        if (err) throw err;
+                                                    });
+                                                            
+                                                    // Move file to storage tree
+                                                    fs.rename(fpath, newPath, function(err) {
+                                                        if (err) console.log(err)
+                                                    })
+                                                            
+                                                    Tipo.increment(meta.tipo)
+                                                        .then(x => {
+                                                            imported++;
+                                                            if((imported+failed)==total)
+                                                                res.status(201).jsonp(imported)
+                                                        })
+                                                        .catch(error => console.log(error))
+                                                })
+                                        })
+                                    })
+                                });
+                            } else {
+                                failed++;
+                                if(failed == total)
+                                    res.status(200).jsonp(-1)
+                                else if((imported+failed)==total)
+                                    res.status(500).jsonp(imported)
+                            }
+                        });
+                    })
+                } else {
+                    res.status(200).jsonp(0)
+                }
+            });
+        });
+    })
+})
+
+
 // PUT /recursos/:id
 router.put('/:id', function(req, res) {
 

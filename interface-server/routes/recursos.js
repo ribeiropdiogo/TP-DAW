@@ -110,6 +110,33 @@ router.post('/', upload.single('conteudo'), function(req, res) {
         })
 });
 
+router.post('/importar', upload.single('conteudo'), function(req, res) {
+
+    let path = __dirname + '/../' + req.file.path
+    const FormData = require('form-data');
+    const form = new FormData();
+    form.append('conteudo', fs.createReadStream(path));
+
+    //request_config alterado
+    const headers = {headers: {
+        'Content-Type': form.getHeaders()['content-type'],
+        'Authorization':  `Bearer ${req.cookies.token}`
+    }}
+
+    axios.post('http://localhost:7000/recursos/importar', form, headers)
+        .then(resp => {
+            fs.unlinkSync(path);
+            res.status(201).jsonp(resp.data);
+        })
+        .catch(err => {
+            if(err.response.status==401){
+                res.status(401).jsonp("Token Expirado!");
+            }else{
+                res.render('error', {error: err}) 
+            }
+        })
+});
+
 
 
 //GET Recursos

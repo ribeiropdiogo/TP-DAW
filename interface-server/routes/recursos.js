@@ -7,7 +7,10 @@ var JSZip = require("jszip");
 var CryptoJS = require("crypto-js");
 
 var multer = require('multer')
-var upload = multer({ dest: 'uploads/' })
+var upload = multer({ 
+    dest: 'uploads/',
+    limits: { fileSize: 50 * 1024 * 1024 }
+ })
 
 function getPath(str){
   var path = str.substring(0, 8) + '/' + str.substring(8, 16) + '/' + str.substring(16, 24) + '/' + str.substring(24, 32);
@@ -93,7 +96,7 @@ router.post('/', upload.single('conteudo'), function(req, res) {
     const headers = {headers: {
         'Content-Type': form.getHeaders()['content-type'],
         'Authorization':  `Bearer ${req.cookies.token}`
-    }}
+    }, maxContentLength: Infinity, maxBodyLength: Infinity }
   
 
     axios.post('http://localhost:7000/recursos', form, headers)
@@ -121,7 +124,7 @@ router.post('/importar', upload.single('conteudo'), function(req, res) {
     const headers = {headers: {
         'Content-Type': form.getHeaders()['content-type'],
         'Authorization':  `Bearer ${req.cookies.token}`
-    }}
+    }, maxContentLength: Infinity, maxBodyLength: Infinity }
 
     axios.post('http://localhost:7000/recursos/importar', form, headers)
         .then(resp => {

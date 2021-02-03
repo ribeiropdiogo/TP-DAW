@@ -14,7 +14,6 @@ var departamento = $(`
 `)
 
 $(document).ready(function(){
-
     $("#sec_filiacao").append(curso);
 });
 
@@ -60,6 +59,7 @@ function login(){
     xhr.send(json);
 }
 
+//On Click -> Register
 function register(){
     var data = {};
     data.nome = $("input[name=name]").val();
@@ -94,9 +94,134 @@ function register(){
     xhr.send(json);
 }
 
+// Recuperar PWD
+//On Click -> Send Reset Token
+function sendResetPassword(){
+    var data = {};
+
+    data.email  = $("input[name=email]").val();
+
+    var json = JSON.stringify(data);
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+
+        if(xhr.readyState === XMLHttpRequest.DONE) {
+            if(xhr.status == 500){
+                window.location.replace("/login");
+                alert("Ocorreu um erro... Volte a tentar.");
+            }else{
+                window.location.replace("/login");
+                alert("O Email Enviado. Por favor verifique o endereço correspondente.");
+            }
+        }   
+    } 
+
+    xhr.open("POST", '/utilizadores/recuperaPassword', true);
+    xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+    xhr.send(json);
+}
+
+
+//On Click -> Update Password
+function updatePassword(){
+
+    var data = {};
+
+    data.newPassword  = $("input[name=npassword]").val();
+    var pwd_confirm = $("input[name=password_conf]").val()
+
+    var reset_token = String(window.location).match(/\/([^\/]+)\/?$/)[1]
+
+    if(data.newPassword === pwd_confirm){
+
+        data.token = reset_token
+
+        var json = JSON.stringify(data);
+    
+        var xhr = new XMLHttpRequest();
+    
+        xhr.onreadystatechange = function() {
+
+            if(xhr.readyState === XMLHttpRequest.DONE) {
+
+                if(xhr.status == 200) {
+                    window.location.replace("/feed");
+                }else if(xhr.status == 401){
+                    window.location.replace("/login");
+                    alert("Ocorreu um problema no processo de reposição... Tente de Novo.");
+                }else if(xhr.status == 422){
+                    alert("A Password deve ter mais de 5 caracteres.");
+                }else{
+                    window.location.replace("/login");
+                    alert("Ocorreu um problema, volte a tentar...");
+                }
+            }
+        } 
+    
+        xhr.open("POST", '/utilizadores/redefinePassword', true);
+        xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+        xhr.send(json);
+
+    }else{
+
+        alert('As Passwords Introduzidas não correspondem!... Tente de novo.')
+    }
+}
 function getRecursosByTag(){
     var tag = $("input[name=tag]").val()
     window.location.replace("/recursos?tag="+tag);
+}
+
+function exportarRecursos(){
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var a = document.getElementById("exportar");
+            var file = new Blob([xhttp.response], {type: "application/zip"});
+            window.open(URL.createObjectURL(file))
+        }
+    };
+
+    xhttp.open("GET", "/recursos/exportar", true);
+    xhttp.responseType = "arraybuffer";
+    xhttp.send();
+}
+
+function importarRecursos(){
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept="application/zip"
+    input.click();
+
+    input.onchange = function(event) {
+        var file = event.target.files[0];
+
+        var formData = new FormData();
+        formData.append('conteudo', file);
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if(xhr.readyState === XMLHttpRequest.DONE) {
+                if(xhr.status == 201) {
+                    if(xhr.response == -1)
+                        alert("Todos os registos já existem!")
+                    else
+                        alert("Registos importados com sucesso: " + xhr.response)
+                }else if(xhr.status == 401){
+                    window.location.replace("/login");
+                    alert("A Sua Sessão Expirou... Volte a Fazer Login!");
+                }else if(xhr.status == 500){
+                    alert("Ocorreu um erro!");
+                }
+            }
+        }
+                
+        xhr.open("POST", '/recursos/importar', true);
+        xhr.send(formData);
+    }
 }
 
 function logout(){

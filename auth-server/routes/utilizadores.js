@@ -5,6 +5,7 @@ const crypto = require('../util/crypto')
 
 const Utilizador = require('../controllers/utilizador')
 
+const nodemailer = require('nodemailer')
 
 // POST /utilizadores
 router.post('/', createAccount, sign, function(req, res) {
@@ -18,6 +19,122 @@ router.post('/login', authenticate, sign, function(req, res) {
 })
 
 
+// Forgot PWD
+router.post('/recuperaPassword', forgotPwd, function(req, res) {
+    res.status(200).jsonp({msg: req.msg})
+})
+
+
+// Forgot PWD
+router.post('/redefinePassword/', verificaToken, atualizaPwd, authenticate, sign, function(req, res) {
+    res.status(200).jsonp({token: req.token})
+})
+
+
+
+function forgotPwd(req, res, next) {
+    
+    Utilizador.lookupUserByEmail(req.body.email)
+        .then(dados => {
+            if (!dados) {
+                res.status(401).jsonp({error: 'Utilizador inexistente!'})
+            } else {
+
+                const novo_token = jwt.sign({username: dados.username, purpose:'password-reset'}, 
+                                    dados.hashedPassword, {expiresIn: '20m'});
+
+                console.log(novo_token)
+                
+                //Enviar Email//
+                const transporter = nodemailer.createTransport({
+
+                    service: 'Gmail',
+                    auth: {
+                        user: 'daw.smtp@gmail.com',
+                        pass: 'testehelloworld123'
+                    }
+                })
+
+                const mailOptions = {
+                    from: 'daw.smtp@gmail.com',
+                    to: req.body.email,
+                    subject: 'Recuperação de Password - RepositoriDOIS',
+                    text: 'Se efetuou um pedido de reposição de password pode aceder a: \n'
+                        + `http:\//127.0.0.1:8000/redefinePassword/${novo_token}` + ' para repô-la, caso contrário, simplesmente ignore este email.'
+                };
+
+                try{
+                    
+                    transporter.sendMail(mailOptions)
+                    req.msg = 'Email de Reset Enviado!'
+                }catch(err){
+                    req.msg = err
+                }
+
+                next()
+            }
+        })
+        .catch(e => res.status(500).jsonp({error: e}))
+}
+
+
+function verificaToken(req, res, next) {
+
+    var rec_token = req.body.token
+
+    if(jwt.decode(rec_token).purpose){
+
+        var usrname = jwt.decode(rec_token).username        
+ 
+        Utilizador.lookupCredentials(usrname)
+            .then(dados => {
+                if (!dados) {
+                    res.status(401).jsonp({error: 'Utilizador inexistente!'})
+
+                    //IF TOKEN IGUAL && NÃO TIVER EXPIRADO
+                }else {
+                    jwt.verify(rec_token, dados.hashedPassword, function(e, payload){
+                        if(e){
+                            res.status(401).jsonp({error: e})
+                        }else{
+                            req.body.username = dados.username
+                            next()
+                        }
+                    })
+                }
+            })
+            .catch(e => res.status(500).jsonp({error: e}))
+    
+    }else{
+        res.status(401).jsonp({error: 'Token de Reset Inválido!'})
+    }
+    
+}
+
+
+//## RESET PWD ##//
+function atualizaPwd(req, res, next) {
+
+    //Gerar nova Hash e Update
+    var hash = crypto.hasher(req.body.newPassword, crypto.generateSalt())
+    
+    hashedPassword = hash.hashedPassword
+    salt = hash.salt
+    //Para mandar para o authenticate
+    req.body.password = req.body.newPassword
+    req.body.newPassword = undefined
+    req.body.passwordConfirm = undefined
+
+    Utilizador.updatePwd(req.body.username, hashedPassword, salt)
+
+        .then(d => {
+            req.msg = 'Password Atualizada!'
+            next()
+        })
+        .catch(e => res.status(500).jsonp({error: e}))
+}
+//#################//
+
 function createAccount(req, res, next) {
     const user = req.body
 
@@ -26,6 +143,8 @@ function createAccount(req, res, next) {
     user.dataRegisto = new Date()
     user.ultimoAcesso = user.dataRegisto
     user.starred = [];
+    user.resetToken = null;
+    user.resetTokenExp = null;
 
     // hashing da palavra-passe
     var hash = crypto.hasher(user.password, crypto.generateSalt())

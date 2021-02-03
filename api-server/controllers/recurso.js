@@ -8,6 +8,10 @@ module.exports.list = function() {
         .exec()
 }
 
+module.exports.exists = function(id) {
+    return Recurso.exists({_id: id})
+}
+
 module.exports.listByTipo = function(t) {
     return Recurso
         .find({tipo: t})

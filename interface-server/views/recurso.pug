@@ -78,7 +78,8 @@ block body
                                                 p
                                                     strong Tags: 
                                                     each tag in recurso.tags
-                                                        a(href='/recursos?tag='+tag) ##{tag} 
+                                                        if recurso.tags != ""
+                                                            a(href='/recursos?tag='+tag) ##{tag}
                                 .col-lg-4
                                     aside(class='sidebar static')
                                         .widget

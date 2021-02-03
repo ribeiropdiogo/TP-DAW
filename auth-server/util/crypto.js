@@ -17,6 +17,7 @@ function hasher(password, salt) {
     }
 }
 
+
 module.exports.compare = function(password, hash) {
     var passwordData = hasher(password, hash.salt)
     if (passwordData.hashedPassword === hash.hashedPassword) {

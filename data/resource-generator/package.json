@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "axios": "^0.21.1",
+    "crypto-js": "^4.0.0",
+    "form-data": "^3.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "jszip": "^3.5.0",
+    "mime-types": "^2.1.28",
+    "node-random-name": "^1.0.1",
+    "select-random-file": "^1.1.0",
+    "sleep": "^6.3.0",
+    "username-generator": "^1.1.0"
+  }
+}

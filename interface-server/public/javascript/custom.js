@@ -181,7 +181,8 @@ function exportarRecursos(){
         if (this.readyState == 4 && this.status == 200) {
             var a = document.getElementById("exportar");
             var file = new Blob([xhttp.response], {type: "application/zip"});
-            window.open(URL.createObjectURL(file))
+            //alert("file received " + URL.createObjectURL(file))
+            document.location.href = URL.createObjectURL(file);
         }
     };
 

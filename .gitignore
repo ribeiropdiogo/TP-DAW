@@ -3,6 +3,7 @@
 api-server/recursos/*
 api-server/uploads/*.zip
 interface-server/uploads/*
+interface-server/downloads/*
 
 # Logs
 logs

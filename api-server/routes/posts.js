@@ -19,6 +19,9 @@ router.get('/:id', function(req, res) {
 
 // POST /posts
 router.post('/', function(req, res) {
+    req.body.comentarios = []
+    req.body.data = new Date()
+
     Post.insert(req.body)
         .then(data => res.status(201).jsonp(data))
         .catch(e => res.status(500).jsonp({error: e}))
@@ -40,14 +43,16 @@ router.delete('/:id', function(req, res) {
 
 // POST /posts/comentarios/:id
 router.post('/comentarios/:id', function(req, res) {
-    Post.insertComment(req.params.id, req.body.comentario)
+    req.body.data = new Date()
+    
+    Post.insertComment(req.params.id, req.body)
         .then(data => res.status(201).jsonp(data))
         .catch(e => res.status(500).jsonp({error: e}))
 })
 
 // DELETE /posts/comentarios/:id
 router.delete('/comentarios/:id', function(req, res) {
-    Post.removeComment(req.params.id, req.body.comentario)
+    Post.removeComment(req.params.id, req.body)
         .then(data => res.status(200).jsonp(data))
         .catch(e => res.status(500).jsonp({error: e}))
 })

@@ -38,13 +38,13 @@ module.exports.edit = function(id, p) {
 // Inserts a new comment
 module.exports.insertComment = function(id, c) {
     return Post
-        .update({_id: id}, {$push: {comentarios: c}})
+        .updateOne({_id: id}, {$push: {comentarios: c}})
         .exec()
 }
 
 // Removes a comment
 module.exports.removeComment = function(id, c) {
     return Post
-        .update({_id: id}, {$pull: {comentarios: {utilizador: c.utilizador, data: c.data}}})
+        .updateOne({_id: id}, {$pull: {comentarios: {utilizador: c.utilizador, data: c.data}}})
         .exec()
 }

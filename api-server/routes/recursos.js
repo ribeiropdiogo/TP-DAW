@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken')
 const Recurso = require('../controllers/recurso')
 const Tipo = require('../controllers/tipo')
 const Utilizador = require('../controllers/utilizador')
+const Noticia = require('../controllers/noticia')
 
 function getPath(str){
     var path = str.substring(0, 6) + '/' + str.substring(6, 12) + '/' + str.substring(12, 18) + '/' + str.substring(18, 24)
@@ -435,9 +436,16 @@ router.post('/', upload.single('conteudo'), function(req, res) {
                                                 })
                                                 
                                                 Tipo.increment(meta.tipo)
-                                                .then(
-                                                    res.status(201).jsonp(data)
-                                                )
+                                                .then(() => {
+                                                    // Criar Notificação e guardá-la---------
+                                                    var notificacao = {}
+                                                    notificacao.recurso = data._id
+                                                    notificacao.utilizador = meta.autor
+                                                    notificacao.texto = "O utilizador " + notificacao.utilizador + " adicionou um novo recurso."
+                                                    //res.status(201).jsonp(data)
+                                                    Noticia.insert(notificacao)
+                                                        .then(() => res.status(201).jsonp(data))
+                                                })
                                                 .catch(error => console.log(error))
                                             })
                                             .catch(error => console.log(error)/*res.status(500).jsonp(error)*/)

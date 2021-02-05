@@ -100,6 +100,15 @@ block body
                     title: {
                         text: 'Recursos Inseridos Por Dia'
                     },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            label: {
+                                backgroundColor: '#6a7985'
+                            }
+                        }
+                    },
                     xAxis: {
                         type: 'category',
                         data: [#{stats.ultimos7dias}]
@@ -180,43 +189,3 @@ block body
                 myChart2.setOption(option2);
                 myChart3.setOption(option3);
         }
-    
-block footer
-    .container
-        .row
-            .col-lg-4.col-md-4
-                .widget
-                    .foot-logo
-                        .logo
-                            h5(style='margin-top: 12px')
-                                a(href='/') RepositóriDOIS
-                        p RepositóriDOIS @ DAW2020
-            .col-lg-2.col-md-4
-                .widget
-                    .widget-title
-                        h4 Tipos
-                    ul.list-style
-                        li
-                            a(href='/recursos?tipo='+tipos[0]._id, title='')= tipos[0]._id
-                        li
-                            a(href='/recursos?tipo='+tipos[1]._id, title='')= tipos[1]._id
-                        li
-                            a(href='/recursos?tipo='+tipos[2]._id, title='')= tipos[2]._id
-            .col-lg-2.col-md-4
-                .widget
-                    .widget-title
-                        h4 Links Úteis
-                    ul.list-style
-                        li
-                            a(href='/recursos/', title='') Recursos
-            .col-lg-4.col-md-4
-                .widget
-                    .widget-title
-                        h4 Desenvolvido por
-                    ul.list-style
-                        li
-                            a(href='mailto:pg42816@alunos.uminho.pt', title='') Cândido Vale
-                        li
-                            a(href='mailto:a84442@alunos.uminho.pt', title='') Diogo Ribeiro
-                        li
-                            a(href='mailto:a84244@alunos.uminho.pt', title='') Luís Cunha

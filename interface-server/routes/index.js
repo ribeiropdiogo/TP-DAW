@@ -27,7 +27,7 @@ router.get('/feed', function(req, res) {
         .then(resp => {
             axios.get('http://localhost:7000/tipos/top/5', headers)
                 .then(t => {
-                    res.render('home', {title: 'RepositóriDOIS', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data})
+                    res.render('home', {title: 'RepositoriDOIS', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data})
                 })
                 .catch(e => res.render('error', {error: e}))
         })
@@ -73,7 +73,7 @@ router.get('/admin', function(req, res, next) {
                 if(resp.data.admin == true){
                     axios.get('http://localhost:7000/tipos/top/5', headers)
                     .then(t => {
-                        res.render('admin', {title: 'RepositóriDOIS', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data})
+                        res.render('admin', {title: 'RepositoriDOIS', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data})
                     })
                     .catch(e => res.render('error', {error: e}))
                 } else {

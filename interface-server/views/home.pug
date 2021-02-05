@@ -58,7 +58,7 @@ block body
                                         .widget
                                             h4.widget-title Perfil
                                             .your-page
-                                                .page-meta
+                                                .page-meta(style='padding-bottom: 10px;')
                                                     a(href='', title='', class='underline')= nome
                                                     span
                                                         i.ti-email
@@ -74,43 +74,3 @@ block body
                                                     a(href='/recursos/novo', title='') Adicionar Recurso
                                                 li
                                                     a(href='/recursos?username='+username, title='') Meus Recursos
-    
-block footer
-    .container
-        .row
-            .col-lg-4.col-md-4
-                .widget
-                    .foot-logo
-                        .logo
-                            h5(style='margin-top: 12px')
-                                a(href='/') RepositoriDOIS
-                        p RepositoriDOIS @ DAW2020
-            .col-lg-2.col-md-4
-                .widget
-                    .widget-title
-                        h4 Tipos
-                    ul.list-style
-                        li
-                            a(href='/recursos?tipo='+tipos[0]._id, title='')= tipos[0]._id
-                        li
-                            a(href='/recursos?tipo='+tipos[1]._id, title='')= tipos[1]._id
-                        li
-                            a(href='/recursos?tipo='+tipos[2]._id, title='')= tipos[2]._id
-            .col-lg-2.col-md-4
-                .widget
-                    .widget-title
-                        h4 Links Úteis
-                    ul.list-style
-                        li
-                            a(href='/recursos/', title='') Recursos
-            .col-lg-4.col-md-4
-                .widget
-                    .widget-title
-                        h4 Desenvolvido por
-                    ul.list-style
-                        li
-                            a(href='mailto:pg42816@alunos.uminho.pt', title='') Cândido Vale
-                        li
-                            a(href='mailto:a84442@alunos.uminho.pt', title='') Diogo Ribeiro
-                        li
-                            a(href='mailto:a84244@alunos.uminho.pt', title='') Luís Cunha

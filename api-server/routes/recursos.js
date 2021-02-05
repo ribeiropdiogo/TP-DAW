@@ -265,7 +265,7 @@ router.get('/exportar', function(req, res) {
         .then(u => {
             if(u.admin == true){
                 var exportzip = new JSZip();
-                Recurso.listAll()
+                Recurso.list()
                     .then(recursos => {
                         var index = 0;
                         recursos.forEach(item => {
@@ -301,6 +301,7 @@ router.get('/exportar', function(req, res) {
                                                 if(index==recursos.length){
                                                     exportzip.generateAsync({type:"nodebuffer"})
                                                     .then(function(e) {
+                                                        console.log('Export finished!')
                                                         res.setHeader('Content-Type', 'application/octet-stream');
                                                         res.status(200).send(e)
                                                     });
@@ -394,52 +395,56 @@ router.post('/', upload.single('conteudo'), function(req, res) {
                     meta.dataRegisto = new Date().toISOString().slice(0,19);
 
                     var payload = zip.file("data/"+meta.nome).async("nodebuffer")
-
                     payload.then(function(p) {
+                        let fpath = __dirname + '/../' + 'recursos/' + meta.nome 
+                        fs.writeFile(fpath, p, function (err) {
+                            fs.readFile(fpath, function (err,ficheiro) {
+                                var file_wordArr1 = CryptoJS.lib.WordArray.create(ficheiro);
+                                var sha256_hash1 = CryptoJS.SHA256(file_wordArr1);
+                                
+                                var file_wordArr2 = CryptoJS.lib.WordArray.create(fs.createReadStream(fpath));
+                                var sha256_hash2 = CryptoJS.SHA256(file_wordArr2);
 
-                        let fpath = __dirname + '/../' + 'recursos/' + meta.nome
-                        fs.writeFileSync(fpath, p,'binary')
+                                var hash = zip.file("manifest-sha256.txt").async("string");
+                                hash.then(function(line){
+                                    // Validate checksums
+                                    const r = line.split(' ')[0];
 
-                        var file_wordArr = CryptoJS.lib.WordArray.create(fs.createReadStream(fpath));
-                        var sha256_hash = CryptoJS.SHA256(file_wordArr);
+                                    if(sha256_hash1.toString() != r.substring(1) & sha256_hash2.toString() != r.substring(1)){
+                                        console.log("> Invalid SIP: Checksum comparison failed")
+                                        res.status(500).send("Invalid Checksum")
+                                    } else {
+                                        Recurso.insert(meta)
+                                            .then(data => { 
+                                                var newPath = __dirname + '/../' + 'recursos/' + getPath(data._id.toString()) + '/' + meta.nome;
+                                                
+                                                // Create path if not exists
+                                                if (!fs.existsSync(__dirname + '/../' + 'recursos/' + getPath(data._id.toString()))){
+                                                    fs.mkdirSync(
+                                                        __dirname + '/../' + 'recursos/' + getPath(data._id.toString()), 
+                                                        { recursive: true }
+                                                    );
+                                                }
+                                                
+                                                // Move file to storage tree
+                                                fs.rename(fpath, newPath, function(err) {
+                                                    if (err) console.log(err)
+                                                })
 
-                        var hash = zip.file("manifest-sha256.txt").async("string");
-                        hash.then(function(line){
-                            // Validate checksums
-                            const r = line.split(' ')[0];
-                            if(sha256_hash.toString() != r.substring(1)){
-                                console.log("> Invalid SIP: Checksum comparison failed")
-                                res.status(500).send("Invalid Checksum")
-                            } else {
-                                Recurso.insert(meta)
-                                    .then(data => { 
-                                        var newPath = __dirname + '/../' + 'recursos/' + getPath(data._id.toString()) + '/' + meta.nome;
-                                        
-                                        // Create path if not exists
-                                        if (!fs.existsSync(__dirname + '/../' + 'recursos/' + getPath(data._id.toString()))){
-                                            fs.mkdirSync(
-                                                __dirname + '/../' + 'recursos/' + getPath(data._id.toString()), 
-                                                { recursive: true }
-                                            );
-                                        }
-                                        
-                                        // Move file to storage tree
-                                        fs.rename(fpath, newPath, function(err) {
-                                            if (err) console.log(err)
-                                        })
-
-                                        fs.unlink(npath, (err) => {
-                                            if (err) throw err
-                                        })
-                                        
-                                        Tipo.increment(meta.tipo)
-                                        .then(
-                                            res.status(201).jsonp(data)
-                                        )
-                                        .catch(error => console.log(error))
-                                    })
-                                    .catch(error => res.status(500).jsonp(error))
-                            }
+                                                fs.unlink(npath, (err) => {
+                                                    if (err) throw err
+                                                })
+                                                
+                                                Tipo.increment(meta.tipo)
+                                                .then(
+                                                    res.status(201).jsonp(data)
+                                                )
+                                                .catch(error => console.log(error))
+                                            })
+                                            .catch(error => console.log(error)/*res.status(500).jsonp(error)*/)
+                                    }
+                                })
+                            })
                         })
                     });
                 });
@@ -475,7 +480,6 @@ router.post('/importar', upload.single('conteudo'), function(req, res) {
                         
                         Recurso.exists(id).then(e => {
                             if(e == false){
-                                console.log("> Importando recurso...")
                                 JSZip.loadAsync(file._data.compressedContent).then(function (zip) {
                                     var metadados = zip.file("metadata.json").async("string");
                                     metadados.then(function(result) {

@@ -7,42 +7,54 @@ const Post = require('../controllers/post')
 router.get('/', function(req, res) {
     Post.list()
         .then(data => res.status(200).jsonp(data))
-        .catch(error => res.status(500).jsonp(error))
+        .catch(e => res.status(500).jsonp({error: e}))
 })
 
 // GET /posts/:id
 router.get('/:id', function(req, res) {
     Post.lookup(req.params.id)
         .then(data => res.status(200).jsonp(data))
-        .catch(error => res.status(500).jsonp(error))
+        .catch(e => res.status(500).jsonp({error: e}))
 })
 
 // POST /posts
 router.post('/', function(req, res) {
+    req.body.comentarios = []
+    req.body.data = new Date()
+
     Post.insert(req.body)
         .then(data => res.status(201).jsonp(data))
-        .catch(error => res.status(500).jsonp(error))
+        .catch(e => res.status(500).jsonp({error: e}))
 })
 
 // PUT /posts/:id
 router.put('/:id', function(req, res) {
     Post.edit(req.params.id, req.body)
         .then(data => res.status(200).jsonp(data))
-        .catch(error => res.status(500).jsonp(error))
+        .catch(e => res.status(500).jsonp({error: e}))
 })
 
 // DELETE /posts/:id
 router.delete('/:id', function(req, res) {
     Post.remove(req.params.id)
         .then(data => res.status(200).jsonp(data))
-        .catch(error => res.status(500).jsonp(error))
+        .catch(e => res.status(500).jsonp({error: e}))
 })
 
-// Post Comentários
-// Fazer Igual para os Likes ?
 // POST /posts/comentarios/:id
 router.post('/comentarios/:id', function(req, res) {
-    // TODO
+    req.body.data = new Date()
+    
+    Post.insertComment(req.params.id, req.body)
+        .then(data => res.status(201).jsonp(data))
+        .catch(e => res.status(500).jsonp({error: e}))
+})
+
+// DELETE /posts/comentarios/:id
+router.delete('/comentarios/:id', function(req, res) {
+    Post.removeComment(req.params.id, req.body)
+        .then(data => res.status(200).jsonp(data))
+        .catch(e => res.status(500).jsonp({error: e}))
 })
 
 module.exports = router

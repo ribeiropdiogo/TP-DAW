@@ -9,7 +9,7 @@ var CryptoJS = require("crypto-js");
 var multer = require('multer')
 var upload = multer({ 
     dest: 'uploads/',
-    limits: { fileSize: 50 * 1024 * 1024 }
+    limits: { fileSize: 1000 * 1024 * 1024 }
  })
 
 function getPath(str){
@@ -41,12 +41,19 @@ router.get('/novo', function(req, res) {
 router.get('/exportar', function(req, res, next) {
     if(req.cookies.token != null){
 
-        var req_config = { headers: { Authorization: `Bearer ${req.cookies.token}` }, responseType: 'stream'}
+        var req_config = { headers: { 
+            Authorization: `Bearer ${req.cookies.token}` }, 
+            responseType: 'stream', 
+            maxContentLength: Infinity, 
+            maxBodyLength: Infinity
+        }
+        
         
         let username = jwt.decode(req.cookies.token).username
 
         var fid =  username + "_export";
         var path = __dirname + '/../downloads/' + fid + ".zip"
+        
         axios.get('http://localhost:7000/recursos/exportar', req_config)
             .then(r => {
                 // Recebe o zip e guarda na pasta

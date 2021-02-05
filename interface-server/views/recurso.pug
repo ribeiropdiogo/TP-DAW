@@ -1,12 +1,12 @@
 extends layout
 
 block head
-    title RepositóriDOIS
+    title RepositoriDOIS
     link(rel='stylesheet', href='/stylesheets/main.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/color.css')
     link(rel='stylesheet', href='/stylesheets/responsive.css')
-    link(rel='icon', href='/img/favicon.png', type='image/png' sizes='16x16') 
+    link(rel='icon', href='/img/favicon.png', type='image/png' sizes='16x16')
     script(src='/javascript/main.min.js')
     script(src='/javascript/custom.js')
     script(src='/javascript/script.js')
@@ -15,16 +15,20 @@ block head
     script(src='/javascript/crud.js')
 
 block body
+
+    input(type="hidden", id="input-username", value=user.username)
+    div.modal#display(style='display: none;')
+
     .theme-layout
         .responsive-header
             .mh-head.first.Sticky
                 span.mh-text
-                    h3 RepositóriDOIS
+                    h3 RepositoriDOIS
             
         .topbar.stick
             .logo
                 h3(style='margin-top: 12px')
-                    a(href='/') RepositóriDOIS
+                    a(href='/') RepositoriDOIS
             .top-area
                 ul.main-menu
                 ul.setting-area
@@ -105,6 +109,7 @@ block body
                                         .widget
                                             h4.widget-title Opções
                                             ul.naves
+                                                li(id="criarpost")
                                                 li(id="descarregar")
                                                 li(id="editar")
                                                 li(id="apagar")
@@ -117,8 +122,8 @@ block footer
                     .foot-logo
                         .logo
                             h5(style='margin-top: 12px')
-                                a(href='/') RepositóriDOIS
-                        p RepositóriDOIS @ DAW2020
+                                a(href='/') RepositoriDOIS
+                        p RepositoriDOIS @ DAW2020
             .col-lg-2.col-md-4
                 .widget
                     .widget-title

@@ -7,12 +7,14 @@ const logger = require('morgan')
 const mongoose = require('mongoose')
 
 const mongoDB = 'mongodb://127.0.0.1/RepositoriDOIS'
-mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
+mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true})
 
 const db = mongoose.connection
-db.on('error', console.error.bind(console, 'Erro de conexão ao MongoDB...'))
+db.on('error', function() {
+    console.log('Error connecting to MongoDB...')
+})
 db.once('open', function() {
-    console.log('Conexão ao MongoDB realizada com sucesso...')
+    console.log('Connected to MongoDB...')
 })
 
 

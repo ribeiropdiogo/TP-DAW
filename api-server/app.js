@@ -4,8 +4,7 @@ const logger = require('morgan')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
-
-var bodyParser = require('body-parser')
+const bodyParser = require('body-parser')
 
 const mongoDB = 'mongodb://127.0.0.1/RepositoriDOIS'
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true})

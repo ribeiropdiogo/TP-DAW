@@ -440,6 +440,7 @@ router.post('/', upload.single('conteudo'), function(req, res) {
                                                     // Criar Notificação e guardá-la---------
                                                     var notificacao = {}
                                                     notificacao.recurso = data._id
+                                                    notificacao.data = new Date().toISOString().slice(0,19)
                                                     notificacao.utilizador = meta.autor
                                                     notificacao.texto = "O utilizador " + notificacao.utilizador + " adicionou um novo recurso."
                                                     //res.status(201).jsonp(data)

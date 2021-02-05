@@ -50,7 +50,40 @@ router.get('/feed', function(req, res) {
     }
   });
 
-
+router.get('/estatisticas', function(req, res) {
+  
+    if(req.cookies.token != null){
+            var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
+            let username = jwt.decode(req.cookies.token).username
+    
+            axios.get('http://localhost:7000/utilizadores/' + username, headers)
+            .then(resp => {
+                if(resp.data.admin == true){
+                    axios.get('http://localhost:7000/tipos/', headers)
+                    .then(t => {
+                        axios.get('http://localhost:7000/recursos/estatisticas', headers)
+                        .then(estatisticas => {
+                            res.render('stats', {title: 'RepositóriDOIS', stats: estatisticas.data, tipos: t.data})
+                        })
+                        .catch(e => res.render('error', {error: e}))
+                    })
+                    .catch(e => res.render('error', {error: e}))
+                } else {
+                    res.redirect('/feed')
+                }
+            })
+            .catch(err => {
+                if(err.response.data.error.name == 'TokenExpiredError'){
+                    res.clearCookie("token")
+                    res.redirect('/login')
+                }else{
+                    res.render('error', {error: err})
+                }
+            })
+        } else {
+            res.redirect('/login')
+        }
+});
 
 router.get('/login', function(req, res, next) {
     res.render('login', { title: 'Login' })

@@ -1,6 +1,14 @@
 // Type Controller
 const Recurso = require('../models/recurso')
 
+module.exports.total = function() {
+    return Recurso.countDocuments().exec();
+}
+
+module.exports.inseridosDia = function(datai, dataf) {
+    return Recurso.countDocuments({dataRegisto: {$gt: new Date(datai), $lt: new Date(dataf)}}).exec();
+}
+
 // Returns Resource list
 module.exports.list = function() {
     return Recurso

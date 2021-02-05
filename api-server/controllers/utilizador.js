@@ -9,6 +9,21 @@ module.exports.list = function() {
         .exec()
 }
 
+module.exports.usersAtivos = function(datai, dataf) {
+    return Utilizador.countDocuments({ultimoAcesso: {$gt: new Date(datai), $lt: new Date(dataf)}}).exec();
+}
+
+module.exports.total = function() {
+    return Utilizador.countDocuments().exec();
+}
+
+module.exports.alunos = function() {
+    return Utilizador.countDocuments({filiacao: "aluno"}).exec();
+}
+
+module.exports.docentes = function() {
+    return Utilizador.countDocuments({filiacao: "docente"}).exec();
+}
 
 // Returns a user record
 module.exports.lookup = function(id) {

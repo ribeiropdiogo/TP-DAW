@@ -11,6 +11,7 @@ function comment(id) {
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4) {
                 if (this.status == 201) {
+                    document.getElementById("textarea" + id).value = ""
                     alert('Comentário publicado!')
                 } else {
                     alert('Ocorreu um erro')

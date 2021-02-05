@@ -5,6 +5,7 @@ const Post = require('../models/post')
 module.exports.list = function() {
     return Post
         .find()
+        .sort({data: -1})
         .exec()
 }
 

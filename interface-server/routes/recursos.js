@@ -37,6 +37,7 @@ router.get('/novo', function(req, res) {
         })
 });
 
+
 router.get('/exportar', function(req, res, next) {
     if(req.cookies.token != null){
 

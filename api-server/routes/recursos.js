@@ -151,6 +151,112 @@ router.get('/', function(req, res) {
 })
 */
 
+router.get('/estatisticas', function(req, res){
+     var query_user = getUsername(req)
+    Utilizador.lookup(query_user)
+        .then(u => {
+            if(u.admin == true){
+                var data = {}
+                Utilizador.total().then(regist => {
+                    data.registados = regist;
+                     Recurso.total().then(recursos => {
+                        data.registados = regist;
+                        data.recursos = recursos;
+                            var dias = [];
+                            var valores = [];
+                            var ativos = [];
+                            var aux = [];
+                            
+                            for (var i=0; i<7; i++) {
+                                var d = new Date();
+                                var d2 = new Date();
+                                d.setDate(d.getDate() - i + 1);
+                                d2.setDate(d2.getDate() - i);
+                                var dia = d.toISOString().slice(0,10)
+                                var dia2 = d2.toISOString().slice(0,10)
+                                aux.push(dia2)
+                                aux.push(dia)
+                                dias.push("'"+dia2.substring(6)+"'")
+                                
+                            } 
+
+                            var p1 = new Promise((resolve, reject) => {
+                                var valores = []
+                                Recurso.inseridosDia(aux[0],aux[1]).then(x1 => {
+                                    valores.push(x1)
+                                    Recurso.inseridosDia(aux[2],aux[3]).then(x2 => {
+                                        valores.push(x2)
+                                        Recurso.inseridosDia(aux[4],aux[5]).then(x3 => {
+                                            valores.push(x3)
+                                            Recurso.inseridosDia(aux[6],aux[7]).then(x4 => {
+                                                valores.push(x4)
+                                                Recurso.inseridosDia(aux[8],aux[9]).then(x5 => {
+                                                    valores.push(x5)
+                                                    Recurso.inseridosDia(aux[10],aux[11]).then(x6 => {
+                                                        valores.push(x6)
+                                                        Recurso.inseridosDia(aux[12],aux[13]).then(x7 => {
+                                                            valores.push(x7)
+                                                            resolve(valores)
+                                                        })
+                                                    })
+                                                })
+                                            })
+                                        })
+                                    })
+                                })
+                            });
+
+                            var p2 = new Promise((resolve, reject) => {
+                                var valores = []
+                                Utilizador.usersAtivos(aux[0],aux[1]).then(x1 => {
+                                    valores.push(x1)
+                                    Utilizador.usersAtivos(aux[2],aux[3]).then(x2 => {
+                                        valores.push(x2)
+                                        Utilizador.usersAtivos(aux[4],aux[5]).then(x3 => {
+                                            valores.push(x3)
+                                            Utilizador.usersAtivos(aux[6],aux[7]).then(x4 => {
+                                                valores.push(x4)
+                                                Utilizador.usersAtivos(aux[8],aux[9]).then(x5 => {
+                                                    valores.push(x5)
+                                                    Utilizador.usersAtivos(aux[10],aux[11]).then(x6 => {
+                                                        valores.push(x6)
+                                                        Utilizador.usersAtivos(aux[12],aux[13]).then(x7 => {
+                                                            valores.push(x7)
+                                                            resolve(valores)
+                                                        })
+                                                    })
+                                                })
+                                            })
+                                        })
+                                    })
+                                })
+                            });
+
+
+                            p1.then(resultado => {
+                                Utilizador.alunos().then(a => {
+                                    Utilizador.docentes().then(d => {
+                                        p2.then(ativos => {
+                                            data.ultimos7dias = dias.reverse()
+                                            data.recursosinseridos = resultado.reverse()
+                                            data.alunos = a
+                                            data.docentes = d
+                                            data.ativos = ativos.reverse()
+                                            res.status(200).jsonp(data);
+                                        })
+                                    })
+                                })
+                                
+                            })
+                            
+                    })
+                })
+            } else
+                res.status(401).send()
+        })
+        .catch(error => res.status(500).jsonp(error))
+
+})
 
 
 router.get('/exportar', function(req, res) {
@@ -205,11 +311,11 @@ router.get('/exportar', function(req, res) {
                             })
                         })
                     })
-                    .catch(error => /*res.status(500).jsonp(error)*/console.log(error))
+                    .catch(error => res.status(500).jsonp(error))
             } else
                 res.status(401).send()
         })
-        .catch(error => /*res.status(500).jsonp(error)*/console.log(error))
+        .catch(error => res.status(500).jsonp(error))
 })
 
 // GET /recursos/:id
@@ -347,9 +453,6 @@ router.post('/', upload.single('conteudo'), function(req, res) {
     })
 })
 
-function getTotalImportar(importzip,callback) {
-    
-  }
 
 // POST /recursos/importar
 router.post('/importar', upload.single('conteudo'), function(req, res) {

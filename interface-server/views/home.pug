@@ -10,8 +10,12 @@ block head
     script(src='/javascript/main.min.js')
     script(src='/javascript/custom.js')
     script(src='/javascript/script.js')
+    script(src='/javascript/feed.js')
 
 block body
+
+    input(type="hidden", id="input-username", value=user.username)
+
     .theme-layout
         .responsive-header
             .mh-head.first.Sticky
@@ -53,19 +57,48 @@ block body
                                                     li
                                                         a(href='/recursos?tipo='+t._id, title='')= t._id
                                 .col-lg-6
+                                    each post in posts
+                                        .central-meta.item(style="display: inline-block;")
+                                            .user-post
+                                                .friend-info
+                                                    .friend-name
+                                                        ins
+                                                            a(href="#" title="")= post.utilizador
+                                                        span published: #{post.data}
+                                                    .post-meta
+                                                        p= post.recurso
+                                                        .description
+                                                            p= post.texto
+                                                .coment-area
+                                                    ul.we-comet
+                                                        each comentario in post.comentarios
+                                                            li
+                                                                .we-comment
+                                                                    .coment-head
+                                                                        h5
+                                                                            a(href="#" title="")= comentario.utilizador
+                                                                        span= comentario.data
+                                                                    p= comentario.texto
+                                                        li.post-comment
+                                                            .post-comt-box
+                                                                .form
+                                                                    textarea(placeholder="Escrever um comentário", id="textarea"+post._id)
+                                                                    .submit-btns
+                                                                        button.mtr-btn(type="button", onclick="comment('"+post._id+"')")
+                                                                            span Comentar
                                 .col-lg-4
                                     aside(class='sidebar static')
                                         .widget
                                             h4.widget-title Perfil
                                             .your-page
                                                 .page-meta(style='padding-bottom: 10px;')
-                                                    a(href='', title='', class='underline')= nome
+                                                    a(href='', title='', class='underline')= user.nome
                                                     span
                                                         i.ti-email
-                                                        a= email
+                                                        a= user.email
                                                     span
                                                         i.ti-book
-                                                        a= instituicao
+                                                        a= user.instituicao
                                     aside(class='sidebar static')
                                         .widget
                                             h4.widget-title Recursos

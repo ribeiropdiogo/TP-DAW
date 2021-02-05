@@ -21,6 +21,7 @@ const usersRouter = require('./routes/utilizadores')
 const postsRouter = require('./routes/posts')
 const tiposRouter = require('./routes/tipos')
 const recursosRouter = require('./routes/recursos')
+const noticiasRouter = require('./routes/noticia')
 
 var blacklist = []
 
@@ -75,6 +76,7 @@ app.use('/utilizadores', usersRouter)
 app.use('/recursos', recursosRouter)
 app.use('/posts', postsRouter)
 app.use('/tipos', tiposRouter)
+app.use('/noticias', noticiasRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

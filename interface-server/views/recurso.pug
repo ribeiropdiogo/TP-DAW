@@ -17,6 +17,7 @@ block head
 block body
 
     input(type="hidden", id="input-username", value=user.username)
+
     div.modal#display(style='display: none;')
 
     .theme-layout
@@ -113,43 +114,3 @@ block body
                                                 li(id="descarregar")
                                                 li(id="editar")
                                                 li(id="apagar")
-    
-block footer
-    .container
-        .row
-            .col-lg-4.col-md-4
-                .widget
-                    .foot-logo
-                        .logo
-                            h5(style='margin-top: 12px')
-                                a(href='/') RepositoriDOIS
-                        p RepositoriDOIS @ DAW2020
-            .col-lg-2.col-md-4
-                .widget
-                    .widget-title
-                        h4 Tipos
-                    ul.list-style
-                        li
-                            a(href='/recursos?tipo='+tipos[0]._id, title='')= tipos[0]._id
-                        li
-                            a(href='/recursos?tipo='+tipos[1]._id, title='')= tipos[1]._id
-                        li
-                            a(href='/recursos?tipo='+tipos[2]._id, title='')= tipos[2]._id
-            .col-lg-2.col-md-4
-                .widget
-                    .widget-title
-                        h4 Links Úteis
-                    ul.list-style
-                        li
-                            a(href='/recursos/', title='') Recursos
-            .col-lg-4.col-md-4
-                .widget
-                    .widget-title
-                        h4 Desenvilvido por
-                    ul.list-style
-                        li
-                            a(href='mailto:pg42816@alunos.uminho.pt', title='') Cândido Vale
-                        li
-                            a(href='mailto:a84442@alunos.uminho.pt', title='') Diogo Ribeiro
-                        li
-                            a(href='mailto:a84244@alunos.uminho.pt', title='') Luís Cunha

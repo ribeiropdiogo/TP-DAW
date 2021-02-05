@@ -1,7 +1,6 @@
 // User Model
 const mongoose = require('mongoose')
 
-
 var userSchema = new mongoose.Schema({
     username: {type: String, index: {unique: true, dropDups: true}},
     nome: String,
@@ -17,6 +16,5 @@ var userSchema = new mongoose.Schema({
     starred: [String],
     salt: String,
 })
-
 
 module.exports = mongoose.model('utilizador', userSchema, 'utilizadores')

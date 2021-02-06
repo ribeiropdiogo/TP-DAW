@@ -16,6 +16,13 @@ npm start
 After executing these commands, the platform should be running at [localhost:8000](http://localhost:8000). 
 Before beeing able to use the platform you need to populate some values in the database. In the folder `data` are some example datasets that can be used to populate the database, and, there are 2 programs to generate example users and resources.
 
+### Converting user to admin
+
+In order to have a user with administrative privileges you need to update the record in `mongo`with the following line:
+
+```
+db.utilizadores.update({username: "USERNAME"},{$set: {admin: true}})
+```
 
 ## Built With
 

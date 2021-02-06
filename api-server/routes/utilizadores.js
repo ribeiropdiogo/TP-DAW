@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-
 const jwt = require('jsonwebtoken')
+
 const Utilizador = require('../controllers/utilizador')
 const Recurso = require('../controllers/recurso')
 const Tipo = require('../controllers/tipo')

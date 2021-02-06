@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
+const nodemailer = require('nodemailer')
 const crypto = require('../util/crypto')
 var axios = require('axios');
 const OAuthClientID = '208792506217-bb9p418he6jq6ve8kjvejj4hr20eau4t.apps.googleusercontent.com';
@@ -9,7 +10,6 @@ const fbAppID = '1815453438611392'
 
 const Utilizador = require('../controllers/utilizador')
 
-const nodemailer = require('nodemailer')
 
 // POST /utilizadores
 router.post('/', createAccount, sign, function(req, res) {
@@ -19,7 +19,9 @@ router.post('/', createAccount, sign, function(req, res) {
 
 // POST /utilizadores/login
 router.post('/login', authenticate, sign, function(req, res) {
-    res.status(200).jsonp({token: req.token})
+    Utilizador.updateUltimoAcesso(req.user.username, new Date())
+        .then(dados => res.status(200).jsonp({token: req.token}))
+        .catch(e => res.status(500).jsonp({error: e}))
 })
 
 

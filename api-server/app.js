@@ -4,8 +4,7 @@ const logger = require('morgan')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
-
-var bodyParser = require('body-parser')
+const bodyParser = require('body-parser')
 
 const mongoDB = 'mongodb://127.0.0.1/RepositoriDOIS'
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true})
@@ -22,6 +21,7 @@ const usersRouter = require('./routes/utilizadores')
 const postsRouter = require('./routes/posts')
 const tiposRouter = require('./routes/tipos')
 const recursosRouter = require('./routes/recursos')
+const noticiasRouter = require('./routes/noticia')
 
 var blacklist = []
 
@@ -76,6 +76,7 @@ app.use('/utilizadores', usersRouter)
 app.use('/recursos', recursosRouter)
 app.use('/posts', postsRouter)
 app.use('/tipos', tiposRouter)
+app.use('/noticias', noticiasRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

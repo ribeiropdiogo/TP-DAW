@@ -7,7 +7,10 @@ var JSZip = require("jszip");
 var CryptoJS = require("crypto-js");
 
 var multer = require('multer')
-var upload = multer({ dest: 'uploads/' })
+var upload = multer({ 
+    dest: 'uploads/',
+    limits: { fileSize: 1000 * 1024 * 1024 }
+ })
 
 function getPath(str){
   var path = str.substring(0, 8) + '/' + str.substring(8, 16) + '/' + str.substring(16, 24) + '/' + str.substring(24, 32);
@@ -36,6 +39,59 @@ router.get('/novo', function(req, res) {
 });
 
 
+router.get('/exportar', function(req, res, next) {
+    if(req.cookies.token != null){
+
+        var req_config = { headers: { 
+            Authorization: `Bearer ${req.cookies.token}` }, 
+            responseType: 'stream', 
+            maxContentLength: Infinity, 
+            maxBodyLength: Infinity
+        }
+        
+        
+        let username = jwt.decode(req.cookies.token).username
+
+        var fid =  username + "_export";
+        var path = __dirname + '/../downloads/' + fid + ".zip"
+        
+        axios.get('http://localhost:7000/recursos/exportar', req_config)
+            .then(r => {
+                // Recebe o zip e guarda na pasta
+                r.data.pipe(fs.createWriteStream(path));
+
+                r.data.on('end', function () {
+                    fs.readFile(path, function(err, file) {
+                        if (err) throw err
+                        JSZip.loadAsync(file).then(function (zip) {
+                            zip.generateAsync({type:"nodebuffer"})
+                            .then(function(content) {
+                                res.setHeader('Content-Type', 'application/octet-stream');
+                                res.status(200).send(content)
+                            });
+                            
+                            fs.unlink(path, (err) => {
+                                if (err) throw err
+                            })
+                        })
+                    }) 
+                });
+            })
+            .catch(err => {
+                if(err.response.status == 401){
+                    res.clearCookie("token")
+                    res.redirect('/login')
+                }else{
+                    res.render('error', {error: err})
+                }
+            })
+
+    } else {
+        res.redirect('/login')
+    }
+});
+
+
 //POST RECURSO //
 router.post('/', upload.single('conteudo'), function(req, res) {
 
@@ -49,11 +105,37 @@ router.post('/', upload.single('conteudo'), function(req, res) {
     const headers = {headers: {
         'Content-Type': form.getHeaders()['content-type'],
         'Authorization':  `Bearer ${req.cookies.token}`
-    }}
+    }, maxContentLength: Infinity, maxBodyLength: Infinity }
   
 
     axios.post('http://localhost:7000/recursos', form, headers)
+        .then(resp => {
+            fs.unlinkSync(path);
+            res.status(201).jsonp(resp.data);
+        })
+        .catch(err => {
+            if(err.response.status==401){
+                res.status(401).jsonp("Token Expirado!");
+            }else{
+                res.render('error', {error: err}) 
+            }
+        })
+});
 
+router.post('/importar', upload.single('conteudo'), function(req, res) {
+
+    let path = __dirname + '/../' + req.file.path
+    const FormData = require('form-data');
+    const form = new FormData();
+    form.append('conteudo', fs.createReadStream(path));
+
+    //request_config alterado
+    const headers = {headers: {
+        'Content-Type': form.getHeaders()['content-type'],
+        'Authorization':  `Bearer ${req.cookies.token}`
+    }, maxContentLength: Infinity, maxBodyLength: Infinity }
+
+    axios.post('http://localhost:7000/recursos/importar', form, headers)
         .then(resp => {
             fs.unlinkSync(path);
             res.status(201).jsonp(resp.data);
@@ -329,5 +411,6 @@ router.put("/:id", function (req, res) {
         res.redirect('/login')
     }
 });
+
 
 module.exports = router;

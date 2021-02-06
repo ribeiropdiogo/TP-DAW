@@ -46,6 +46,8 @@ function getRecurso() {
                             $("#editar").append("<a href='/recursos/editar/" + meta._id + "'>Editar Recurso</a>")
                             $("#apagar").append("<a href='javascript:deleteRecurso(\"" + meta._id + "\");'>Apagar Recurso</a>")
                         }
+
+                        $("#criarpost").append("<a href='javascript:openPostForm(\"" + meta._id + "\");'>Criar Post</a>")
                     })
                 })
             })
@@ -54,6 +56,76 @@ function getRecurso() {
     xhttp.open("GET", "/recursos/zip/"+recurso, true);
     xhttp.responseType = "arraybuffer";
     xhttp.send();
+}
+
+
+function openPostForm(id) {
+    $('#display').empty()
+    $('#display').append(`
+    <div style="
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px #000;
+        text-align: left;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        overflow: auto;
+        z-index: 1;
+        padding: 20px;
+        box-sizing: border-box;
+        margin: auto;
+        width: 50%;
+        max-height: 300px;
+        height: 80%;
+    ">
+        <form>
+            <div class="form-group">
+                <textarea rows="4" id="input-texto" required="required"/>
+                <label class="control-label" for="input-texto">Texto</label><i class="mtrl-select"></i>
+            </div>
+            <div class="submit-btns">
+                <button type="button" class="mtr-btn" onclick="sendPost('${id}')"><span>Criar post</span></button>
+            </div>
+        </form>
+    </div>
+    `)
+    $('#display').modal()
+}
+
+
+function sendPost(id) {
+    var texto = document.getElementById("input-texto").value
+
+    if (texto) {
+        var username = document.getElementById("input-username").value
+        var body = {
+            utilizador: username,
+            recurso: id,
+            texto: texto
+        }
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                if (this.status == 201) {
+                    alert('Post publicado!')
+                    $('#display').modal('hide')
+                } else {
+                    alert('Ocorreu um erro')
+                }
+            }
+        };
+
+        xhttp.open("POST", "/posts", true);
+        xhttp.setRequestHeader('Content-type','application/json; charset=utf-8');
+        xhttp.send(JSON.stringify(body));
+
+    } else {
+        alert('Inválido')
+    }
 }
 
 

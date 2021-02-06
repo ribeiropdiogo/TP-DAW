@@ -50,11 +50,11 @@ app.use(function(req, res, next) {
                 if(blacklisted == true){
                     res.status(401).jsonp({error: "Token Inválido!"})
                 }else{
+                    req.token = myToken
                     next()
                 }
             }
         })
-        req.token = myToken
     }else{
         res.status(401).jsonp({error: "Token Inexistente!"})
     }

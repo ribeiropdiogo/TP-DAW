@@ -65,7 +65,7 @@ block body
                                                         tr
                                                             td
                                                                 ins(style="color: #088dcd; float: left; font-weight: 700; width: 100%; font-size: 18px; text-decoration: none;")= post.usr.nome
-                                                            if user.username == post.rec.autor || user.admin
+                                                            if user.admin || user.username == post.utilizador
                                                                 td
                                                                     button(type="button", onclick="deletePost('"+post._id+"')", style="float: right; font-size: 15px; border: 1px solid #5d6371; border-radius: 5px; padding: 5px; background-color: transparent;") Apagar
                                                         tr
@@ -81,11 +81,13 @@ block body
                                                 .coment-area
                                                     ul.we-comet#comment-ul
                                                         each comentario in post.comentarios
-                                                            li
+                                                            li(id="postcom"+comentario._id)
                                                                 .we-comment
                                                                     .coment-head
                                                                         h5= comentario.utilizador
                                                                         span= comentario.data
+                                                                        if user.admin || user.username == comentario.utilizador
+                                                                            button(type="button", onclick="deletePostComment('"+post._id+"','"+comentario._id+"')", style="float: right; font-size: 10px; border: 1px solid #5d6371; border-radius: 5px; padding: 3px; background-color: transparent;") Apagar
                                                                     p= comentario.texto
                                                     ul.we-comet
                                                         li.post-comment

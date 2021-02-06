@@ -70,13 +70,19 @@ module.exports.edit = function(id, p) {
 // Inserts a new comment
 module.exports.insertComment = function(id, c) {
     return Post
-        .updateOne({_id: id}, {$push: {comentarios: c}})
+        .findByIdAndUpdate(id, {$push: {comentarios: c}}, {new: true})
         .exec()
 }
 
 // Removes a comment
-module.exports.removeComment = function(id, c) {
+module.exports.removeComment = function(id_post, id_com) {
     return Post
-        .updateOne({_id: id}, {$pull: {comentarios: {utilizador: c.utilizador, data: c.data}}})
+        .updateOne({_id: id_post}, {$pull: {comentarios: {_id: id_com}}}, {new: true})
+        .exec()
+}
+
+module.exports.removeCommentIfOwner = function(id_post, id_com, owner) {
+    return Post
+        .updateOne({_id: id_post}, {$pull: {comentarios: {_id: id_com, utilizador: owner}}}, {new: true})
         .exec()
 }

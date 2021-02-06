@@ -18,11 +18,14 @@ function getPath(str){
 }
 
 function filterResources(data,query_user,admin){
+    if (admin == true)
+        return data
+
     var i
     var response = []
             
     for (i = 0; i < data.length; i++) {
-        if(data[i].visibilidade == "Público" || data[i].autor == query_user || admin == true)
+        if(data[i].visibilidade == "Público" || data[i].autor == query_user)
             response.push(data[i])
     } 
 

@@ -54,6 +54,7 @@ app.use(function(req, res, next) {
                 }
             }
         })
+        req.token = myToken
     }else{
         res.status(401).jsonp({error: "Token Inexistente!"})
     }

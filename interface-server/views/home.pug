@@ -58,12 +58,19 @@ block body
                                                         a(href='/recursos?tipo='+t._id, title='')= t._id
                                 .col-lg-6
                                     each post in posts
-                                        .central-meta.item(style="display: inline-block;")
+                                        .central-meta.item(style="display: inline-block;", id="post"+post._id)
                                             .user-post
                                                 .friend-info
-                                                    .friend-name
-                                                        ins= post.usr.nome
-                                                        span published: #{post.data}
+                                                    table(style="width: 100%;")
+                                                        tr
+                                                            td
+                                                                ins(style="color: #088dcd; float: left; font-weight: 700; width: 100%; font-size: 18px; text-decoration: none;")= post.usr.nome
+                                                            if user.username == post.rec.autor || user.admin
+                                                                td
+                                                                    button(type="button", onclick="deletePost('"+post._id+"')", style="float: right; font-size: 15px; border: 1px solid #5d6371; border-radius: 5px; padding: 5px; background-color: transparent;") Apagar
+                                                        tr
+                                                            td
+                                                                span(style="color: #999; float: left; font-size: 12px; width: 100%;") Published: #{post.data}
                                                     .post-meta
                                                         div(style="box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); padding: 15px 15px 7px 15px;")
                                                             a(href="/recursos/"+post.recurso)
@@ -72,15 +79,15 @@ block body
                                                         .description
                                                             p= post.texto
                                                 .coment-area
-                                                    ul.we-comet
+                                                    ul.we-comet#comment-ul
                                                         each comentario in post.comentarios
                                                             li
                                                                 .we-comment
                                                                     .coment-head
-                                                                        h5
-                                                                            a= comentario.utilizador
+                                                                        h5= comentario.utilizador
                                                                         span= comentario.data
                                                                     p= comentario.texto
+                                                    ul.we-comet
                                                         li.post-comment
                                                             .post-comt-box
                                                                 .form

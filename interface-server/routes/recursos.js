@@ -22,6 +22,7 @@ router.get('/novo', function(req, res) {
     axios.get('http://localhost:7000/recursos/novo', headers)
         
         .then(resp => {
+
             res.render('addRecurso', { title: 'Adicionar Recurso', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo})
         })
         .catch(err => {

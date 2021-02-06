@@ -2,7 +2,7 @@ const express = require('express')
 var axios = require('axios');
 const router = express.Router()
 const jwt = require('jsonwebtoken')
-
+var passport = require('passport')
 
 /* ############################# */
 /* Interface -> Comunicação com a API / Render dos templates
@@ -62,6 +62,11 @@ router.get('/redefinePassword/:token', function(req, res, next) {
 });
 
 
+//Google OAuth
+router.get('/googleAuth', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+//Facebook OAuth
+router.get('/facebookAuth', passport.authenticate('facebook', { scope : ['email'] }));
 
 router.get('/admin', function(req, res, next) {
     if(req.cookies.token != null){

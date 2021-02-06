@@ -16,6 +16,44 @@ var axios = require('axios')
 
 var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+
+
+passport.use(new GoogleStrategy({
+    clientID: '208792506217-bb9p418he6jq6ve8kjvejj4hr20eau4t.apps.googleusercontent.com',
+    clientSecret: 'P_st4hIFKjJlF1Kmb_8O0wDS',
+    callbackURL: "http://localhost:8000/utilizadores/google/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+        var userData = {}
+        userData.profile = profile;
+        userData.accessToken = accessToken;
+        return done(null, userData);
+  }
+));
+
+passport.use(new FacebookStrategy({
+    clientID: '1815453438611392',
+    clientSecret: '3827d296b5d3f7a038aac6e2b716d3ce',
+    callbackURL: "http://localhost:8000/utilizadores/facebook/callback",
+    profileFields: ["email", "name"]
+  }, function (accessToken, refreshToken, profile, done) {
+    var userData = {}
+    userData.profile = profile;
+    userData.accessToken = accessToken;
+    return done(null, userData);
+  }
+));
+
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
+  });
+  
+passport.deserializeUser(function(obj, done) {
+    done(null, obj);
+});
 
 
 const indexRouter = require('./routes/index')
@@ -38,7 +76,8 @@ app.use(cookieParser('wazzzup'));
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.session());
+
 
 app.use(function(req, res, next){
     //console.log('Signed Cookies: ', JSON.stringify(req.signedCookies))

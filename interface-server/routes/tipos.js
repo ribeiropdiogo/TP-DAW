@@ -8,13 +8,12 @@ const jwt = require('jsonwebtoken')
 router.get('/novo', function(req, res) {
   
     var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
-    let usrname = jwt.decode(req.cookies.token).username
 
-    axios.get('http://localhost:7000/utilizadores/' + usrname, headers)
+    axios.get('http://localhost:7000/recursos/novo', headers)
         .then(resp => {
 
             console.log(resp.data)
-            res.render('addTipo', { title: 'Adicionar Tipo', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email});
+            res.render('addTipo', { title: 'Adicionar Tipo', nome: resp.data.user.nome, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo});
         
         })
         .catch(e => res.render('error', {error: e}))

@@ -2,6 +2,10 @@ const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
 const crypto = require('../util/crypto')
+var axios = require('axios');
+const OAuthClientID = '208792506217-bb9p418he6jq6ve8kjvejj4hr20eau4t.apps.googleusercontent.com';
+const appToken = '1815453438611392|sFi5H45h-qFI24FsudDasA450Fo'; //fb
+const fbAppID = '1815453438611392'
 
 const Utilizador = require('../controllers/utilizador')
 
@@ -31,7 +35,92 @@ router.post('/redefinePassword/', verificaToken, atualizaPwd, authenticate, sign
 })
 
 
+// Google Auth
+router.post('/googleAuth/', verificaGoogleToken, sign, function(req, res) {
+    res.status(200).jsonp({token: req.token})
+})
 
+// Facebook Auth
+router.post('/facebookAuth/', verificaFbToken, sign, function(req, res) {
+    res.status(200).jsonp({token: req.token})
+})
+
+//graph.facebook.com/debug_token?input_token={token-to-inspect}&access_token={app-token-or-admin-token}
+
+function verificaFbToken(req, res, next) {
+
+    var token2inspect = req.body.userData.accessToken
+
+    axios.get('https://graph.facebook.com/debug_token?input_token=' + token2inspect +'&access_token=' + appToken)
+    .then(resp => {
+
+        if(resp.data.data.app_id == fbAppID){
+
+            Utilizador.lookupUserByEmail(req.body.userData.profile._json.email)
+            .then(dados => {
+                if (!dados) {
+                    res.status(404).jsonp({error: 'Utilizador não Registado...'})
+                } else {
+                    req.user = {username: dados.username, admin: dados.admin}
+                    next() //Passar para o Sign
+                }
+            })
+        }else{
+            res.status(401).jsonp({error: 'Pedido Inválido!'})
+        }
+
+    })
+    .catch(err => {
+        
+        if(err.response.status==401){
+            res.status(401).jsonp("Problema com o pedido.");
+        }else{
+            res.render('error', {error: err}) 
+        }
+    })
+    
+}
+
+// ######################### //
+function verificaGoogleToken(req, res, next) {
+
+    var headers = { headers: { Authorization: `Bearer ${req.body.userData.accessToken}` }}
+
+    //https://www.googleapis.com/oauth2/v3/userinfo
+    //https://www.googleapis.com/oauth2/v3/tokeninfo
+    axios.get('https://www.googleapis.com/oauth2/v3/tokeninfo', headers)
+    .then(resp => {
+        //pegar no resp.data.email e fazer retrieve do user na db
+        if(resp.data.azp == OAuthClientID){
+
+            Utilizador.lookupUserByEmail(resp.data.email)
+            .then(dados => {
+                if (!dados) {
+                    //Aqui tenho que mandar a indicação e os dados necessários para completar o registo
+                    //return 404 - user não existe e mandar os dados que se recolheu do google
+                    res.status(404).jsonp({error: 'Utilizador não Registado...'})
+                } else {
+                    req.user = {username: dados.username, admin: dados.admin}
+                    next() //Passar para o Sign
+                }
+            })
+        }else{
+            res.status(401).jsonp({error: 'Pedido Inválido!'})
+        }
+
+    })
+    .catch(err => {
+        if(err.response.status==401){
+            res.status(401).jsonp("Problema com o pedido.");
+        }else{
+            res.render('error', {error: err}) 
+        }
+    })
+    
+}
+
+
+// ############ //
 function forgotPwd(req, res, next) {
     
     Utilizador.lookupUserByEmail(req.body.email)

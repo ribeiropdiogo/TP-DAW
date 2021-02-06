@@ -20,7 +20,7 @@ module.exports.insert = function(u) {
 module.exports.lookupUserByEmail = function(id) {
     return Utilizador
         //.findOne({email: id}, {_id: 0, salt: 1, resetToken: 1, resetTokenExp: 1})
-        .findOne({email: id}, {_id: 0, username: 1, hashedPassword: 1})
+        .findOne({email: id}, {_id: 0, username: 1, hashedPassword: 1, admin: 1})
         .exec()
 }
 

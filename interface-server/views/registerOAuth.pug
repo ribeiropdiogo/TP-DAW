@@ -22,45 +22,19 @@ block body
                 .col-lg-6.col-md-6.col-sm-6.col-xs-12
                     .login-reg-bg
                         .log-reg-area.sign
-                            h2.log-title Login
-                            form(action='/login.js')
-                                .form-group
-                                    input(type='text', id='username', name='username', required)
-                                    label(class='control-label', for='username') Username
-                                    i.mtrl-select
-                                .form-group
-                                    input(type='password', id='password', name='password', required)
-                                    label(class='control-label', for='password') Password
-                                    i.mtrl-select
-                                a(href='/recuperaPassword', title='Recuperar Password', class='forgot-pwd') Esqueceu a password?
-                                .submit-btns
-                                    button(class='mtr-btn signin', type='button', style="margin-right: 5px", onclick='login()')
-                                        span Login
-                                    button(class='mtr-btn signup', type='button')
-                                        span Registar
-                                    a(href='/googleAuth')
-                                        button(type='button' style="background:#4c94cc; color:white; width:60px; height:40px; margin-left: 5px;")
-                                            img(src='https://www.iconfinder.com/data/icons/social-media-2210/24/Google-512.png' style='width:30px; background:white; border-radius:50%;' alt='')
-                                            //b(style='top: -10px; left: 5px; position: relative') Google
-                                    a(href='/facebookAuth')
-                                        button(type='button' style="background:#4c94cc; color:white; width:60px; height:40px; margin-left: 5px;")
-                                            img(src='https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Facebook_colored_svg_copy-512.png' style='width:30px; background:white; border-radius:50%;' alt='')
-
-                        .log-reg-area.reg
                             h2.log-title Registar
                             form(action='/login.js')
                                 .form-group
-                                    input(type='text', id='name', name='name', required)
+                                    input(type='text', id='name', name='name', required, value = user.name)
                                     label(class='control-label', for='name') Primeiro e Último Nome
                                     i.mtrl-select
                                 .form-group
                                     input(type='text', id='rusername', name='rusername', required)
                                     label(class='control-label', for='rusername') Username
                                     i.mtrl-select
-                                .form-group
-                                    input(type='email', id='email', name='email', required)
-                                    label(class='control-label', for='email') Email
-                                    i.mtrl-select
+                                    input(type='hidden', id='email', name='email', required, readonly, value = user.email)
+                                    //label(class='control-label', for='email') Email
+                                    //i.mtrl-select
                                 .form-group
                                     input(type='password', id='rpassword', name='rpassword', required)
                                     label(class='control-label', for='rpassword') Password
@@ -81,8 +55,8 @@ block body
                                     input(type='text', id='instituicao', name='instituicao', required)
                                     label(class='control-label', for='instituicao') Instituição
                                     i.mtrl-select
-                                a(href='', title='', class='already-have') Já tem conta?
                                 .submit-btns
-                                    button(class='mtr-btn signup', type='button', onclick='register()')
+                                    button(class='mtr-btn signup', type='button', style="margin-right: 5px", onclick='register()')
                                         span Registar
-                                    
+                                    button(class='mtr-btn back', onclick="location.href='/'" type='button')  
+                                        span Voltar

@@ -6,10 +6,7 @@ const Post = require('../controllers/post')
 // GET /posts
 router.get('/', function(req, res) {
     Post.list()
-        .then(dados => {
-            console.log(JSON.stringify(dados))
-            res.status(200).jsonp(dados)
-        })
+        .then(dados => res.status(200).jsonp(dados))
         .catch(e => res.status(500).jsonp({error: e}))
 })
 

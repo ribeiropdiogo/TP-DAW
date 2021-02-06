@@ -62,15 +62,13 @@ block body
                                             .user-post
                                                 .friend-info
                                                     .friend-name
-                                                        ins
-                                                            a(href="#" title="")= post.usr.nome
+                                                        ins= post.usr.nome
                                                         span published: #{post.data}
                                                     .post-meta
-                                                        p= post.recurso
-                                                        p= post.rec.tipo
-                                                        p= post.rec.titulo
-                                                        p= post.rec.nome
-                                                        p= post.rec.autor
+                                                        div(style="box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12); padding: 15px 15px 7px 15px;")
+                                                            a(href="/recursos/"+post.recurso)
+                                                                h5 #{post.rec.tipo} - #{post.rec.titulo}
+                                                                h6= post.rec.autor
                                                         .description
                                                             p= post.texto
                                                 .coment-area
@@ -80,7 +78,7 @@ block body
                                                                 .we-comment
                                                                     .coment-head
                                                                         h5
-                                                                            a(href="#" title="")= comentario.utilizador
+                                                                            a= comentario.utilizador
                                                                         span= comentario.data
                                                                     p= comentario.texto
                                                         li.post-comment

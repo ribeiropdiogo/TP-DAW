@@ -33,7 +33,6 @@ module.exports.list = function() {
                 'usr.nome': 1,
                 'rec.tipo': 1,
                 'rec.titulo': 1,
-                'rec.nome': 1,
                 'rec.autor': 1
             } }
         ])

@@ -4,8 +4,39 @@ const Post = require('../models/post')
 // Returns Post list
 module.exports.list = function() {
     return Post
-        .find()
-        .sort({data: -1})
+        .aggregate([
+            {
+                $lookup: {
+                    from: 'utilizadores',
+                    localField: 'utilizador',
+                    foreignField: 'username',
+                    as: 'output1'
+                }
+            },
+            { $set: { usr: { $arrayElemAt: [ "$output1", 0 ] } } },
+            {
+                $lookup: {
+                    from: 'recursos',
+                    localField: 'recurso',
+                    foreignField: '_id',
+                    as: 'output2'
+                }
+            },
+            { $set: { rec: { $arrayElemAt: [ "$output2", 0 ] } } },
+            { $sort: { data: -1 } },
+            { $project: {
+                utilizador: 1,
+                recurso: 1,
+                texto: 1,
+                comentarios: 1,
+                data: 1,
+                'usr.nome': 1,
+                'rec.tipo': 1,
+                'rec.titulo': 1,
+                'rec.nome': 1,
+                'rec.autor': 1
+            } }
+        ])
         .exec()
 }
 

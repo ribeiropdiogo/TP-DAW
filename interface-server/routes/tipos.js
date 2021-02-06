@@ -13,7 +13,8 @@ router.get('/novo', function(req, res) {
         .then(resp => {
 
             console.log(resp.data)
-            res.render('addTipo', { title: 'Adicionar Tipo', nome: resp.data.user.nome, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo});
+            res.render('addTipo', { title: 'Adicionar Tipo', nome: resp.data.user.nome, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo, footer: true});
+
         
         })
         .catch(e => res.render('error', {error: e}))

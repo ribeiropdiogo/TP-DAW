@@ -29,11 +29,11 @@ router.get('/feed', function(req, res) {
             .then(tipos => {
                 axios.get('http://localhost:7000/posts', headers)
                 .then(posts => {
-                    res.render('home', {title: 'RepositoriDOIS', user: user.data, tipos: tipos.data, posts: posts.data})
+                    res.render('home', {title: 'RepositoriDOIS', user: user.data, tipos: tipos.data, posts: posts.data, footer: true})
                 })
-                .catch(e => res.render('error', {error: e}))
+                .catch(e => res.render('error', {error: e, footer: false}))
             })
-            .catch(e => res.render('error', {error: e}))
+            .catch(e => res.render('error', {error: e, footer: false}))
         })
         .catch(e => {
             console.log(e.response.data.error.name)
@@ -42,7 +42,7 @@ router.get('/feed', function(req, res) {
                 res.clearCookie("token")
                 res.redirect('/login')
             }else{
-                res.render('error', {error: e})
+                res.render('error', {error: e, footer: false})
             }
         })
     } else {
@@ -63,11 +63,11 @@ router.get('/estatisticas', function(req, res) {
                     .then(t => {
                         axios.get('http://localhost:7000/recursos/estatisticas', headers)
                         .then(estatisticas => {
-                            res.render('stats', {title: 'RepositóriDOIS', stats: estatisticas.data, tipos: t.data})
+                            res.render('stats', {title: 'RepositóriDOIS', stats: estatisticas.data, tipos: t.data, footer: true})
                         })
-                        .catch(e => res.render('error', {error: e}))
+                        .catch(e => res.render('error', {error: e, footer: false}))
                     })
-                    .catch(e => res.render('error', {error: e}))
+                    .catch(e => res.render('error', {error: e, footer: false}))
                 } else {
                     res.redirect('/feed')
                 }
@@ -77,7 +77,7 @@ router.get('/estatisticas', function(req, res) {
                     res.clearCookie("token")
                     res.redirect('/login')
                 }else{
-                    res.render('error', {error: err})
+                    res.render('error', {error: err, footer: false})
                 }
             })
         } else {
@@ -86,16 +86,16 @@ router.get('/estatisticas', function(req, res) {
 });
 
 router.get('/login', function(req, res, next) {
-    res.render('login', { title: 'Login' })
+    res.render('login', { title: 'Login', footer: false })
 });
 
 router.get('/recuperaPassword', function(req, res, next){
-    res.render('recoverPassword', { title: 'Recuperar Password' })
+    res.render('recoverPassword', { title: 'Recuperar Password', footer: false })
 })
 
 
 router.get('/redefinePassword/:token', function(req, res, next) {
-    res.render('resetPassword', { title: 'Recuperar Password' })
+    res.render('resetPassword', { title: 'Recuperar Password', footer: false })
 });
 
 
@@ -115,9 +115,9 @@ router.get('/admin', function(req, res, next) {
                 if(resp.data.admin == true){
                     axios.get('http://localhost:7000/tipos/top/5', headers)
                     .then(t => {
-                        res.render('admin', {title: 'RepositoriDOIS', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data})
+                        res.render('admin', {title: 'RepositoriDOIS', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data, footer: true})
                     })
-                    .catch(e => res.render('error', {error: e}))
+                    .catch(e => res.render('error', {error: e, footer: false}))
                 } else {
                     res.redirect('/feed')
                 }
@@ -127,7 +127,7 @@ router.get('/admin', function(req, res, next) {
                     res.clearCookie("token")
                     res.redirect('/login')
                 }else{
-                    res.render('error', {error: err})
+                    res.render('error', {error: err, footer: false})
                 }
             })
         } else {

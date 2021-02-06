@@ -31,17 +31,17 @@ router.post('/comentarios/:id', function(req, res) {
 //Detalhes de um Post
 router.get('/:id', function(req, res) {
     res.jsonp("Interface Posts work.")
-    res.render('index', { title: 'Express' })
+    res.render('index', { title: 'Express', footer: false })
 })
 
 //Editar um Post --> tem de ser o dono
 router.put('/:id', function(req, res) {
-    res.render('index', { title: 'Express' })
+    res.render('index', { title: 'Express', footer: false })
 })
 
 //Apagar post --> Só pode se for o produtor
 router.delete('/delete', function(req, res) {
-    res.render('index', { title: 'Express' })
+    res.render('index', { title: 'Express', footer: false })
 })
 
 

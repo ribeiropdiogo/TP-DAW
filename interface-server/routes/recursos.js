@@ -170,7 +170,7 @@ router.get('/', function(req, res, next) {
 
         axios.get('http://localhost:7000/recursos?' + cond + 'n=5', headers)
             .then(resp => {
-                res.render('recursos', {title: 'RepositóriDOIS', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo, recursos: resp.data.recurso})
+                res.render('recursos', {title: 'RepositóriDOIS', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo, recursos: resp.data.recurso, footer: true})
 
             })
             .catch(err => {
@@ -179,7 +179,7 @@ router.get('/', function(req, res, next) {
                     res.clearCookie("token")
                     res.redirect('/login')
                 }else{
-                    res.render('error', {error: err})
+                    res.render('error', {error: err, footer: false})
                 }
             })
 
@@ -250,7 +250,7 @@ router.get('/zip/:id', function(req, res, next) {
                     res.clearCookie("token")
                     res.redirect('/login')
                 }else{
-                    res.render('error', {error: err})
+                    res.render('error', {error: err, footer: false})
                 }
             })
 
@@ -274,7 +274,7 @@ router.get('/meta/:id', function(req, res, next) {
                     res.clearCookie("token")
                     res.redirect('/login')
                 }else{
-                    res.render('error', {error: err})
+                    res.render('error', {error: err, footer: false})
                 }
             })
 
@@ -296,18 +296,18 @@ router.get('/:id', function(req, res, next) {
                     .then(resp => {
                         axios.get('http://localhost:7000/tipos/top/5', headers)
                             .then(t => {
-                                res.render('recurso', {title: r.data.titulo, user: resp.data, tipos: t.data, recurso: r.data})
+                                res.render('recurso', {title: r.data.titulo, user: resp.data, tipos: t.data, recurso: r.data, footer: true})
                             })
-                            .catch(e => res.render('error', {error: e}))
+                            .catch(e => res.render('error', {error: e, footer: false}))
                     })
-                    .catch(err => res.render('error', {error: err}))
+                    .catch(err => res.render('error', {error: err, footer: false}))
             })
             .catch(err => {
                 if(err.response.status == 401){
                     res.clearCookie("token")
                     res.redirect('/login')
                 }else{
-                    res.render('error', {error: err})
+                    res.render('error', {error: err, footer: false})
                 }
             })
     } else {
@@ -350,7 +350,7 @@ router.put('/star/:id', function(req, res) {
                     res.clearCookie("token")
                     res.status(401).jsonp("Token Expirado!");
                 }else{
-                    res.render('error', {error: err})
+                    res.render('error', {error: err, footer: false})
                 }
             })
     }
@@ -368,10 +368,10 @@ router.get("/editar/:id", function (req, res) {
                         axios.get('http://localhost:7000/tipos/top/5', headers)
                             .then(t => {
                                 //res.cookie(req.cookies.token)
-                                res.render('editRecurso', {title: "Editar Recurso", nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data})
+                                res.render('editRecurso', {title: "Editar Recurso", nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data, footer: true})
                             })
                             .catch(e => {
-                                res.render('error', {error: e})
+                                res.render('error', {error: e, footer: false})
                             })
                     })
                     .catch(err => {
@@ -379,7 +379,7 @@ router.get("/editar/:id", function (req, res) {
                             res.clearCookie("token")
                             res.redirect('/login')
                         }else{
-                            res.render('error', {error: err})
+                            res.render('error', {error: err, footer: false})
                         }
                     })
 
@@ -404,7 +404,7 @@ router.put("/:id", function (req, res) {
                         res.clearCookie("token")
                         res.status(401).jsonp("Token Expirado!");
                     }else{
-                        res.render('error', {error: err}) 
+                        res.render('error', {error: err, footer: false}) 
                     }                
                 })
     } else {

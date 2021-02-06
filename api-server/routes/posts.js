@@ -6,7 +6,10 @@ const Post = require('../controllers/post')
 // GET /posts
 router.get('/', function(req, res) {
     Post.list()
-        .then(data => res.status(200).jsonp(data))
+        .then(dados => {
+            console.log(JSON.stringify(dados))
+            res.status(200).jsonp(dados)
+        })
         .catch(e => res.status(500).jsonp({error: e}))
 })
 
@@ -46,14 +49,14 @@ router.post('/comentarios/:id', function(req, res) {
     req.body.data = new Date()
     
     Post.insertComment(req.params.id, req.body)
-        .then(data => res.status(201).jsonp(data))
+        .then(dados => res.status(201).jsonp(dados))
         .catch(e => res.status(500).jsonp({error: e}))
 })
 
 // DELETE /posts/comentarios/:id
 router.delete('/comentarios/:id', function(req, res) {
     Post.removeComment(req.params.id, req.body)
-        .then(data => res.status(200).jsonp(data))
+        .then(dados => res.status(200).jsonp(dados))
         .catch(e => res.status(500).jsonp({error: e}))
 })
 

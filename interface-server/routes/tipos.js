@@ -14,7 +14,7 @@ router.get('/novo', function(req, res) {
         .then(resp => {
 
             console.log(resp.data)
-            res.render('addTipo', { title: 'Adicionar Tipo', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email});
+            res.render('addTipo', { title: 'Adicionar Tipo', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, footer: true});
         
         })
         .catch(e => res.render('error', {error: e}))

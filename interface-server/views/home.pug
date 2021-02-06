@@ -63,10 +63,14 @@ block body
                                                 .friend-info
                                                     .friend-name
                                                         ins
-                                                            a(href="#" title="")= post.utilizador
+                                                            a(href="#" title="")= post.usr.nome
                                                         span published: #{post.data}
                                                     .post-meta
                                                         p= post.recurso
+                                                        p= post.rec.tipo
+                                                        p= post.rec.titulo
+                                                        p= post.rec.nome
+                                                        p= post.rec.autor
                                                         .description
                                                             p= post.texto
                                                 .coment-area

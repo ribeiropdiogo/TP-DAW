@@ -16,6 +16,17 @@ npm start
 After executing these commands, the platform should be running at [localhost:8000](http://localhost:8000). 
 Before beeing able to use the platform you need to populate some values in the database. In the folder `data` are some example datasets that can be used to populate the database, and, there are 2 programs to generate example users and resources.
 
+To populate the database with the example datasets use the following commands:
+
+```
+// For Types
+mongoimport --db RepositoriDOIS --collection utilizadores --file utilizadores.json --jsonArray 
+// For Users
+mongoimport --db RepositoriDOIS --collection utilizadores --file utilizadores.json --jsonArray 
+```
+
+In the `data`folder is also the `export.zip` file wich can be imported in the administration page.
+
 ### Converting user to admin
 
 In order to have a user with administrative privileges you need to update the record in `mongo`with the following line:

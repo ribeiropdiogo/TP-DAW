@@ -67,14 +67,12 @@ router.post('/redefinePassword', [check('newPassword').isLength({ min: 5 })], fu
 
     axios.post('http://localhost:6000/utilizadores/redefinePassword/', req.body)
     .then(resp => {
-        console.log(resp.data)
         res.cookie('token', resp.data.token, {
           expires: new Date(Date.now() + '1h'),
           secure: false, 
           httpOnly: true
         });
         res.redirect('/feed')
-        console.log('teste')
     })
     .catch(err => {
         if(err.response.status==401){
@@ -85,6 +83,68 @@ router.post('/redefinePassword', [check('newPassword').isLength({ min: 5 })], fu
     })
   });
 
+
+//Google OAuth Callback
+router.get('/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  function(req, res) {
+
+    req.body.userData = req.user
+    
+    axios.post('http://localhost:6000/utilizadores/googleAuth', req.body)
+    .then(resp => {
+        res.cookie('token', resp.data.token, {
+          expires: new Date(Date.now() + '1h'),
+          secure: false, 
+          httpOnly: true
+        });
+        res.redirect('/feed')
+    })
+    .catch(err => {
+        if(err.response.status==401){
+            res.status(401).jsonp("Problema com o Token");
+        }else if(err.response.status==404){
+            res.render('registerOAuth', { title: 'Registo', user: req.user.profile._json})
+        }else{
+            res.render('error', {error: err}) 
+        }
+    })
+
+});
+
+
+//Facebook OAuth Callback
+router.get('/facebook/callback', 
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+
+    req.body.userData = req.user
+    //console.log(req.body.userData.profile.emails[0].value)
+    
+    axios.post('http://localhost:6000/utilizadores/facebookAuth', req.body)
+    .then(resp => {
+        res.cookie('token', resp.data.token, {
+          expires: new Date(Date.now() + '1h'),
+          secure: false, 
+          httpOnly: true
+        });
+        res.redirect('/feed')
+    })
+    .catch(err => {
+        if(err.response.status==401){
+            res.status(401).jsonp("Problema com o Token");
+        }else if(err.response.status==404){
+
+            var render = {}
+            render.email = req.user.profile._json.email
+            render.name = '' + req.user.profile._json.first_name + ' ' + req.user.profile._json.last_name
+            res.render('registerOAuth', { title: 'Registo', user: render})
+        }else{
+            res.render('error', {error: err}) 
+        }
+    })
+
+});
 
 //Logout --> Tem que se adicionar os tokens a uma BLACKLIST
 router.get('/logout', function(req, res) {

@@ -36,5 +36,16 @@ router.delete('/:id', function(req, res) {
         .catch(e => res.status(500).jsonp(e.data))
 })
 
+router.delete('/comentarios/:id', function(req, res) {
+    var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${req.cookies.token}`
+    }
+    
+    axios.delete('http://localhost:7000/posts/comentarios/'+req.params.id, {data: req.body, headers: headers})
+        .then(dados => res.status(200).jsonp(dados.data))
+        .catch(e => res.status(500).jsonp({error: e}))
+})
+
 
 module.exports = router

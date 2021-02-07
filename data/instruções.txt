@@ -1,9 +1,0 @@
-Passos: 
-
-1 > mongoimport --db RepositoriDOIS --collection tipos --file tipos.json --jsonArray 
-2 > mongoimport --db RepositoriDOIS --collection utilizadores --file utilizadores.json --jsonArray 
-3 > na página admin fazer import do zip "export.zip"
-
-Para ter um user a admin:
-
- no mongo -> db.utilizadores.update({username: "ribeiro"},{$set: {admin: true}})

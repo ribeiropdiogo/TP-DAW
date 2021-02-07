@@ -59,6 +59,7 @@ passport.deserializeUser(function(obj, done) {
 const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/utilizadores')
 const postsRouter = require('./routes/posts')
+const noticiasRouter = require('./routes/noticias')
 const recursosRouter = require('./routes/recursos')
 const tiposRouter = require('./routes/tipos')
 
@@ -88,6 +89,7 @@ app.use(function(req, res, next){
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/posts', postsRouter)
+app.use('/noticias', noticiasRouter)
 app.use('/recursos', recursosRouter)
 app.use('/utilizadores', usersRouter)
 app.use('/tipos', tiposRouter)

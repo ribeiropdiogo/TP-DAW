@@ -63,7 +63,7 @@ router.get('/estatisticas', function(req, res) {
                     .then(t => {
                         axios.get('http://localhost:7000/recursos/estatisticas', headers)
                         .then(estatisticas => {
-                            res.render('stats', {title: 'RepositóriDOIS', stats: estatisticas.data, tipos: t.data, footer: true})
+                            res.render('stats', {title: 'RepositóriDOIS', user: resp.data, stats: estatisticas.data, tipos: t.data, footer: true})
                         })
                         .catch(e => res.render('error', {error: e, footer: false}))
                     })

@@ -25,8 +25,8 @@
         <p>
             O Trabalho Prático realizado consiste numa plataforma de partilha de recursos educativos. A plataforma disponibilizada permite
             o registo de utilizadores via email/password bem como através de uma conta Google ou Facebook. Utilizadores registados podem
-            submeter recursos de diversos tipos sendo estes Públicos (visíveis para todos) ou privados (visíveis apenas para o autor ou para 
-            utilizadores admin). O sistema permite a pesqusia de recursos por autor, tag ou tipo. Utilizadores com privilégios de administrador 
+            submeter recursos de diversos tipos sendo estes públicos (visíveis para todos) ou privados (visíveis apenas para o autor ou para 
+            utilizadores admin). O sistema permite a pesquisa de recursos por autor, tag ou tipo. Utilizadores com privilégios de administrador 
             têm acesso a uma página de estatísticas bem como acesso a operações CRUD sobre todos os recursos e acesso a operações de importação 
             e exportação de recursos.
         </p>

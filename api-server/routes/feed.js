@@ -13,7 +13,7 @@ function filter(data, query_user, admin) {
     var response = []
     
     for (i = 0; i < data.length; i++) {
-        if(data[i].rec.visibilidade == "Público" || data[i].autor == query_user)
+        if (!data[i].rec || data[i].rec.visibilidade == "Público" || data[i].rec.autor == query_user)
             response.push(data[i])
     } 
 

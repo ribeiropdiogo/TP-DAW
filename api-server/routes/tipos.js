@@ -26,7 +26,6 @@ router.get('/:id', function(req, res) {
 
 // POST /tipos
 router.post('/', function(req, res) {
-    console.log(req.body)
     Tipo.insert(req.body)
         .then(data => res.status(201).jsonp(data))
         .catch(error => res.status(500).jsonp(error))

@@ -16,11 +16,15 @@ router.get('/:username', function(req, res) {
 
 // POST /noticias
 router.post('/', function(req, res) {
-    req.body.data = new Date()
+    if (req.token.admin == true) {
+        req.body.data = new Date()
 
-    Noticia.insert(req.body)
-        .then(dados => res.status(201).jsonp(dados))
-        .catch(e => res.status(500).jsonp({error: e}))
+        Noticia.insert(req.body)
+            .then(dados => res.status(201).jsonp(dados))
+            .catch(e => res.status(500).jsonp({error: e}))
+    } else {
+        res.status(401).send()
+    }
 })
 
 // DELETE /noticias/:id

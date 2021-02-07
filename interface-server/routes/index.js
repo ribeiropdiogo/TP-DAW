@@ -27,7 +27,7 @@ router.get('/feed', function(req, res) {
         .then(user => {
             axios.get('http://localhost:7000/tipos/top/5', headers)
             .then(tipos => {
-                axios.get('http://localhost:7000/posts', headers)
+                axios.get('http://localhost:7000/feed', headers)
                 .then(posts => {
                     res.render('home', {title: 'RepositoriDOIS', user: user.data, tipos: tipos.data, posts: posts.data, footer: true})
                 })
@@ -107,32 +107,34 @@ router.get('/facebookAuth', passport.authenticate('facebook', { scope : ['email'
 
 router.get('/admin', function(req, res, next) {
     if(req.cookies.token != null){
-            var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
-            let username = jwt.decode(req.cookies.token).username
-    
-            axios.get('http://localhost:7000/utilizadores/' + username, headers)
-            .then(resp => {
-                if(resp.data.admin == true){
-                    axios.get('http://localhost:7000/tipos/top/5', headers)
-                    .then(t => {
-                        res.render('admin', {title: 'RepositoriDOIS', nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data, footer: true})
-                    })
+        var headers = { headers: { Authorization: `Bearer ${req.cookies.token}` }}
+        let username = jwt.decode(req.cookies.token).username
+
+        axios.get('http://localhost:7000/utilizadores/' + username, headers)
+        .then(resp => {
+            if(resp.data.admin == true){
+                axios.get('http://localhost:7000/tipos/top/5', headers)
+                .then(t => {
+                    axios.get('http://localhost:7000/noticias/'+username, headers)
+                    .then(ntc => res.render('admin', {title: 'RepositoriDOIS', user: resp.data, tipos: t.data, noticias: ntc.data, footer: true}))
                     .catch(e => res.render('error', {error: e, footer: false}))
-                } else {
-                    res.redirect('/feed')
-                }
-            })
-            .catch(err => {
-                if(err.response.data.error.name == 'TokenExpiredError'){
-                    res.clearCookie("token")
-                    res.redirect('/login')
-                }else{
-                    res.render('error', {error: err, footer: false})
-                }
-            })
-        } else {
-            res.redirect('/login')
-        }
+                })
+                .catch(e => res.render('error', {error: e, footer: false}))
+            } else {
+                res.redirect('/feed')
+            }
+        })
+        .catch(err => {
+            if(err.response.data.error.name == 'TokenExpiredError'){
+                res.clearCookie("token")
+                res.redirect('/login')
+            }else{
+                res.render('error', {error: err, footer: false})
+            }
+        })
+    } else {
+        res.redirect('/login')
+    }
 });
 
 

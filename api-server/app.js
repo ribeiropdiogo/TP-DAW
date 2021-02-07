@@ -17,11 +17,12 @@ db.once('open', function() {
     console.log('Connected to MongoDB...')
 })
 
+const feedRouter = require('./routes/feed')
 const usersRouter = require('./routes/utilizadores')
 const postsRouter = require('./routes/posts')
 const tiposRouter = require('./routes/tipos')
 const recursosRouter = require('./routes/recursos')
-const noticiasRouter = require('./routes/noticia')
+const noticiasRouter = require('./routes/noticias')
 
 var blacklist = []
 
@@ -50,7 +51,7 @@ app.use(function(req, res, next) {
                 if(blacklisted == true){
                     res.status(401).jsonp({error: "Token Inválido!"})
                 }else{
-                    req.token = myToken
+                    req.token = jwt.decode(myToken)
                     next()
                 }
             }
@@ -73,6 +74,7 @@ app.use(function(req, res, next) {
 
 })
 
+app.use('/feed', feedRouter)
 app.use('/utilizadores', usersRouter)
 app.use('/recursos', recursosRouter)
 app.use('/posts', postsRouter)

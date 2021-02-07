@@ -77,12 +77,12 @@ module.exports.insertComment = function(id, c) {
 // Removes a comment
 module.exports.removeComment = function(id_post, id_com) {
     return Post
-        .updateOne({_id: id_post}, {$pull: {comentarios: {_id: id_com}}}, {new: true})
+        .updateOne({_id: id_post}, {$pull: {comentarios: {_id: id_com}}})
         .exec()
 }
 
 module.exports.removeCommentIfOwner = function(id_post, id_com, owner) {
     return Post
-        .updateOne({_id: id_post}, {$pull: {comentarios: {_id: id_com, utilizador: owner}}}, {new: true})
+        .updateOne({_id: id_post}, {$pull: {comentarios: {_id: id_com, utilizador: owner}}})
         .exec()
 }

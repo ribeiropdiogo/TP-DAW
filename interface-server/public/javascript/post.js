@@ -32,7 +32,7 @@ function comment(id) {
                     alert('Ocorreu um erro')
                 }
             }
-        };
+        }
 
         xhttp.open("POST", "/posts/comentarios/"+id, true);
         xhttp.setRequestHeader('Content-type','application/json; charset=utf-8');

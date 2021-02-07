@@ -49,7 +49,7 @@ function login(){
             window.location.replace("/feed");
         } else if(xhr.status == 401){
             alert("Check if your credentials are correct!");
-        } else if(xhr.status == 500){
+        }else if(xhr.status == 500){
             alert("The server exploded, please try again later...");
         }
     } 
@@ -84,7 +84,9 @@ function register(){
     xhr.onreadystatechange = function() {
         if(xhr.readyState == 4 && xhr.status == 200) {
             window.location.replace("/login");
-        } else if(xhr.status == 409){
+        } else if(xhr.readyState == 4 && xhr.status == 422){
+            alert("Verifique se o email está correto ou a password tem mais de 5 caracteres!");
+        }  else if(xhr.status == 409){
             alert("Username or Email already exist");
         }
     }

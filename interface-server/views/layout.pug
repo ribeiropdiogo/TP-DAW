@@ -37,6 +37,9 @@ html(lang='pt')
                 ul.list-style
                   li
                     a(href='/recursos/', title='') Recursos
+                  if user.admin == true 
+                    li
+                      a(href='/admin', title='') Página Admin
             .col-lg-4.col-md-4
               .widget
                 .widget-title

@@ -170,7 +170,7 @@ router.get('/', function(req, res, next) {
 
         axios.get('http://localhost:7000/recursos?' + cond + 'n=5', headers)
             .then(resp => {
-                res.render('recursos', {title: 'RepositóriDOIS', nome: resp.data.user.nome, username: resp.data.user.username, instituicao: resp.data.user.instituicao, email: resp.data.user.email, tipos: resp.data.tipo, recursos: resp.data.recurso, footer: true})
+                res.render('recursos', {title: 'RepositóriDOIS', user: resp.data.user, username: resp.data.user.username, tipos: resp.data.tipo, recursos: resp.data.recurso, footer: true})
 
             })
             .catch(err => {
@@ -237,7 +237,7 @@ router.get('/zip/:id', function(req, res, next) {
                                 res.setHeader('Content-Type', 'application/octet-stream');
                                 res.status(200).send(content)
                             });
-                            //res.status(200).send(file);
+                            
                             fs.unlink(path, (err) => {
                                 if (err) throw err
                             })
@@ -368,7 +368,7 @@ router.get("/editar/:id", function (req, res) {
                         axios.get('http://localhost:7000/tipos/top/5', headers)
                             .then(t => {
                                 //res.cookie(req.cookies.token)
-                                res.render('editRecurso', {title: "Editar Recurso", nome: resp.data.nome, username: resp.data.username, instituicao: resp.data.instituicao, email: resp.data.email, tipos: t.data, footer: true})
+                                res.render('editRecurso', {title: "Editar Recurso", user: resp.data, tipos: t.data, footer: true})
                             })
                             .catch(e => {
                                 res.render('error', {error: e, footer: false})

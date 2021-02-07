@@ -109,7 +109,7 @@ block body
                                             h4.widget-title Perfil
                                             .your-page
                                                 .page-meta(style='padding-bottom: 10px;')
-                                                    a(href='', title='', class='underline')= user.nome
+                                                    a(href='/utilizadores/'+user.username, title='', class='underline')= user.nome
                                                     span
                                                         i.ti-email
                                                         a= user.email

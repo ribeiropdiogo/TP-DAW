@@ -527,7 +527,7 @@ router.post('/importar', upload.single('conteudo'), function(req, res) {
                                                             
                                                     // Move file to storage tree
                                                     fs.rename(fpath, newPath, function(err) {
-                                                        if (err) console.log(err)
+                                                        //if (err) console.log(err)
                                                     })
                                                             
                                                     Tipo.increment(meta.tipo)

@@ -20,7 +20,7 @@ To populate the database with the example datasets use the following commands:
 
 ```
 // For Types
-mongoimport --db RepositoriDOIS --collection utilizadores --file utilizadores.json --jsonArray 
+mongoimport --db RepositoriDOIS --collection tipos --file tipos.json --jsonArray 
 // For Users
 mongoimport --db RepositoriDOIS --collection utilizadores --file utilizadores.json --jsonArray 
 ```
